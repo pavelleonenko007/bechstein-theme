@@ -386,6 +386,14 @@ p strong {
   background: white;
 }
 
+/* Custom styles */
+
+.h1-75-90 {
+  text-transform: uppercase;
+}
+
+/* Custom styles */
+
 .cms-li_actions-div.biger .booktickets-btn {
   margin-bottom: 12rem;
   margin-right: 0px;
