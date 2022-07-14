@@ -1,4 +1,18 @@
 <?php
+add_action('wp_enqueue_scripts', 'bech_add_scripts');
+function bech_add_scripts()
+{
+  wp_enqueue_style('custom', get_template_directory_uri() . '/css/custom.css', ['main'], rand());
+  wp_enqueue_script('main', get_template_directory_uri() . '/js/main.js', ['jquery'], false, true);
+  wp_enqueue_script('front', get_template_directory_uri() . '/js/front.js', ['main'], false, true);
+  wp_enqueue_script('custom', get_template_directory_uri() . '/js/custom.js', ['main'], false, true);
+  wp_localize_script('custom', 'bech_var', array(
+    'url' => admin_url('admin-ajax.php'),
+    'nonce' => wp_create_nonce('ajax-nonce'),
+    'home_url' => get_home_url()
+  ));
+}
+
 
 /**
  * webhook endpoint
@@ -7,12 +21,12 @@
 add_action('rest_api_init', function () {
   register_rest_route('tix-webhook/v1', '/webhook', array(
     'methods'  => 'POST',
-    'callback' => 'webhook_callback',
+    'callback' => 'bech_webhook_callback',
     'permission_callback' => '__return_true'
   ));
 });
 
-function webhook_callback(WP_REST_Request $request)
+function bech_webhook_callback(WP_REST_Request $request)
 {
   $url = get_home_url() . '/data.json';
   $response = wp_remote_get($url);
