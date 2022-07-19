@@ -13,6 +13,30 @@ function bech_add_scripts()
   ));
 }
 
+/* Tix Utils Functions */
+
+function bech_format_date($str = '', $format = 'Y-m-d H:i:s')
+{
+  $date = new DateTime($str);
+  return $date->format($format);
+}
+
+function bech_purchase_url_format_data($arr)
+{
+  $formatted_arr = [];
+
+  foreach ($arr as $item) {
+    $formatted_item = [];
+    $formatted_item['two_letter_culture'] = $item['TwoLetterCulture'];
+    $formatted_item['link'] = $item['Link'];
+
+    $formatted_arr[] = $formatted_item;
+  }
+
+  return $formatted_arr;
+}
+
+/* Tix Utils Functions */
 
 /**
  * webhook endpoint
@@ -40,7 +64,7 @@ function bech_webhook_callback(WP_REST_Request $request)
     mkdir(get_home_path() . 'tix-logs');
   }
 
-  $file = fopen(get_home_path() . 'tix-logs/logs.txt', "w");
+  $file = fopen(get_home_path() . 'tix-logs/logs.txt', "a");
   fwrite($file, '=== Start: ' . date('l jS \of F Y h:i:s A') . '=== ||');
   fwrite($file, json_encode($request->get_body_params()));
 
@@ -53,37 +77,51 @@ function bech_webhook_callback(WP_REST_Request $request)
   $body = json_decode($response['body'], true);
   $error = '';
 
-  foreach ($body as $item) {
-    $events = $item['Dates'];
-    foreach ($events as $event) {
-      $existing_event = get_posts([
-        'post_type' => 'event',
-        's' => $post['title']
-      ]);
+  $events = $body[0]['Dates'];
 
-      $event_args = [
-        'post_type' => 'event',
-        'post_title' => sanitize_text_field($event['Name']),
-        'post_status' => 'publish',
-        'tax_input' => [
-          'event_tag' => is_array($event['Tags']) ? $event['Tags'] : [$event['Tags']]
-        ],
-        'post_author' => 1,
-        'post_content' => '<p></p>'
-      ];
+  foreach ($events as $event) {
+    $existing_event = get_posts([
+      'post_type' => 'event',
+      's' => $event['Name']
+    ]);
 
-      if ($existing_event[0]) {
-        $event_args['ID'] = $existing_event[0]->ID;
-        $event_args['post_content'] = $existing_event[0]->post_content;
-      }
+    $event_args = [
+      'post_type' => 'event',
+      'post_title' => sanitize_text_field($event['Name']),
+      'post_status' => 'publish',
+      'tax_input' => [
+        'event_tag' => is_array($event['Tags']) ? $event['Tags'] : [$event['Tags']]
+      ],
+      'post_author' => 1,
+      'post_content' => '<p></p>'
+    ];
 
-      $event_id = wp_insert_post($event_args, true);
-
-      if (is_wp_error($event_id)) {
-        $error = $event_id->get_error_message();
-        break;
-      }
+    if ($existing_event[0]) {
+      $event_args['ID'] = $existing_event[0]->ID;
+      $event_args['post_content'] = $existing_event[0]->post_content;
     }
+
+    $event_id = wp_insert_post($event_args, true);
+
+    if (is_wp_error($event_id)) {
+      $error = $event_id->get_error_message();
+      break;
+    }
+
+    $online_sale_start_field = 'field_62d6800f618cb';
+    $online_sale_end_field = 'field_62d68403618cc';
+    $min_price_field = 'field_62d68426618cd';
+    $max_price_field = 'field_62d68451618ce';
+    $purchase_urlsfield = 'field_62d684c2618cf';
+
+    /* Update Online Sale Start Field */
+
+    update_field($online_sale_start_field, bech_format_date($event['OnlineSaleStart'], 'Y-m-d H:i:s'), $event_id);
+    update_field($online_sale_end_field, bech_format_date($event['OnlineSaleEnd'], 'Y-m-d H:i:s'), $event_id);
+    update_field($min_price_field, $event['MinPrice'], $event_id);
+    update_field($max_price_field, $event['MaxPrice'], $event_id);
+    update_field($max_price_field, $event['MaxPrice'], $event_id);
+    update_field($purchase_urlsfield, bech_purchase_url_format_data($event['PurchaseUrls']), $event_id);
   }
 
   if ($error) {
