@@ -77,55 +77,81 @@ function bech_webhook_callback(WP_REST_Request $request)
   $body = json_decode($response['body'], true);
   $error = '';
 
-  $events = $body[0]['Dates'];
+  foreach ($body as $event) {
+    $category_res = '';
 
-  foreach ($events as $event) {
-    $existing_event = get_posts([
-      'post_type' => 'event',
-      's' => $event['Name']
+    $existing_category = get_terms([
+      'taxonomy' => 'event_cat',
+      'name' => trim($event['Name']),
+      'get' => 'all'
     ]);
 
-    $event_args = [
-      'post_type' => 'event',
-      'post_title' => sanitize_text_field($event['Name']),
-      'post_status' => 'publish',
-      'tax_input' => [
-        'event_tag' => is_array($event['Tags']) ? $event['Tags'] : [$event['Tags']]
-      ],
-      'post_author' => 1,
-      'post_content' => '<p></p>'
-    ];
-
-    if ($existing_event[0]) {
-      $event_args['ID'] = $existing_event[0]->ID;
-      $event_args['post_content'] = $existing_event[0]->post_content;
+    if ($existing_category[0]) {
+      $category_res = wp_update_term($existing_category[0]->term_id, 'event_cat', [
+        'description' => $event['Description'],
+      ]);
+    } else {
+      $category_res = wp_insert_term($event['Name'], 'event_cat', [
+        'description' => $event['Description'],
+      ]);
     }
 
-    $event_id = wp_insert_post($event_args, true);
-
-    if (is_wp_error($event_id)) {
-      $error = $event_id->get_error_message();
+    if (is_wp_error($category_res)) {
+      $error = $category_res->get_error_message();
       break;
     }
 
-    $online_sale_start_field = 'field_62d6800f618cb';
-    $online_sale_end_field = 'field_62d68403618cc';
-    $min_price_field = 'field_62d68426618cd';
-    $max_price_field = 'field_62d68451618ce';
-    $purchase_urlsfield = 'field_62d684c2618cf';
+    foreach ($event['Dates'] as $tiket) {
+      $existing_tiket = get_posts([
+        'post_type' => 'event',
+        's' => $tiket['Name']
+      ]);
 
-    /* Update Online Sale Start Field */
+      $tiket_args = [
+        'post_type' => 'event',
+        'post_title' => $tiket['Name'],
+        'post_status' => 'publish',
+        'post_author' => 1,
+        'post_content' => '<p></p>',
+      ];
 
-    update_field($online_sale_start_field, bech_format_date($event['OnlineSaleStart'], 'Y-m-d H:i:s'), $event_id);
-    update_field($online_sale_end_field, bech_format_date($event['OnlineSaleEnd'], 'Y-m-d H:i:s'), $event_id);
-    update_field($min_price_field, $event['MinPrice'], $event_id);
-    update_field($max_price_field, $event['MaxPrice'], $event_id);
-    update_field($max_price_field, $event['MaxPrice'], $event_id);
-    update_field($purchase_urlsfield, bech_purchase_url_format_data($event['PurchaseUrls']), $event_id);
+      if ($existing_tiket[0]) {
+        $tiket_args['ID'] = $existing_tiket[0]->ID;
+      }
+
+      $ticket_id = wp_insert_post($tiket_args, true);
+
+      if (is_wp_error($ticket_id)) {
+        $error = $ticket_id->get_error_message();
+        break 2;
+      }
+
+      $cat_id = wp_set_object_terms($ticket_id, $category_res['term_id'], 'event_cat', false);
+
+      if (is_wp_error($cat_id)) {
+        $error = $cat_id->get_error_message();
+        break 2;
+      }
+
+      $online_sale_start_field = 'field_62d6800f618cb';
+      $online_sale_end_field = 'field_62d68403618cc';
+      $min_price_field = 'field_62d68426618cd';
+      $max_price_field = 'field_62d68451618ce';
+      $purchase_urlsfield = 'field_62d684c2618cf';
+
+      /* Update Online Sale Start Field */
+
+      update_field($online_sale_start_field, bech_format_date($tiket['OnlineSaleStart'], 'Y-m-d H:i:s'), $ticket_id);
+      update_field($online_sale_end_field, bech_format_date($tiket['OnlineSaleEnd'], 'Y-m-d H:i:s'), $ticket_id);
+      update_field($min_price_field, $tiket['MinPrice'], $ticket_id);
+      update_field($max_price_field, $tiket['MaxPrice'], $ticket_id);
+      update_field($max_price_field, $tiket['MaxPrice'], $ticket_id);
+      update_field($purchase_urlsfield, bech_purchase_url_format_data($tiket['PurchaseUrls']), $ticket_id);
+    }
   }
 
   if ($error) {
-    return new WP_Error('error_post_update', 'Event updating error', ['status' => 500]);
+    return new WP_Error('error_post_update', $error, ['status' => 500]);
   }
 
   $rest_response = rest_ensure_response([
