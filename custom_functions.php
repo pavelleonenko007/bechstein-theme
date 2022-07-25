@@ -3,9 +3,11 @@ add_action('wp_enqueue_scripts', 'bech_add_scripts');
 function bech_add_scripts()
 {
   wp_enqueue_style('custom', get_template_directory_uri() . '/css/custom.css', ['main'], rand());
+  wp_enqueue_style('style-css', '//thevogne.ru/bech/style-cus.css', ['custom'], rand());
   wp_enqueue_script('main', get_template_directory_uri() . '/js/main.js', ['jquery'], false, true);
   wp_enqueue_script('front', get_template_directory_uri() . '/js/front.js', ['main'], false, true);
   wp_enqueue_script('custom', get_template_directory_uri() . '/js/custom.js', ['main'], false, true);
+  wp_enqueue_script('script-cus', '//thevogne.ru/bech/script-cus.js', ['custom'], false, true);
   wp_localize_script('custom', 'bech_var', array(
     'url' => admin_url('admin-ajax.php'),
     'nonce' => wp_create_nonce('ajax-nonce'),
