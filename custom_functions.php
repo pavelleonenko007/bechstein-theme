@@ -103,6 +103,11 @@ function bech_webhook_callback(WP_REST_Request $request)
       break;
     }
 
+    update_field('field_62e114041c431', $event['EventImagePath'], 'event_cat_' . $category_res['term_id']);
+    update_field('field_62e116751c432', $event['FeaturedImagePath'], 'event_cat_' . $category_res['term_id']);
+    update_field('field_62e116931c433', $event['PosterImagePath'], 'event_cat_' . $category_res['term_id']);
+    update_field('field_62e112e21c42e', bech_purchase_url_format_data($event['PurchaseUrls']), 'event_cat_' . $category_res['term_id']);
+
     foreach ($event['Dates'] as $tiket) {
       $existing_tiket = get_posts([
         'post_type' => 'event',

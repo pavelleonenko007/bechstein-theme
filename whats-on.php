@@ -16,7 +16,10 @@ Template name: What's on
   <?php get_header(); ?>
   <main class="wrapper">
     <section class="section wf-section">
-      <div class="breadcrumbs-line"><a href="#" class="breadcrumbs-link">Home</a><a href="/whats-on" aria-current="page" class="breadcrumbs-link w--current">what’s on</a></div>
+      <div class="breadcrumbs-line">
+        <a href="#" class="breadcrumbs-link">Home</a>
+        <a href="/whats-on" aria-current="page" class="breadcrumbs-link w--current">what’s on</a>
+      </div>
       <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
           <div class="catalog-row">
             <div class="filter-column">
