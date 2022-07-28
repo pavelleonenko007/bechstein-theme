@@ -224,3 +224,14 @@ function bech_get_ticket_times($post_id)
       return '–';
   }
 }
+
+function bech_get_custom_taxonomies($taxonomy)
+{
+  $terms = get_terms([
+    'taxonomy' => $taxonomy,
+    'hide_empty' => false,
+    'parent' => 0,
+  ]);
+
+  return $terms;
+}

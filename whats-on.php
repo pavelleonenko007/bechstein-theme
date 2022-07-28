@@ -33,103 +33,58 @@ Template name: What's on
                           <div>calendar</div>
                         </a>
                       </div>
-                      <div class="filters-bottom-div"><label class="w-checkbox cbx-mom">
+                      <div class="filters-bottom-div">
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox" name="checkbox" data-name="Checkbox" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx w-form-label" for="checkbox">today</span>
-                        </label><label class="w-checkbox cbx-mom">
+                        </label>
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx w-form-label" for="checkbox-2">tomorrow</span>
-                        </label><label class="w-checkbox cbx-mom">
+                        </label>
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx w-form-label" for="checkbox-2">this weekend</span>
-                        </label><label class="w-checkbox cbx-mom">
+                        </label>
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx w-form-label" for="checkbox-2">next week</span>
-                        </label></div>
-                    </div>
-                    <div class="filters-div">
-                      <div class="filters-top-div">
-                        <div class="p-20-30">Genre</div>
-                      </div>
-                      <div class="filters-bottom-div">
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">contemporary</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">minimalism</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">vocal music</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom hidden-item">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label>
-                        <a href="#" class="show-all-btn">show all</a>
-                      </div>
-                    </div>
-                    <div class="filters-div">
-                      <div class="filters-top-div">
-                        <div class="p-20-30">Instruments</div>
-                      </div>
-                      <div class="filters-bottom-div">
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">basoon</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">cello</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">choir</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">double bass</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">flute</span>
-                        </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">harp</span>
                         </label>
                       </div>
                     </div>
+                    <?php $genres = bech_get_custom_taxonomies('genres');
+
+                    if (!empty($genres)) : ?>
+                      <div class="filters-div">
+                        <div class="filters-top-div">
+                          <div class="p-20-30">Genre</div>
+                        </div>
+                        <div class="filters-bottom-div">
+                          <?php foreach ($genres as $genre) : ?>
+                            <label class="w-checkbox cbx-mom">
+                              <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                              <input type="checkbox" id="checkbox-3" name="<?php echo $genre->slug; ?>" data-name="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                              <span class="filter-cbx ischbx w-form-label" for="checkbox-3"><?php echo $genre->name; ?></span>
+                            </label>
+                          <?php endforeach; ?>
+                          <a href="#" class="show-all-btn">show all</a>
+                        </div>
+                      </div>
+                    <?php endif; ?>
+                    <?php $instruments = bech_get_custom_taxonomies('instruments');
+
+                    if (!empty($instruments)) : ?>
+                      <div class="filters-div">
+                        <div class="filters-top-div">
+                          <div class="p-20-30">Instruments</div>
+                        </div>
+                        <div class="filters-bottom-div">
+                          <?php foreach ($instruments as $instrument) : ?>
+                            <label class="w-checkbox cbx-mom">
+                              <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                              <input type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="<?php echo $instrument->slug; ?>" data-name="<?php echo $instrument->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                              <span class="filter-cbx ischbx w-form-label" for="checkbox-3"><?php echo $instrument->name; ?></span>
+                            </label>
+                          <?php endforeach; ?>
+                        </div>
+                      </div>
+                    <?php endif; ?>
                     <div class="filters-div">
                       <div class="filters-top-div">
                         <div class="p-20-30">Specials and Festivals</div>
