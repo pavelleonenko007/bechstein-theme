@@ -191,8 +191,8 @@ Template name: What's on
                             </div>
                             <div class="cms-li_content">
                               <div class="cms-li_time-div">
-                                <div class="p-30-45">14:00—16:00</div>
-                                <div class="p-17-25 italic">Including 1 interval</div>
+                                <div class="p-30-45"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
+                                <div class="p-17-25 italic"><?php echo get_field('time_details', $ticket->ID); ?></div>
                               </div>
                               <div class="p-20-30 title-event"><?php echo get_the_title($ticket); ?></div>
                               <p class="p-17-25"><?php echo get_field('event_subheader', $ticket->ID); ?></p>

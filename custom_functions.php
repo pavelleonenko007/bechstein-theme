@@ -207,3 +207,20 @@ function bech_get_ticket_from_to_price($post_id)
     return 'from £' . $from_price . ' to £' . $to_price;
   }
 }
+
+function bech_get_ticket_times($post_id)
+{
+  $start_time = get_field('time_start', $post_id);
+  $end_time = get_field('time_end', $post_id);
+
+  switch (true) {
+    case $start_time !== '' && $end_time !== '':
+      return $start_time . '—' . $end_time;
+    case $end_time === '':
+      return 'start from ' . $start_time;
+    case $start_time === '':
+      return 'ends at ' . $end_time;
+    default:
+      return '–';
+  }
+}
