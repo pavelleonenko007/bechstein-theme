@@ -24,7 +24,7 @@ Template name: What's on
           <div class="catalog-row">
             <div class="filter-column">
               <div class="filter-styk">
-                <form action="/search" class="search-filter w-form"><input type="search" class="search-line-input w-input" maxlength="256" name="query" placeholder="search by keyword…" id="search" required="" /><input type="submit" value="Search" class="search-line-btn w-button" /></form>
+                <?php get_search_form(); ?>
                 <div class="filters-form w-form">
                   <form id="email-form" name="email-form" data-name="Email Form" method="get">
                     <div class="filters-div">
