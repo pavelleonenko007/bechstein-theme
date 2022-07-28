@@ -47,53 +47,88 @@ Template name: What's on
                       <div class="filters-top-div">
                         <div class="p-20-30">Genre</div>
                       </div>
-                      <div class="filters-bottom-div"><label class="w-checkbox cbx-mom">
+                      <div class="filters-bottom-div">
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">contemporary</span>
-                        </label><label class="w-checkbox cbx-mom">
+                        </label>
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">minimalism</span>
-                        </label><label class="w-checkbox cbx-mom">
+                        </label>
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">vocal music</span>
-                        </label><label class="w-checkbox cbx-mom">
+                        </label>
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom">
+                        </label>
+                        <label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><label class="w-checkbox cbx-mom hidden-item">
+                        </label>
+                        <label class="w-checkbox cbx-mom hidden-item">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">baroque</span>
-                        </label><a href="#" class="show-all-btn">show all</a></div>
+                        </label>
+                        <a href="#" class="show-all-btn">show all</a>
+                      </div>
                     </div>
                     <div class="filters-div">
                       <div class="filters-top-div">
                         <div class="p-20-30">Instruments</div>
                       </div>
-                      <div class="filters-bottom-div"><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">basoon</span>
-                        </label><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">cello</span>
-                        </label><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">choir</span>
-                        </label><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">double bass</span>
-                        </label><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">flute</span>
-                        </label><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">harp</span>
-                        </label></div>
+                      <div class="filters-bottom-div">
+                        <label class="w-checkbox cbx-mom">
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">basoon</span>
+                        </label>
+                        <label class="w-checkbox cbx-mom">
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">cello</span>
+                        </label>
+                        <label class="w-checkbox cbx-mom">
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">choir</span>
+                        </label>
+                        <label class="w-checkbox cbx-mom">
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">double bass</span>
+                        </label>
+                        <label class="w-checkbox cbx-mom">
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">flute</span>
+                        </label>
+                        <label class="w-checkbox cbx-mom">
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx ischbx w-form-label" for="checkbox-3">harp</span>
+                        </label>
+                      </div>
                     </div>
                     <div class="filters-div">
                       <div class="filters-top-div">
@@ -131,184 +166,65 @@ Template name: What's on
                 <div>you choose &#x27;25 nov 2022—26 nov 2022.’ in filters.</div><a href="#" class="clearfilter-btn"> clear filters</a>
               </div>
               <div class="cms-tems">
-                <div class="cms-ul">
-                  <div class="cms-heading">
-                    <h2 class="h2-cms">25 november</h2>
-                    <h2 class="h2-cms day">Wednesday</h2>
-                  </div>
-                  <div class="cms-ul-events">
-                    <div class="cms-li">
-                      <div class="cms-li_mom-img"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img.jpg" loading="lazy" srcset="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img-p-500.jpeg 500w, https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img.jpg 540w" sizes="(max-width: 479px) 275px, (max-width: 991px) 190px, 270px" alt="" class="cms-li_img" /></div>
-                      <div class="cms-li_content">
-                        <div class="cms-li_time-div">
-                          <div class="p-30-45">14:00—16:00</div>
-                          <div class="p-17-25 italic">Including 1 interval</div>
-                        </div>
-                        <div class="p-20-30 title-event">Max Richter</div>
-                        <p class="p-17-25">excerpts from “The Leftovers” and “Infra”. A part of Winter Piano Festival</p>
-                        <div class="cms-li_tags-div"><a href="#" class="cms-li_tag-link">concert</a><a href="#" class="cms-li_tag-link">minimalism</a><a href="#" class="cms-li_tag-link">piano</a><a href="#" class="cms-li_tag-link">winter piano festival</a></div>
-                        <div class="cms-li_actions-div"><a bgline="1" href="#" class="booktickets-btn"><strong>Book tickets</strong></a><a href="#" class="readmore-btn w-inline-block">
-                            <div>read more</div>
-                            <div> →</div>
-                          </a></div>
-                        <div class="cms-li_price">from £100 to £320</div>
+                <?php $tickets = get_posts([
+                  'post_type' => 'event',
+                  'post_status' => 'publish',
+                  'orderby' => 'meta_value',
+                  'meta_key' => 'online_sale_start'
+                ]);
+
+                $sorted_tickets = bech_sort_tickets($tickets);
+
+                if (!empty($sorted_tickets)) :
+                  foreach ($sorted_tickets as $date => $tickets) : ?>
+                    <div class="cms-ul">
+                      <div class="cms-heading">
+                        <h2 class="h2-cms"><?php echo date('d F', $date); ?></h2>
+                        <h2 class="h2-cms day"><?php echo date('l', $date); ?></h2>
                       </div>
-                      <div class="cms-li_actions-div biger"><a bgline="1" href="#" class="booktickets-btn"><strong>Book tickets</strong></a>
-                        <div class="cms-li_price">from £100 to £320</div>
-                      </div>
-                    </div>
-                    <div class="cms-li">
-                      <div class="cms-li_mom-img"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2.jpg" loading="lazy" srcset="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2-p-500.jpeg 500w, https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2.jpg 540w" sizes="(max-width: 479px) 275px, (max-width: 991px) 190px, 270px" alt="" class="cms-li_img" />
-                        <div class="cms-li_sold-out-banner">Sold out</div>
-                      </div>
-                      <div class="cms-li_content">
-                        <div class="cms-li_time-div">
-                          <div class="p-30-45">14:00—16:00</div>
-                          <div class="p-17-25 italic">Including 1 interval</div>
-                        </div>
-                        <div class="p-20-30 title-event">Kronos Quartet</div>
-                        <p class="p-17-25">Steve Reich: WTC 9/11, Mallet Quartet, Dance Patterns</p>
-                        <div class="cms-li_tags-div"><a href="#" class="cms-li_tag-link">concert</a><a href="#" class="cms-li_tag-link">minimalism</a><a href="#" class="cms-li_tag-link">piano</a><a href="#" class="cms-li_tag-link">winter piano festival</a></div>
-                        <div class="cms-li_actions-div"><a bgline="2" href="#" class="booktickets-btn sold-out"><strong>SOLD OUT</strong></a><a href="#" class="readmore-btn w-inline-block">
-                            <div>read more</div>
-                            <div> →</div>
-                          </a></div>
-                      </div>
-                      <div class="cms-li_actions-div biger"><a bgline="2" href="#" class="booktickets-btn sold-out"><strong>SOLD OUT</strong></a></div>
-                    </div>
-                    <div class="cms-li">
-                      <div class="cms-li_mom-img"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2.jpg" loading="lazy" srcset="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2-p-500.jpeg 500w, https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2.jpg 540w" sizes="(max-width: 479px) 275px, (max-width: 991px) 190px, 270px" alt="" class="cms-li_img" />
-                        <div class="cms-li_sold-out-banner">cancelled</div>
-                      </div>
-                      <div class="cms-li_content">
-                        <div class="cms-li_time-div">
-                          <div class="p-30-45">14:00—16:00</div>
-                          <div class="p-17-25 italic">Including 1 interval</div>
-                        </div>
-                        <div class="p-20-30 title-event">Kronos Quartet</div>
-                        <p class="p-17-25">Steve Reich: WTC 9/11, Mallet Quartet, Dance Patterns</p>
-                        <div class="cms-li_tags-div"><a href="#" class="cms-li_tag-link">concert</a><a href="#" class="cms-li_tag-link">minimalism</a><a href="#" class="cms-li_tag-link">piano</a><a href="#" class="cms-li_tag-link">winter piano festival</a></div>
-                        <div class="cms-li_actions-div"><a bgline="2" href="#" class="booktickets-btn sold-out"><strong>event cancelled</strong></a><a href="#" class="readmore-btn w-inline-block">
-                            <div>read more</div>
-                            <div> →</div>
-                          </a></div>
-                        <div class="cms-li_price">find more</div>
-                      </div>
-                      <div class="cms-li_actions-div biger"><a bgline="2" href="#" class="booktickets-btn sold-out"><strong>event cancelled</strong></a>
-                        <div class="cms-li_price">find more</div>
+                      <div class="cms-ul-events">
+                        <?php foreach ($tickets as $ticket) :
+                          $category = get_the_terms($ticket->ID, 'event_cat')[0]; ?>
+                          <div class="cms-li">
+                            <div class="cms-li_mom-img">
+                              <img src="<?php echo get_field('feature_image', $category); ?>" alt="<?php echo get_the_title($ticket); ?>" class="cms-li_img" />
+                            </div>
+                            <div class="cms-li_content">
+                              <div class="cms-li_time-div">
+                                <div class="p-30-45">14:00—16:00</div>
+                                <div class="p-17-25 italic">Including 1 interval</div>
+                              </div>
+                              <div class="p-20-30 title-event"><?php echo get_the_title($ticket); ?></div>
+                              <p class="p-17-25"><?php echo get_field('event_subheader', $ticket->ID); ?></p>
+                              <div class="cms-li_tags-div">
+                                <?php $tags = wp_get_object_terms($ticket->ID, ['event_tag', 'genres', 'instruments']);
+                                foreach ($tags as $tag) : ?>
+                                  <a href="#" class="cms-li_tag-link"><?php echo $tag->name; ?></a>
+                                <?php endforeach; ?>
+                              </div>
+                              <div class="cms-li_actions-div">
+                                <a bgline="1" href="<?php echo get_field('purchase_urls', $category)[0]['link']; ?>" class="booktickets-btn">
+                                  <strong>Book tickets</strong>
+                                </a>
+                                <a href="<?php echo get_term_link($category); ?>" class="readmore-btn w-inline-block">
+                                  <div>read more</div>
+                                  <div> →</div>
+                                </a>
+                              </div>
+                              <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+                            </div>
+                            <div class="cms-li_actions-div biger">
+                              <a bgline="1" href="<?php echo get_field('purchase_urls', $category)[0]['link']; ?>" class="booktickets-btn">
+                                <strong>Book tickets</strong>
+                              </a>
+                              <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+                            </div>
+                          </div>
+                        <?php endforeach; ?>
                       </div>
                     </div>
-                    <div class="cms-li">
-                      <div class="cms-li_mom-img"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img.jpg" loading="lazy" srcset="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img-p-500.jpeg 500w, https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img.jpg 540w" sizes="(max-width: 479px) 275px, (max-width: 991px) 190px, 270px" alt="" class="cms-li_img" /></div>
-                      <div class="cms-li_content">
-                        <div class="cms-li_time-div">
-                          <div class="p-30-45">14:00—16:00</div>
-                          <div class="p-17-25 italic">Including 1 interval</div>
-                        </div>
-                        <div class="p-20-30 title-event">Max Richter</div>
-                        <p class="p-17-25">excerpts from “The Leftovers” and “Infra”. A part of Winter Piano Festival</p>
-                        <div class="cms-li_tags-div"><a href="#" class="cms-li_tag-link">concert</a><a href="#" class="cms-li_tag-link">minimalism</a><a href="#" class="cms-li_tag-link">piano</a><a href="#" class="cms-li_tag-link">winter piano festival</a></div>
-                        <div class="cms-li_actions-div"><a bgline="1" href="#" class="booktickets-btn priority"><strong>priority booking only</strong></a><a href="#" class="readmore-btn w-inline-block">
-                            <div>read more</div>
-                            <div> →</div>
-                          </a></div>
-                        <div class="cms-li_price">free sales from 26 october</div>
-                      </div>
-                      <div class="cms-li_actions-div biger"><a bgline="1" href="#" class="booktickets-btn priority"><strong>priority booking only</strong></a>
-                        <div class="cms-li_price">free sales from 26 october</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="cms-ul">
-                  <div class="cms-heading">
-                    <h2 class="h2-cms">25 november</h2>
-                    <h2 class="h2-cms day">Wednesday</h2>
-                  </div>
-                  <div class="cms-ul-events">
-                    <div class="cms-li">
-                      <div class="cms-li_mom-img"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img.jpg" loading="lazy" srcset="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img-p-500.jpeg 500w, https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img.jpg 540w" sizes="(max-width: 479px) 275px, (max-width: 991px) 190px, 270px" alt="" class="cms-li_img" /></div>
-                      <div class="cms-li_content">
-                        <div class="cms-li_time-div">
-                          <div class="p-30-45">14:00—16:00</div>
-                          <div class="p-17-25 italic">Including 1 interval</div>
-                        </div>
-                        <div class="p-20-30 title-event">Max Richter</div>
-                        <p class="p-17-25">excerpts from “The Leftovers” and “Infra”. A part of Winter Piano Festival</p>
-                        <div class="cms-li_tags-div"><a href="#" class="cms-li_tag-link">concert</a><a href="#" class="cms-li_tag-link">minimalism</a><a href="#" class="cms-li_tag-link">piano</a><a href="#" class="cms-li_tag-link">winter piano festival</a></div>
-                        <div class="cms-li_actions-div"><a bgline="1" href="#" class="booktickets-btn"><strong>Book tickets</strong></a><a href="#" class="readmore-btn w-inline-block">
-                            <div>read more</div>
-                            <div> →</div>
-                          </a></div>
-                        <div class="cms-li_price">from £100 to £320</div>
-                      </div>
-                      <div class="cms-li_actions-div biger"><a bgline="1" href="#" class="booktickets-btn"><strong>Book tickets</strong></a>
-                        <div class="cms-li_price">from £100 to £320</div>
-                      </div>
-                    </div>
-                    <div class="cms-li">
-                      <div class="cms-li_mom-img"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2.jpg" loading="lazy" srcset="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2-p-500.jpeg 500w, https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2.jpg 540w" sizes="(max-width: 479px) 275px, (max-width: 991px) 190px, 270px" alt="" class="cms-li_img" />
-                        <div class="cms-li_sold-out-banner">Sold out</div>
-                      </div>
-                      <div class="cms-li_content">
-                        <div class="cms-li_time-div">
-                          <div class="p-30-45">14:00—16:00</div>
-                          <div class="p-17-25 italic">Including 1 interval</div>
-                        </div>
-                        <div class="p-20-30 title-event">Kronos Quartet</div>
-                        <p class="p-17-25">Steve Reich: WTC 9/11, Mallet Quartet, Dance Patterns</p>
-                        <div class="cms-li_tags-div"><a href="#" class="cms-li_tag-link">concert</a><a href="#" class="cms-li_tag-link">minimalism</a><a href="#" class="cms-li_tag-link">piano</a><a href="#" class="cms-li_tag-link">winter piano festival</a></div>
-                        <div class="cms-li_actions-div"><a bgline="2" href="#" class="booktickets-btn sold-out"><strong>SOLD OUT</strong></a><a href="#" class="readmore-btn w-inline-block">
-                            <div>read more</div>
-                            <div> →</div>
-                          </a></div>
-                      </div>
-                      <div class="cms-li_actions-div biger"><a bgline="2" href="#" class="booktickets-btn sold-out"><strong>SOLD OUT</strong></a></div>
-                    </div>
-                    <div class="cms-li">
-                      <div class="cms-li_mom-img"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2.jpg" loading="lazy" srcset="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2-p-500.jpeg 500w, https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc617a652615c3_img2.jpg 540w" sizes="(max-width: 479px) 275px, (max-width: 991px) 190px, 270px" alt="" class="cms-li_img" />
-                        <div class="cms-li_sold-out-banner">cancelled</div>
-                      </div>
-                      <div class="cms-li_content">
-                        <div class="cms-li_time-div">
-                          <div class="p-30-45">14:00—16:00</div>
-                          <div class="p-17-25 italic">Including 1 interval</div>
-                        </div>
-                        <div class="p-20-30 title-event">Kronos Quartet</div>
-                        <p class="p-17-25">Steve Reich: WTC 9/11, Mallet Quartet, Dance Patterns</p>
-                        <div class="cms-li_tags-div"><a href="#" class="cms-li_tag-link">concert</a><a href="#" class="cms-li_tag-link">minimalism</a><a href="#" class="cms-li_tag-link">piano</a><a href="#" class="cms-li_tag-link">winter piano festival</a></div>
-                        <div class="cms-li_actions-div"><a bgline="2" href="#" class="booktickets-btn sold-out"><strong>event cancelled</strong></a><a href="#" class="readmore-btn w-inline-block">
-                            <div>read more</div>
-                            <div> →</div>
-                          </a></div>
-                        <div class="cms-li_price">find more</div>
-                      </div>
-                      <div class="cms-li_actions-div biger"><a bgline="2" href="#" class="booktickets-btn sold-out"><strong>event cancelled</strong></a>
-                        <div class="cms-li_price">find more</div>
-                      </div>
-                    </div>
-                    <div class="cms-li">
-                      <div class="cms-li_mom-img"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img.jpg" loading="lazy" srcset="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img-p-500.jpeg 500w, https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6191ff2615c2_img.jpg 540w" sizes="(max-width: 479px) 275px, (max-width: 991px) 190px, 270px" alt="" class="cms-li_img" /></div>
-                      <div class="cms-li_content">
-                        <div class="cms-li_time-div">
-                          <div class="p-30-45">14:00—16:00</div>
-                          <div class="p-17-25 italic">Including 1 interval</div>
-                        </div>
-                        <div class="p-20-30 title-event">Max Richter</div>
-                        <p class="p-17-25">excerpts from “The Leftovers” and “Infra”. A part of Winter Piano Festival</p>
-                        <div class="cms-li_tags-div"><a href="#" class="cms-li_tag-link">concert</a><a href="#" class="cms-li_tag-link">minimalism</a><a href="#" class="cms-li_tag-link">piano</a><a href="#" class="cms-li_tag-link">winter piano festival</a></div>
-                        <div class="cms-li_actions-div"><a bgline="1" href="#" class="booktickets-btn priority"><strong>priority booking only</strong></a><a href="#" class="readmore-btn w-inline-block">
-                            <div>read more</div>
-                            <div> →</div>
-                          </a></div>
-                        <div class="cms-li_price">free sales from 26 october</div>
-                      </div>
-                      <div class="cms-li_actions-div biger"><a bgline="1" href="#" class="booktickets-btn priority"><strong>priority booking only</strong></a>
-                        <div class="cms-li_price">free sales from 26 october</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <?php endforeach;
+                endif; ?>
               </div>
             </div>
           </div>

@@ -173,3 +173,37 @@ function bech_webhook_callback(WP_REST_Request $request)
 
   return $rest_response;
 }
+
+function bech_sort_tickets($tickets)
+{
+  $sorted_tickets = [];
+
+  foreach ($tickets as $ticket) {
+    // $ticket_date = get_field('online_sale_start', $ticket->ID);
+    $ticket_date = strtotime(get_post_meta($ticket->ID, 'online_sale_start', true));
+    $sorted_tickets[$ticket_date][] = $ticket;
+  }
+
+  ksort($sorted_tickets);
+
+  return $sorted_tickets;
+}
+
+function bech_get_ticket_from_to_price($post_id)
+{
+  $from_price = get_field('min_price', $post_id);
+  $to_price = get_field('max_price', $post_id);
+
+  if ($from_price === '' || $to_price === '') {
+    switch (true) {
+      case $from_price === '' && $to_price === '':
+        return 'No price yet';
+      case $from_price === '':
+        return "from £" . $to_price;
+      default:
+        return "from £" . $from_price;
+    }
+  } else {
+    return 'from £' . $from_price . ' to £' . $to_price;
+  }
+}
