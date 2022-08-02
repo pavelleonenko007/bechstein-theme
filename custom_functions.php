@@ -235,3 +235,41 @@ function bech_get_custom_taxonomies($taxonomy)
 
   return $terms;
 }
+
+/* What's on filters */
+
+add_action('rest_api_init', function () {
+  register_rest_route('tix-webhook/v1', '/whats-on-filter', array(
+    'methods'  => 'POST',
+    'callback' => 'bech_filter_whats_on_tickets',
+    'permission_callback' => '__return_true'
+  ));
+});
+
+function bech_filter_whats_on_tickets(WP_REST_Request $request)
+{
+  $params = $request->get_params();
+  $params_keys = array_keys($params);
+
+  // $tickets = get_posts([
+  //   'post_type' => 'event',
+  //   'post_status' => 'publish',
+  //   'orderby' => 'meta_value',
+  //   'meta_key' => 'online_sale_start'
+  // ]);
+
+  $rest_response = rest_ensure_response([
+    'code' => 'success',
+    'message' => 'Data succesfully updated',
+    'data' => [
+      'status' => 201,
+      'data' => $params_keys
+    ]
+  ]);
+
+  $rest_response->set_status(201);
+
+  return $rest_response;
+}
+
+/* What's on filters */

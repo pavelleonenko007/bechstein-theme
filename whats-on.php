@@ -16,6 +16,9 @@ Template name: What's on
   <?php get_header(); ?>
   <main class="wrapper">
     <section class="section wf-section">
+      <div class="breadcrumbs">
+        <?php if (function_exists('bcn_display')) bcn_display(); ?>
+      </div>
       <div class="breadcrumbs-line">
         <a href="#" class="breadcrumbs-link">Home</a>
         <a href="/whats-on" aria-current="page" class="breadcrumbs-link w--current">what’s on</a>
@@ -25,8 +28,8 @@ Template name: What's on
             <div class="filter-column">
               <div class="filter-styk">
                 <?php get_search_form(); ?>
-                <div class="filters-form w-form">
-                  <form id="email-form" name="email-form" data-name="Email Form" method="get">
+                <div class="filters-form">
+                  <form data-filter="form">
                     <div class="filters-div">
                       <div class="filters-top-div">
                         <div class="p-20-30">Time to go</div><a href="#" class="calendar-btn w-inline-block"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
@@ -35,21 +38,28 @@ Template name: What's on
                       </div>
                       <div class="filters-bottom-div">
                         <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox" name="checkbox" data-name="Checkbox" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx w-form-label" for="checkbox">today</span>
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox" name="checkbox" data-name="Checkbox" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx w-form-label" for="checkbox">today</span>
                         </label>
                         <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx w-form-label" for="checkbox-2">tomorrow</span>
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx w-form-label" for="checkbox-2">tomorrow</span>
                         </label>
                         <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx w-form-label" for="checkbox-2">this weekend</span>
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx w-form-label" for="checkbox-2">this weekend</span>
                         </label>
                         <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx w-form-label" for="checkbox-2">next week</span>
+                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                          <input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx w-form-label" for="checkbox-2">next week</span>
                         </label>
                       </div>
                     </div>
                     <?php $genres = bech_get_custom_taxonomies('genres');
-
                     if (!empty($genres)) : ?>
                       <div class="filters-div">
                         <div class="filters-top-div">
@@ -59,8 +69,8 @@ Template name: What's on
                           <?php foreach ($genres as $genre) : ?>
                             <label class="w-checkbox cbx-mom">
                               <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                              <input type="checkbox" id="checkbox-3" name="<?php echo $genre->slug; ?>" data-name="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
-                              <span class="filter-cbx ischbx w-form-label" for="checkbox-3"><?php echo $genre->name; ?></span>
+                              <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="<?php echo $genre->slug; ?>" data-name="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                              <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $genre->term_id; ?>"><?php echo $genre->name; ?></span>
                             </label>
                           <?php endforeach; ?>
                           <a href="#" class="show-all-btn">show all</a>
@@ -68,7 +78,6 @@ Template name: What's on
                       </div>
                     <?php endif; ?>
                     <?php $instruments = bech_get_custom_taxonomies('instruments');
-
                     if (!empty($instruments)) : ?>
                       <div class="filters-div">
                         <div class="filters-top-div">
@@ -78,8 +87,8 @@ Template name: What's on
                           <?php foreach ($instruments as $instrument) : ?>
                             <label class="w-checkbox cbx-mom">
                               <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                              <input type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="<?php echo $instrument->slug; ?>" data-name="<?php echo $instrument->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
-                              <span class="filter-cbx ischbx w-form-label" for="checkbox-3"><?php echo $instrument->name; ?></span>
+                              <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="<?php echo $instrument->slug; ?>" data-name="<?php echo $instrument->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                              <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
                             </label>
                           <?php endforeach; ?>
                         </div>
