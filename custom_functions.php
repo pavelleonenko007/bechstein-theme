@@ -240,7 +240,7 @@ function bech_get_custom_taxonomies($taxonomy)
 
 add_action('rest_api_init', function () {
   register_rest_route('tix-webhook/v1', '/whats-on-filter', array(
-    'methods'  => 'POST',
+    'methods'  => 'GET',
     'callback' => 'bech_filter_whats_on_tickets',
     'permission_callback' => '__return_true'
   ));

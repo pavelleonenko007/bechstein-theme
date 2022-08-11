@@ -1,3 +1,7 @@
+[property='itemListElement']:last-child a.breadcrumbs-link:after {
+  display: none;
+}
+
 html {
   font-size: 1px;
 }
