@@ -30,22 +30,20 @@ const initWhatsOnFilters = () => {
 
 initWhatsOnFilters();
 
-const receiveMessageFromTix = (event) => {
-  if (event.origin !== 'tix.bechsteinhall.func.agency') {
-    return;
-  }
-
-  console.log(event);
-};
-
 const initTixSessions = () => {
-  window.addEventListener('message', receiveMessageFromTix, false);
+  const tixIframe = document.getElementById('tix');
+  if (!tixIframe) return;
 
-  const $tixIframe = document.getElementById('tix');
-  const tixDomain = $tixIframe.getAttribute('src');
-  const tixWindow = $tixIframe.contentWindow;
+  tixIframe.addEventListener('load', (event) => {
+    event.target.contentWindow.postMessage(
+      'GetSession',
+      'https://tixbechsteinhall.func.agency/en/itix'
+    );
+  });
 
-  tixWindow.postMessage('GetSession', tixDomain);
+  window.addEventListener('message', (event) => {
+    console.log(event);
+  });
 };
 
 document.addEventListener('DOMContentLoaded', () => {
