@@ -60,4 +60,4 @@
     </div>
   </div>
 </div>
-<iframe src="https://tix.bechsteinhall.func.agency/en/itix" frameborder="0" id="tix"></iframe>
+<iframe src="https://tix.bechsteinhall.func.agency/en/itix" onload="(function(){ console.log('iFrame Loaded'); })();" frameborder="0" id="tix"></iframe>

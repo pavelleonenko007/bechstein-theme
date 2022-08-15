@@ -35,6 +35,7 @@ const initTixSessions = () => {
   if (!tixIframe) return;
 
   tixIframe.addEventListener('load', (event) => {
+    console.log('loaded Iframe');
     event.target.contentWindow.postMessage(
       'GetSession',
       'https://tixbechsteinhall.func.agency/en/itix'

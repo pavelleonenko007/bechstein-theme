@@ -84,8 +84,9 @@ function bech_webhook_callback(WP_REST_Request $request)
 
     $existing_category = get_terms([
       'taxonomy' => 'event_cat',
-      'name' => trim($event['Name']),
-      'get' => 'all'
+      'get' => 'all',
+      'meta_key' => 'event_group_id',
+      'meta_value' => $event['EventGroupId']
     ]);
 
     if ($existing_category[0]) {
@@ -103,6 +104,7 @@ function bech_webhook_callback(WP_REST_Request $request)
       break;
     }
 
+    update_field('field_62fa240659e1f', $event['EventGroupId'], 'event_cat_' . $category_res['term_id']);
     update_field('field_62e114041c431', $event['EventImagePath'], 'event_cat_' . $category_res['term_id']);
     update_field('field_62e116751c432', $event['FeaturedImagePath'], 'event_cat_' . $category_res['term_id']);
     update_field('field_62e116931c433', $event['PosterImagePath'], 'event_cat_' . $category_res['term_id']);
@@ -111,7 +113,8 @@ function bech_webhook_callback(WP_REST_Request $request)
     foreach ($event['Dates'] as $tiket) {
       $existing_tiket = get_posts([
         'post_type' => 'event',
-        's' => $tiket['Name']
+        'meta_key' => 'eventid',
+        'meta_value' => $tiket['EventId']
       ]);
 
       $tiket_args = [
@@ -140,20 +143,34 @@ function bech_webhook_callback(WP_REST_Request $request)
         break 2;
       }
 
+      $event_id_field = 'field_62fa1a2a5e949';
+      $sale_status_field = 'field_62fa1a3a5e94a';
+      $sold_out_field = 'field_62fa1aee5e94b';
+      $waiting_list_field = 'field_62fa1b775e94c';
+      $duration_field = 'field_62fa1cd95e94d';
       $online_sale_start_field = 'field_62d6800f618cb';
       $online_sale_end_field = 'field_62d68403618cc';
+      $online_date_start_field = 'field_62fa1f3b5e94f';
+      $online_date_end_field = 'field_62fa1f755e950';
       $min_price_field = 'field_62d68426618cd';
       $max_price_field = 'field_62d68451618ce';
-      $purchase_urlsfield = 'field_62d684c2618cf';
+      $purchase_urls_field = 'field_62d684c2618cf';
 
       /* Update Online Sale Start Field */
 
+      update_field($event_id_field, $tiket['EventId'], $ticket_id);
+      update_field($sale_status_field, $tiket['SaleStatus'], $ticket_id);
+      update_field($duration_field, $tiket['Duration'], $ticket_id);
+      update_field($sold_out_field, $tiket['SoldOut'], $ticket_id);
+      update_field($waiting_list_field, $tiket['WaitingList'], $ticket_id);
+      update_field($online_date_start_field, bech_format_date($tiket['StartDate'], 'Y-m-d H:i:s'), $ticket_id);
+      update_field($online_date_end_field, bech_format_date($tiket['EndDate'], 'Y-m-d H:i:s'), $ticket_id);
       update_field($online_sale_start_field, bech_format_date($tiket['OnlineSaleStart'], 'Y-m-d H:i:s'), $ticket_id);
       update_field($online_sale_end_field, bech_format_date($tiket['OnlineSaleEnd'], 'Y-m-d H:i:s'), $ticket_id);
       update_field($min_price_field, $tiket['MinPrice'], $ticket_id);
       update_field($max_price_field, $tiket['MaxPrice'], $ticket_id);
       update_field($max_price_field, $tiket['MaxPrice'], $ticket_id);
-      update_field($purchase_urlsfield, bech_purchase_url_format_data($tiket['PurchaseUrls']), $ticket_id);
+      update_field($purchase_urls_field, bech_purchase_url_format_data($tiket['PurchaseUrls']), $ticket_id);
     }
   }
 
