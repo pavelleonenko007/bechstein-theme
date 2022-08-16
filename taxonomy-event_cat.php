@@ -89,45 +89,52 @@ $category = get_queried_object();
 							</div>
 							<a href="#tickets" bgline="1" class="choisetckets-btn min"><strong>choose tickets</strong></a>
 						</div>
+						<?php
+						$args = [
+							'post_type' => 'event',
+							'post_status' => 'publish',
+							'numberposts' => -1,
+							'tax_query' => [
+								[
+									'taxonomy' => $category->taxonomy,
+									'field' => 'id',
+									'terms' => $category->term_id
+								]
+							]
+						];
+
+						$tickets = get_posts($args);
+
+						//var_dump($tickets); 
+						?>
+
 						<div class="right-event-col">
-							<div class="events-ticket">
-								<div class="events-ticket_left">
-									<div class="p-17-25 top-ticket">Thursday</div>
-									<div class="p-20-30">29 February</div>
-									<div class="p-20-30 w20">19:00–21:00</div>
-								</div>
-								<div class="events-ticket_right"><a bgline="1" href="#" class="booktickets-btn min"><strong>Book tickets</strong></a><a href="#" class="event-ticket_calendar-btn w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
-										<div>ADD TO CALENDAR</div>
-									</a></div>
-							</div>
-							<div class="events-ticket">
-								<div class="events-ticket_left">
-									<div class="p-17-25 top-ticket">Thursday</div>
-									<div class="p-20-30">29 February</div>
-									<div class="p-20-30 w20">19:00–21:00</div>
-								</div>
-								<div class="events-ticket_right"><a bgline="2" href="#" class="booktickets-btn sold-out min"><strong>SOLD OUT</strong></a></div>
-							</div>
-							<div class="events-ticket">
-								<div class="events-ticket_left">
-									<div class="p-17-25 top-ticket">Thursday</div>
-									<div class="p-20-30">29 February</div>
-									<div class="p-20-30 w20">19:00–21:00</div>
-								</div>
-								<div class="events-ticket_right"><a bgline="2" href="#" class="booktickets-btn sold-out min"><strong>event cancelled</strong></a></div>
-							</div>
-							<div class="events-ticket">
-								<div class="events-ticket_left">
-									<div class="p-17-25 top-ticket">Thursday</div>
-									<div class="p-20-30">29 February</div>
-									<div class="p-20-30 w20">19:00–21:00</div>
-								</div>
-								<div class="events-ticket_right"><a bgline="1" href="#" class="booktickets-btn priority min"><strong>priority booking only</strong></a>
-									<div class="event-ticket_calendar-btn">
-										<div>free sales from 26 october</div>
+							<?php foreach ($tickets as $ticket) : ?>
+								<div class="events-ticket">
+									<div class="events-ticket_left">
+										<div class="p-17-25 top-ticket"><?php echo date('l', strtotime(get_field('start_date', $ticket->ID))); ?></div>
+										<div class="p-20-30"><?php echo date('d F', strtotime(get_field('start_date', $ticket->ID))); ?></div>
+										<div class="p-20-30 w20"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
+									</div>
+									<div class="events-ticket_right">
+										<?php $sale_status = get_field('sale_status', $ticket->ID);
+										if ($sale_status['value'] === '0' || $sale_status['value'] === '1') :
+											$purchase_urls = get_field('purchase_urls', $ticket->ID); ?>
+											<a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" class="booktickets-btn min">
+												<strong>Book tickets</strong>
+											</a>
+											<a href="#" class="event-ticket_calendar-btn w-inline-block">
+												<img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
+												<div>ADD TO CALENDAR</div>
+											</a>
+										<?php else : ?>
+											<a bgline="2" href="#" class="booktickets-btn sold-out min">
+												<strong><?php echo $sale_status['label']; ?></strong>
+											</a>
+										<?php endif; ?>
 									</div>
 								</div>
-							</div>
+							<?php endforeach; ?>
 						</div>
 					</div>
 				</div>
