@@ -129,8 +129,18 @@ Template name: What's on
                 <?php $tickets = get_posts([
                   'post_type' => 'event',
                   'post_status' => 'publish',
+                  'numberposts' => 10,
                   'orderby' => 'meta_value',
-                  'meta_key' => 'online_sale_start'
+                  'meta_key' => 'start_date',
+                  'order' => 'ASC',
+                  'meta_query' => [
+                    [
+                      'key' => 'start_date',
+                      'value' => date('Y.m.d H:i'),
+                      'compare' => '>=',
+                      'type' => 'DATETIME'
+                    ]
+                  ]
                 ]);
 
                 $sorted_tickets = bech_sort_tickets($tickets);
@@ -139,8 +149,8 @@ Template name: What's on
                   foreach ($sorted_tickets as $date => $tickets) : ?>
                     <div class="cms-ul">
                       <div class="cms-heading">
-                        <h2 class="h2-cms"><?php echo date('d F', $date); ?></h2>
-                        <h2 class="h2-cms day"><?php echo date('l', $date); ?></h2>
+                        <h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
+                        <h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
                       </div>
                       <div class="cms-ul-events">
                         <?php foreach ($tickets as $ticket) :

@@ -163,10 +163,10 @@ function bech_webhook_callback(WP_REST_Request $request)
       update_field($duration_field, $tiket['Duration'], $ticket_id);
       update_field($sold_out_field, $tiket['SoldOut'], $ticket_id);
       update_field($waiting_list_field, $tiket['WaitingList'], $ticket_id);
-      update_field($online_date_start_field, bech_format_date($tiket['StartDate'], 'Y-m-d H:i:s'), $ticket_id);
-      update_field($online_date_end_field, bech_format_date($tiket['EndDate'], 'Y-m-d H:i:s'), $ticket_id);
-      update_field($online_sale_start_field, bech_format_date($tiket['OnlineSaleStart'], 'Y-m-d H:i:s'), $ticket_id);
-      update_field($online_sale_end_field, bech_format_date($tiket['OnlineSaleEnd'], 'Y-m-d H:i:s'), $ticket_id);
+      update_field($online_date_start_field, $tiket['StartDate'], $ticket_id);
+      update_field($online_date_end_field, $tiket['EndDate'], $ticket_id);
+      update_field($online_sale_start_field, $tiket['OnlineSaleStart'], $ticket_id);
+      update_field($online_sale_end_field, $tiket['OnlineSaleEnd'], $ticket_id);
       update_field($min_price_field, $tiket['MinPrice'], $ticket_id);
       update_field($max_price_field, $tiket['MaxPrice'], $ticket_id);
       update_field($max_price_field, $tiket['MaxPrice'], $ticket_id);
@@ -196,12 +196,10 @@ function bech_sort_tickets($tickets)
   $sorted_tickets = [];
 
   foreach ($tickets as $ticket) {
-    // $ticket_date = get_field('online_sale_start', $ticket->ID);
-    $ticket_date = strtotime(get_post_meta($ticket->ID, 'online_sale_start', true));
+    $date_time = new DateTime(get_field('start_date', $ticket->ID));
+    $ticket_date = $date_time->format('Y-m-d');
     $sorted_tickets[$ticket_date][] = $ticket;
   }
-
-  ksort($sorted_tickets);
 
   return $sorted_tickets;
 }
