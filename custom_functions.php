@@ -225,8 +225,10 @@ function bech_get_ticket_from_to_price($post_id)
 
 function bech_get_ticket_times($post_id)
 {
-  $start_time = get_field('time_start', $post_id);
-  $end_time = get_field('time_end', $post_id);
+  $start_date = new DateTime(get_field('start_date', $post_id));
+  $end_date = new DateTime(get_field('end_date', $post_id));
+  $start_time = $start_date->format('H:i');
+  $end_time = $end_date->format('H:i');
 
   switch (true) {
     case $start_time !== '' && $end_time !== '':

@@ -158,11 +158,16 @@ Template name: What's on
                           <div class="cms-li">
                             <div class="cms-li_mom-img">
                               <img src="<?php echo get_field('feature_image', $category); ?>" alt="<?php echo get_the_title($ticket); ?>" class="cms-li_img" />
+                              <?php $sale_status = get_field('sale_status', $ticket->ID);
+                              if ($sale_status['value'] !== '0') :
+                              ?>
+                                <div class="cms-li_sold-out-banner"><?php echo $sale_status['label']; ?></div>
+                              <?php endif; ?>
                             </div>
                             <div class="cms-li_content">
                               <div class="cms-li_time-div">
                                 <div class="p-30-45"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
-                                <div class="p-17-25 italic"><?php echo get_field('time_details', $ticket->ID); ?></div>
+                                <div class="p-17-25 italic"><?php echo get_field('duration', $ticket->ID); ?></div>
                               </div>
                               <div class="p-20-30 title-event"><?php echo get_the_title($ticket); ?></div>
                               <p class="p-17-25"><?php echo get_field('event_subheader', $ticket->ID); ?></p>
@@ -173,9 +178,15 @@ Template name: What's on
                                 <?php endforeach; ?>
                               </div>
                               <div class="cms-li_actions-div">
-                                <a bgline="1" href="<?php echo get_field('purchase_urls', $category)[0]['link']; ?>" class="booktickets-btn">
-                                  <strong>Book tickets</strong>
-                                </a>
+                                <?php if ($sale_status['value'] === '0' || $sale_status['value'] === '1') : ?>
+                                  <a bgline="1" href="<?php echo get_field('purchase_urls', $category)[0]['link']; ?>" class="booktickets-btn">
+                                    <strong>Book tickets</strong>
+                                  </a>
+                                <?php else : ?>
+                                  <a bgline="2" href="#" class="booktickets-btn sold-out">
+                                    <strong><?php echo $sale_status['label']; ?></strong>
+                                  </a>
+                                <?php endif; ?>
                                 <a href="<?php echo get_term_link($category); ?>" class="readmore-btn w-inline-block">
                                   <div>read more</div>
                                   <div> →</div>
