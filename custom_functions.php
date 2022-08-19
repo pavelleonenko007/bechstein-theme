@@ -312,7 +312,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 
   $tickets = get_posts($args);
   $sorted_tickets = bech_sort_tickets($tickets);
-
+  $data = "<p class='no-event-message'>There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>";
   ob_start();
   if (!empty($sorted_tickets)) :
     foreach ($sorted_tickets as $date => $tickets) :
@@ -376,8 +376,8 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
       </div>
 <?php
     endforeach;
+    $data = ob_get_clean();
   endif;
-  $data = ob_get_clean();
 
   $rest_response = rest_ensure_response([
     'code' => 'success',

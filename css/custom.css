@@ -411,6 +411,11 @@ p strong {
   display: block;
 }
 
+.no-event-message {
+  font-size: 30px;
+  line-height: 45px;
+}
+
 @media screen and (min-width: 1920px) {
   .cms-li_content .booktickets-btn,
   .cms-li_content .cms-li_price {
