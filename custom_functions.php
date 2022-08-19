@@ -266,25 +266,130 @@ add_action('rest_api_init', function () {
 function bech_filter_whats_on_tickets(WP_REST_Request $request)
 {
   $params = $request->get_params();
-  $params_keys = array_keys($params);
+  $selected_string = '';
 
-  // $tickets = get_posts([
-  //   'post_type' => 'event',
-  //   'post_status' => 'publish',
-  //   'orderby' => 'meta_value',
-  //   'meta_key' => 'online_sale_start'
-  // ]);
+  foreach ($params as $prop => $param) {
+    if ($prop === 'genre' || $prop === 'instrument') {
+      $selected_string .= is_array($param) ? implode(', ', $param) : $param;
+      $selected_string .= ', ';
+    }
+  }
+
+  $selected_string = mb_substr($selected_string, 0, -2);
+
+  $args = [
+    'post_type' => 'event',
+    'post_status' => 'publish',
+    'numberposts' => 10,
+    'orderby' => 'meta_value',
+    'meta_key' => 'start_date',
+    'order' => 'ASC',
+    'meta_query' => [
+      [
+        'key' => 'start_date',
+        'value' => date('Y.m.d H:i'),
+        'compare' => '>=',
+        'type' => 'DATETIME'
+      ]
+    ]
+  ];
+
+  if (isset($params['genre'])) {
+    $args['tax_query'][] = [
+      'taxonomy' => 'genres',
+      'field' => 'slug',
+      'terms' => $params['genre']
+    ];
+  }
+
+  if (isset($params['instrument'])) {
+    $args['tax_query'][] = [
+      'taxonomy' => 'instruments',
+      'field' => 'slug',
+      'terms' => $params['instrument']
+    ];
+  }
+
+  $tickets = get_posts($args);
+  $sorted_tickets = bech_sort_tickets($tickets);
+
+  ob_start();
+  if (!empty($sorted_tickets)) :
+    foreach ($sorted_tickets as $date => $tickets) :
+?>
+      <div class="cms-ul">
+        <div class="cms-heading">
+          <h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
+          <h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
+        </div>
+        <div class="cms-ul-events">
+          <?php foreach ($tickets as $ticket) :
+            $category = get_the_terms($ticket->ID, 'event_cat')[0]; ?>
+            <div class="cms-li">
+              <div class="cms-li_mom-img">
+                <img src="<?php echo get_field('feature_image', $category); ?>" alt="<?php echo get_the_title($ticket); ?>" class="cms-li_img" />
+                <?php $sale_status = get_field('sale_status', $ticket->ID);
+                if ($sale_status['value'] !== '0') :
+                ?>
+                  <div class="cms-li_sold-out-banner"><?php echo $sale_status['label']; ?></div>
+                <?php endif; ?>
+              </div>
+              <div class="cms-li_content">
+                <div class="cms-li_time-div">
+                  <div class="p-30-45"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
+                  <div class="p-17-25 italic"><?php echo get_field('duration', $ticket->ID); ?></div>
+                </div>
+                <div class="p-20-30 title-event"><?php echo get_the_title($ticket); ?></div>
+                <p class="p-17-25"><?php echo get_field('event_subheader', $ticket->ID); ?></p>
+                <div class="cms-li_tags-div">
+                  <?php $tags = wp_get_object_terms($ticket->ID, ['event_tag', 'genres', 'instruments']);
+                  foreach ($tags as $tag) : ?>
+                    <a href="#" class="cms-li_tag-link"><?php echo $tag->name; ?></a>
+                  <?php endforeach; ?>
+                </div>
+                <div class="cms-li_actions-div">
+                  <?php if ($sale_status['value'] === '0' || $sale_status['value'] === '1') : ?>
+                    <a bgline="1" href="<?php echo get_field('purchase_urls', $category)[0]['link']; ?>" class="booktickets-btn">
+                      <strong>Book tickets</strong>
+                    </a>
+                  <?php else : ?>
+                    <a bgline="2" href="#" class="booktickets-btn sold-out">
+                      <strong><?php echo $sale_status['label']; ?></strong>
+                    </a>
+                  <?php endif; ?>
+                  <a href="<?php echo get_term_link($category); ?>" class="readmore-btn w-inline-block">
+                    <div>read more</div>
+                    <div> →</div>
+                  </a>
+                </div>
+                <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+              </div>
+              <div class="cms-li_actions-div biger">
+                <a bgline="1" href="<?php echo get_field('purchase_urls', $category)[0]['link']; ?>" class="booktickets-btn">
+                  <strong>Book tickets</strong>
+                </a>
+                <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+<?php
+    endforeach;
+  endif;
+  $data = ob_get_clean();
 
   $rest_response = rest_ensure_response([
     'code' => 'success',
     'message' => 'Data succesfully updated',
     'data' => [
-      'status' => 201,
-      'data' => $params_keys
+      'status' => 200,
+      'html' => $data,
+      'selected_string' => $selected_string,
     ]
   ]);
 
-  $rest_response->set_status(201);
+  $rest_response->set_status(200);
 
   return $rest_response;
 }

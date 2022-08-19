@@ -65,7 +65,7 @@ Template name: What's on
                           <?php foreach ($genres as $genre) : ?>
                             <label class="w-checkbox cbx-mom">
                               <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                              <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="<?php echo $genre->slug; ?>" data-name="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                              <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="genre[]" data-name="<?php echo $genre->slug; ?>" value="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
                               <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $genre->term_id; ?>"><?php echo $genre->name; ?></span>
                             </label>
                           <?php endforeach; ?>
@@ -83,7 +83,7 @@ Template name: What's on
                           <?php foreach ($instruments as $instrument) : ?>
                             <label class="w-checkbox cbx-mom">
                               <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                              <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="<?php echo $instrument->slug; ?>" data-name="<?php echo $instrument->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                              <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="instrument[]" data-name="<?php echo $instrument->slug; ?>" value="<?php echo $instrument->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
                               <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
                             </label>
                           <?php endforeach; ?>
@@ -109,7 +109,9 @@ Template name: What's on
                         </label><label class="w-checkbox cbx-mom">
                           <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">minimalism</span>
                         </label></div>
-                    </div><input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
+                    </div>
+                    <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
+                    <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
                   </form>
                   <div class="w-form-done">
                     <div>Thank you! Your submission has been received!</div>
@@ -122,10 +124,10 @@ Template name: What's on
             </div>
             <div class="catalog-column">
               <h1 class="h1-75-90"><?php the_title(); ?></h1>
-              <div class="filters-line-text">
-                <div>you choose &#x27;25 nov 2022—26 nov 2022.’ in filters.</div><a href="#" class="clearfilter-btn"> clear filters</a>
+              <div id="selected-filters" class="filters-line-text">
+                <div>you choose &#x27;<span data-filter="choosen">25 nov 2022—26 nov 2022.</span>’ in filters.</div><a id="clear" href="#" class="clearfilter-btn"> clear filters</a>
               </div>
-              <div class="cms-tems">
+              <div id="tickets-container" class="cms-tems">
                 <?php $tickets = get_posts([
                   'post_type' => 'event',
                   'post_status' => 'publish',
