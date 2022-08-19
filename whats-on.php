@@ -22,13 +22,17 @@ Template name: What's on
       <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
           <div class="catalog-row">
             <div class="filter-column">
-              <div class="filter-styk">
-                <?php get_search_form(); ?>
+              <form data-filter="form" class="filter-styk">
+                <div class="search-filter">
+                  <input type="search" value="<?php echo get_search_query() ?>" class="search-line-input w-input" maxlength="256" name="s" placeholder="search by keyword…" id="s" required="" />
+                  <input type="submit" value="Search" class="search-line-btn w-button" />
+                </div>
                 <div class="filters-form">
-                  <form data-filter="form">
+                  <div>
                     <div class="filters-div">
                       <div class="filters-top-div">
-                        <div class="p-20-30">Time to go</div><a href="#" class="calendar-btn w-inline-block"><img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
+                        <div class="p-20-30">Time to go</div><a href="#" class="calendar-btn w-inline-block">
+                          <img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
                           <div>calendar</div>
                         </a>
                       </div>
@@ -112,7 +116,7 @@ Template name: What's on
                     </div>
                     <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
                     <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
-                  </form>
+                  </div>
                   <div class="w-form-done">
                     <div>Thank you! Your submission has been received!</div>
                   </div>
@@ -120,7 +124,7 @@ Template name: What's on
                     <div>Oops! Something went wrong while submitting the form.</div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
             <div class="catalog-column">
               <h1 class="h1-75-90"><?php the_title(); ?></h1>

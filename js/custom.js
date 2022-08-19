@@ -1,7 +1,9 @@
 const initWhatsOnFilters = () => {
   const $form = document.querySelector('[data-filter="form"]');
-  const $filterCheckboxes = Array.from(
-    $form?.querySelectorAll('[data-filter="checkbox"]') || []
+  const $filterFields = Array.from(
+    $form?.querySelectorAll(
+      'input:not([type="hidden"]):not([type="submit"])'
+    ) || []
   );
   const showSelectedFilters = (selectedString = '') => {
     const selectedBlock = document.getElementById('selected-filters');
@@ -55,15 +57,15 @@ const initWhatsOnFilters = () => {
     clearButton?.addEventListener('click', (event) => {
       $form.reset();
       handleChange();
-      // $($filterCheckboxes).change();
+      // $($filterFields).change();
       // $form.querySelector('[type="submit"]').click();
     });
   };
 
   initClearFiltersButton();
-  for (let i = 0; i < $filterCheckboxes.length; i++) {
-    const $checkbox = $filterCheckboxes[i];
-    $checkbox.addEventListener('change', handleChange);
+  for (let i = 0; i < $filterFields.length; i++) {
+    const $field = $filterFields[i];
+    $field.addEventListener('change', handleChange);
     // $($checkbox).change(handleChange);
   }
 };

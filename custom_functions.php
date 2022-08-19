@@ -266,6 +266,21 @@ add_action('rest_api_init', function () {
 function bech_filter_whats_on_tickets(WP_REST_Request $request)
 {
   $params = $request->get_params();
+
+  if (!wp_verify_nonce($params['bech_filter_nonce'], 'bech_filter_nonce_action')) {
+    $rest_response = rest_ensure_response([
+      'code' => 'fail',
+      'message' => 'Something goes wrong',
+      'data' => [
+        'status' => 400
+      ]
+    ]);
+
+    $rest_response->set_status(400);
+
+    return $rest_response;
+  }
+
   $selected_string = '';
 
   foreach ($params as $prop => $param) {
@@ -308,6 +323,10 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
       'field' => 'slug',
       'terms' => $params['instrument']
     ];
+  }
+
+  if (isset($params['s'])) {
+    $args['s'] = $params['s'];
   }
 
   $tickets = get_posts($args);
