@@ -416,6 +416,11 @@ p strong {
   line-height: 45px;
 }
 
+[type='checkbox']:checked + span {
+  border-color: rgba(3, 14, 20, 0.1);
+  background: #f1ead6;
+}
+
 @media screen and (min-width: 1920px) {
   .cms-li_content .booktickets-btn,
   .cms-li_content .cms-li_price {
