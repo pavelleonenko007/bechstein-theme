@@ -12,68 +12,8 @@ $category = get_queried_object();
 <?php get_template_part("header_block", ""); ?>
 
 <body <?php body_class("body"); ?>>
-	<div data-animation="default" data-collapse="none" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
-		<header class="header">
-			<div class="left-header"><a href="/" class="brand w-nav-brand"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6105552615ba_logo.svg" loading="lazy" alt class="logo"></a><a href="#" class="header-video-link w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc61a8292615b9_header-video-link.png" loading="lazy" alt></a></div>
-			<div class="right-header">
-				<nav role="navigation" class="nav-menu w-nav-menu"><a href="/whats-on" class="navbar-links w-nav-link">What’s on</a><a href="/your-visit" class="navbar-links w-nav-link">your Visit</a><a href="#" class="navbar-links no-mob w-nav-link">bechstein hall</a></nav>
-				<div class="w-nav-button">
-					<div class="w-icon-nav-menu"></div>
-				</div>
-				<div class="r-head-sec">
-					<div class="right-menuer"><a href="#" class="head-search-btn w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc61ba862615bb_search.svg" loading="lazy" alt class="ico-60"></a><a bgline="1" href="#" class="header-book-head-btn w-inline-block">
-							<div>Book tickets</div>
-						</a></div>
-					<div class="logreg"><a href="#" class="reglog-a">Log In</a>
-						<div> / </div><a href="#" class="reglog-a">Register</a>
-					</div><a href="#" class="b-menu w-inline-block">
-						<div class="b-line"></div>
-						<div class="b-line"></div>
-						<div class="b-line"></div>
-					</a>
-				</div>
-			</div>
-		</header>
-		<div class="burger-menu">
-			<div class="foo-mom">
-				<div class="footer-container top-container">
-					<div id="w-node-e1be876e-05a4-9245-628d-78602bcc79a4-2bcc79a3" class="footer-col _1 top-col"><a href="/whats-on" class="link-foo-big">What’s on?</a>
-						<div class="foo-menu-div"><a href="#" class="link-foo-small">Schedule</a><a href="#" class="link-foo-small">Priority booking</a></div>
-						<div class="foo-marger"></div><a href="/festival" class="link-foo-whats_last w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc612f532615c7_Rectangle2039.jpg" loading="lazy" alt class="img-cover foters">
-							<div class="text-block">Autumn Festival ‘22</div>
-						</a><a href="#" class="link-foo-small no-mob">Rachmaninov Days at Bechstein Hall</a>
-					</div>
-					<div id="w-node-e1be876e-05a4-9245-628d-78602bcc79ba-2bcc79a3" class="footer-col top-col center-col"><a href="/your-visit" class="link-foo-big">your visit</a>
-						<div class="foo-menu-div"><a href="/box-office" class="link-foo-small">Health and safety</a></div>
-						<div class="foo-marger"></div>
-						<div class="foo-menu-div"><a href="/box-office" class="link-foo-small">Ticketing Info</a><a href="#" class="link-foo-small">Getting here</a><a href="#" class="link-foo-small">Security & Rules</a><a href="#" class="link-foo-small">Contact Us</a></div>
-						<div class="foo-marger"></div>
-						<div class="foo-menu-div"><a href="/about" class="link-foo-small">Around Bechstein Hall</a><a href="#" class="link-foo-small">Tours</a><a href="#" class="link-foo-small">Eat & drink</a><a href="#" class="link-foo-small">Venue & seating plan</a></div>
-						<div class="foo-marger"></div>
-						<div class="foo-menu-div"><a href="#" class="link-foo-small">Accesible facilities</a><a href="#" class="link-foo-small">Accesibility statement</a><a href="/contacts" class="link-foo-small">Contacts</a></div>
-						<div class="foo-bottom no-pc"><a href="#" class="link-foo-small _2">Terms and Conditions</a><a href="#" class="link-foo-small last">Privacy policy</a></div>
-					</div>
-					<div id="w-node-e1be876e-05a4-9245-628d-78602bcc79dd-2bcc79a3" class="footer-col _3 top-col"><a href="/history" class="link-foo-big _2">History</a><a href="#" class="link-foo-big _2">friends</a><a href="/press-office" class="link-foo-big _2">Press</a><a href="#" class="link-foo-big _2">hire the hall</a></div>
-				</div>
-				<div class="footer-container bottom">
-					<div class="footer-col _1">
-						<div class="div-block-2">
-							<div class="p-20-27">(020) 1234 5678 support@bechsteinhall.com London, W1U 2RJ, 22–28 Wigmore St.</div>
-						</div>
-						<div class="foo-soc-line"><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a></div>
-					</div>
-					<div class="footer-col no-mob">
-						<div class="foo-bottom nz"><a href="#" class="link-foo-small _2">Terms and Conditions</a><a href="#" class="link-foo-small last">Privacy policy</a></div>
-					</div>
-					<div class="footer-col _3">
-						<div class="foo-bottomer">
-							<div>© 2022, Bechstein Hall</div><a href="#" class="funk-link">Website made by Func. ↗</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<?php wp_body_open(); ?>
+	<?php get_header(); ?>
 	<main class="wrapper">
 		<section class="section wf-section">
 			<div class="head-event-container single-page">
@@ -85,9 +25,11 @@ $category = get_queried_object();
 								<?php echo $category->name; ?>
 							</h1>
 							<div class="p-25-40">
-								<?php echo get_field('event_subheader') ?>
+								<?php echo $category->description; ?>
 							</div>
-							<a href="#tickets" bgline="1" class="choisetckets-btn min"><strong>choose tickets</strong></a>
+							<a href="#tickets" bgline="1" class="choisetckets-btn min">
+								<strong>choose tickets</strong>
+							</a>
 						</div>
 						<?php
 						$args = [
@@ -134,7 +76,8 @@ $category = get_queried_object();
 										<?php endif; ?>
 									</div>
 								</div>
-							<?php endforeach; ?>
+							<?php endforeach;
+							unset($ticket); ?>
 						</div>
 					</div>
 				</div>
@@ -145,14 +88,9 @@ $category = get_queried_object();
 				<div class="event-row_left-col">
 					<div class="event-row_left-info">
 						<div class="evetn-left-contnt-div">
-							<div class="event-avatar"><img src="<?php $field = get_field('small_image');
-																									if (isset($field['url'])) {
-																										echo ($field['url']);
-																									} elseif (is_numeric($field)) {
-																										echo (wp_get_attachment_image_url($field, 'full'));
-																									} else {
-																										echo ($field);
-																									} ?>" loading="lazy" alt="<?php echo esc_attr($field['alt']); ?>" class="img-cover" title="<?php echo pathinfo($field['filename'])['filename'] !== $field['title'] ? esc_attr($field['title']) : ''; ?>"></div>
+							<div class="event-avatar">
+								<img src="<?php echo get_field('event_image', $category); ?>" />
+							</div>
 							<div>
 								<div class="p-35-45 no-mpb">
 									<?php the_title(); ?>
@@ -166,7 +104,8 @@ $category = get_queried_object();
 										$term_query_total = count($term_query);
 										$term_query_counter = 0;
 										foreach ($term_query as $term) {
-											$term_query_counter++; ?><a href="<?php echo get_term_link($term->term_id, $term->taxonomy); ?>" class="cms-li_tag-link"><?php echo $term->name ?></a>
+											$term_query_counter++; ?>
+											<a href="<?php echo get_term_link($term->term_id, $term->taxonomy); ?>" class="cms-li_tag-link"><?php echo $term->name ?></a>
 											<?php if ($term_query_counter != $term_query_total) { ?>
 									<?php }
 										}
@@ -180,26 +119,24 @@ $category = get_queried_object();
 						</div>
 						<div class="tikets-pc">
 							<div>
-								<div class="events-ticket">
-									<div class="events-ticket_left">
-										<div class="p-17-25 top-ticket _2">Thursday</div>
-										<div class="p-20-30 w20 m30">29 February</div>
-										<div class="p-20-30 w20">19:00–21:00</div>
+								<?php foreach ($tickets as $ticket) : ?>
+									<div class="events-ticket">
+										<div class="events-ticket_left">
+											<div class="p-17-25 top-ticket _2"><?php echo date('l', strtotime(get_field('start_date', $ticket->ID))); ?></div>
+											<div class="p-20-30 w20 m30"><?php echo date('d F', strtotime(get_field('start_date', $ticket->ID))); ?></div>
+											<div class="p-20-30 w20"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
+										</div>
+										<div class="events-ticket_right">
+											<a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" target="_blank" class="booktickets-btn min left-side">
+												<strong>Book tickets</strong>
+											</a>
+											<a href="#" class="event-ticket_calendar-btn min w-inline-block">
+												<img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
+												<div>ADD TO CALENDAR</div>
+											</a>
+										</div>
 									</div>
-									<div class="events-ticket_right"><a bgline="1" href="#" target="_blank" class="booktickets-btn min left-side"><strong>Book tickets</strong></a><a href="#" class="event-ticket_calendar-btn min w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
-											<div>ADD TO CALENDAR</div>
-										</a></div>
-								</div>
-								<div class="events-ticket">
-									<div class="events-ticket_left">
-										<div class="p-17-25 top-ticket _2">Thursday</div>
-										<div class="p-20-30 w20 m30">29 February</div>
-										<div class="p-20-30 w20">19:00–21:00</div>
-									</div>
-									<div class="events-ticket_right"><a bgline="1" href="#" class="booktickets-btn min left-side"><strong>Book tickets</strong></a><a href="#" class="event-ticket_calendar-btn min w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
-											<div>ADD TO CALENDAR</div>
-										</a></div>
-								</div>
+								<?php endforeach; ?>
 							</div>
 							<div class="info-right-side-bottom">
 								<div>Tickets information</div>

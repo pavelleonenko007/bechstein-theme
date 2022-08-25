@@ -89,6 +89,10 @@ const initTixSessions = () => {
   });
 };
 
+window.addEventListener('load', () => {
+  $('#date-picker').datepicker();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   initTixSessions();
 });

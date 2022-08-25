@@ -4,6 +4,8 @@ function bech_add_scripts()
 {
   wp_enqueue_style('custom', get_template_directory_uri() . '/css/custom.css', ['main'], rand());
   wp_enqueue_style('style-css', '//thevogne.ru/bech/style-cus.css', ['custom'], rand());
+  wp_enqueue_script('jquery-ui-core');
+  wp_enqueue_script('jquery-ui-datepicker');
   wp_enqueue_script('main', get_template_directory_uri() . '/js/main.js', ['jquery'], false, true);
   wp_enqueue_script('front', get_template_directory_uri() . '/js/front.js', ['main'], false, true);
   wp_enqueue_script('custom', get_template_directory_uri() . '/js/custom.js', ['main'], false, true);

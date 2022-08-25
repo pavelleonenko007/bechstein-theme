@@ -416,6 +416,29 @@ p strong {
   line-height: 45px;
 }
 
+#date-picker,
+.hasDatepicker {
+  width: 100px;
+  min-width: unset;
+  border: none;
+  color: #030e14;
+  font-size: 15rem;
+  line-height: 25rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+#date-picker::placeholder,
+.hasDatepicker::placeholder {
+  color: #030e14;
+}
+
+.calendar-btn:hover #date-picker::placeholder,
+.calendar-btn:hover .hasDatepicker::placeholder {
+  color: #dcca99;
+}
+
 [type='checkbox']:checked + span {
   border-color: rgba(3, 14, 20, 0.1);
   background: #f1ead6;

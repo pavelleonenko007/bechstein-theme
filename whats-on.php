@@ -31,9 +31,11 @@ Template name: What's on
                   <div>
                     <div class="filters-div">
                       <div class="filters-top-div">
-                        <div class="p-20-30">Time to go</div><a href="#" class="calendar-btn w-inline-block">
+                        <div class="p-20-30">Time to go</div>
+                        <a href="#" class="calendar-btn w-inline-block">
                           <img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
-                          <div>calendar</div>
+                          <input type="text" id="date-picker" placeholder="Calendar">
+                          <!-- <div>calendar</div> -->
                         </a>
                       </div>
                       <div class="filters-bottom-div">
