@@ -93,24 +93,21 @@ $category = get_queried_object();
 							</div>
 							<div>
 								<div class="p-35-45 no-mpb">
-									<?php the_title(); ?>
+									<?php echo $category->name; ?>
 								</div>
 								<div class="p-17-25 no-mob">
-									<?php echo get_field('event_subheader') ?>
+									<?php echo $category->description; ?>
 								</div>
 								<div class="cms-li_tags-div in-left">
-									<?php $term_query = get_the_terms(get_the_ID(), "event_tag");
-									if (is_array($term_query)) {
-										$term_query_total = count($term_query);
-										$term_query_counter = 0;
-										foreach ($term_query as $term) {
-											$term_query_counter++; ?>
+									<?php
+
+									if (!empty($tickets)) :
+										$term_query = wp_get_object_terms($tickets[0]->ID, ['event_tag', 'genres', 'instruments']);
+										foreach ($term_query as $term) : ?>
 											<a href="<?php echo get_term_link($term->term_id, $term->taxonomy); ?>" class="cms-li_tag-link"><?php echo $term->name ?></a>
-											<?php if ($term_query_counter != $term_query_total) { ?>
-									<?php }
-										}
-									}
-									unset($term_query); ?>
+									<?php endforeach;
+										unset($term_query);
+									endif; ?>
 								</div>
 								<div class="p-17-25 italic">
 									<?php echo get_field('duration_info') ?>
@@ -146,6 +143,112 @@ $category = get_queried_object();
 					</div>
 				</div>
 				<div class="event-row_right-col">
+					<?php $content_blocks = get_field('content_blocks', $category);
+
+					foreach ($content_blocks as $content_block) : ?>
+						<?php if ($content_block['acf_fc_layout'] === 'alert_block') :
+							$link = $content_block['link'];
+							$link_html = $link['url'] ? '<a href="' . $link['url'] . '">' . $link['link_text'] . '</a>' : ''; ?>
+							<div class="ui_alert-block w-richtext">
+								<p><?php echo $content_block['text']; ?> <?php echo $link_html; ?></p>
+							</div>
+						<?php elseif ($content_block['acf_fc_layout'] === 'paragraph') : ?>
+							<div class="ui_text-block w-richtext">
+								<?php echo $content_block['paragraph']; ?>
+							</div>
+						<?php elseif ($content_block['acf_fc_layout'] === 'programme_columns') : ?>
+							<div class="ui_program-row">
+								<?php $columns = $content_block['columns'];
+								foreach ($columns as $column) : ?>
+									<div id="w-node-fa9df372-dff5-74be-646a-834100e2033a-92261598" class="ui_program-col">
+										<h2 class="h2-35-45">
+											<?php echo $column['column_title']; ?>
+										</h2>
+										<?php $list = $column['column_list'];
+										if (!empty($list)) : ?>
+											<div class="ui_program-core">
+												<?php foreach ($list as $list_item) : ?>
+													<div class="ui_program-item">
+														<div class="p-20-30">
+															<?php echo $list_item['list_title']; ?>
+														</div>
+														<div class="p-17-25 italic">
+															<?php echo $list_item['list_subtitle']; ?>
+														</div>
+													</div>
+												<?php endforeach; ?>
+											</div>
+										<?php endif; ?>
+									</div>
+								<?php endforeach; ?>
+							</div>
+						<?php elseif ($content_block['acf_fc_layout'] === 'watch_and_listen') : ?>
+							<h2 class="h2-35-45">
+								<?php echo $content_block['heading']; ?>
+							</h2>
+							<?php
+							$videos = $content_block['videos'];
+							foreach ($videos as $video) : ?>
+								<a href="#" class="ui-event-link w-inline-block w-lightbox">
+									<div class="ui-event-link_img-mom">
+										<?php echo preg_replace('/(width|height)=\"(\d+)\"/', '', wp_get_attachment_image(
+											$video['poster']['ID'],
+											'medium',
+											false,
+											[
+												'class' => 'ui-event-link_img'
+											]
+										)); ?>
+										<!-- <img src="" loading="lazy" alt class="play-ico-24"> -->
+									</div>
+									<div class="vert">
+										<div class="p-25-40"><?php echo $video['video_title']; ?></div>
+										<div class="p-17-25 italic"><?php echo $video['video_description']; ?></div>
+									</div>
+									<?php
+									$json = [];
+									$json['group'] = $content_block['heading'];
+									$json['items'][] = [
+										'url' => $video['video_link'],
+										'originalUrl' => $video['video_link'],
+										'html' => '<iframe width="940" height="528" src="https://www.youtube.com/embed/' . bech_get_youtube_video_id_from_link($video['video_link']) . '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+										'thumbnailUrl' => wp_get_attachment_image_url($video['poster']['ID'], 'full'),
+										'width' => 940,
+										'height' => 528,
+										'type' => 'video'
+									];
+									?>
+									<script class="w-json" type="application/json">
+										<?php echo json_encode($json, JSON_UNESCAPED_SLASHES); ?>
+									</script>
+								</a>
+							<?php endforeach; ?>
+						<?php elseif ($content_block['acf_fc_layout'] === 'dropdowns_block') : ?>
+							<h2 class="h2-35-45">
+								<?php echo $content_block['heading']; ?>
+							</h2>
+							<?php $dropdowns = $content_block['dropdowns'];
+							foreach ($dropdowns as $dropdown) : ?>
+								<div class="ui-drop-container">
+									<div class="ui-drop-container_btn">
+										<div class="p-20-30">
+											<?php echo $dropdown['dropdown_title']; ?>
+										</div>
+										<div class="ui-drop-container_ico-mom">
+											<div class="ui-drop-container_ico-mom_down">→</div>
+											<div class="ui-drop-container_ico-mom_top">→</div>
+										</div>
+									</div>
+									<div class="ui-drop-container_content">
+										<p class="p-17-25">
+											<?php echo $dropdown['dropdown_content']; ?>
+										</p>
+									</div>
+								</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					<?php endforeach;
+					?>
 					<?php if (get_field('show_alert_box')) { ?>
 						<div>
 							<div class="ui_alert-block w-richtext">
@@ -214,6 +317,7 @@ $category = get_queried_object();
 							<?php } ?>
 						</div>
 					</div>
+
 					<h2 class="h2-35-45">
 						<?php echo get_field('watch_and_listen_header') ?>
 					</h2>
@@ -228,7 +332,8 @@ $category = get_queried_object();
 								global $loop_id;
 								$loop_index++;
 								$loop_id++;
-								the_row(); ?><a href="#" class="ui-event-link w-inline-block w-lightbox">
+								the_row(); ?>
+								<a href="#" class="ui-event-link w-inline-block w-lightbox">
 									<div class="ui-event-link_img-mom"><img src="<?php $field = get_sub_field('video_cover');
 																																if (isset($field['url'])) {
 																																	echo ($field['url']);

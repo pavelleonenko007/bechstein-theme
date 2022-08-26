@@ -429,6 +429,11 @@ p strong {
   text-transform: uppercase;
 }
 
+.event-avatar > img {
+  height: 100%;
+  object-fit: cover;
+}
+
 #date-picker::placeholder,
 .hasDatepicker::placeholder {
   color: #030e14;

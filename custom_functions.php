@@ -416,3 +416,9 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 }
 
 /* What's on filters */
+
+function bech_get_youtube_video_id_from_link($link = '')
+{
+  preg_match('/watch\?v=(.+)/', $link, $matches);
+  return $matches[1];
+}
