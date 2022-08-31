@@ -1,0 +1,9 @@
+[] Скопировать js и css из песочницы, чтобы сохранить корзину
+[] Страница Your Visit
+[] Страница Bechstein hall 
+[] Страница History
+[] Страница Friends
+[] страница Press
+[] Single Press
+[] Header
+[] Footer

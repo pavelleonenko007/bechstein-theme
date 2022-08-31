@@ -449,6 +449,39 @@ p strong {
   background: #f1ead6;
 }
 
+.slider-wvwnts {
+  width: 100%;
+}
+
+.wo-slider {
+  position: relative;
+  width: 100%;
+  z-index: 10;
+}
+
+.wo-slide {
+  padding-right: 20rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  user-select: none;
+}
+
+.wo-slide img {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.wo-slider--ready .wo-slide {
+  transition: all 0.2s ease-in-out;
+}
+
+.wo-slider--dragging .wo-slide {
+  transition: none;
+}
+
 @media screen and (min-width: 1920px) {
   .cms-li_content .booktickets-btn,
   .cms-li_content .cms-li_price {

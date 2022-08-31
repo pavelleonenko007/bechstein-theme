@@ -910,8 +910,8 @@ Template name: Copy of Bechstein Hall
 						</div>
 						<div class="slider-wvwnts-home">
 							<div class="slider-wvwnts">
-								<div class="slider-wvwnts_mask">
-									<div class="slider-wvwnts_slide">
+								<div class="slider-wvwnts_mask wo-slider">
+									<div class="slider-wvwnts_slide wo-slider_item wo-slide">
 										<div class="link-block">
 											<div class="slider-wvwnts_top"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6103852615c8_img-event.jpg" loading="eager" alt class="img-cover">
 												<div class="slider-wvwnts_top-cats"><a href="#" class="slider-wvwnts_top-cats_a">baroque</a><a href="#" class="slider-wvwnts_top-cats_a">piano</a></div>
@@ -923,7 +923,7 @@ Template name: Copy of Bechstein Hall
 											</div>
 										</div>
 									</div>
-									<div class="slider-wvwnts_slide">
+									<div class="slider-wvwnts_slide wo-slider_item wo-slide">
 										<div class="link-block">
 											<div class="slider-wvwnts_top"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6103852615c8_img-event.jpg" loading="eager" alt class="img-cover">
 												<div class="slider-wvwnts_top-cats"><a href="#" class="slider-wvwnts_top-cats_a">baroque</a><a href="#" class="slider-wvwnts_top-cats_a">piano</a></div>
@@ -935,7 +935,31 @@ Template name: Copy of Bechstein Hall
 											</div>
 										</div>
 									</div>
-									<div class="slider-wvwnts_slide">
+									<div class="slider-wvwnts_slide wo-slider_item wo-slide">
+										<div class="link-block">
+											<div class="slider-wvwnts_top"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6103852615c8_img-event.jpg" loading="eager" alt class="img-cover">
+												<div class="slider-wvwnts_top-cats"><a href="#" class="slider-wvwnts_top-cats_a">baroque</a><a href="#" class="slider-wvwnts_top-cats_a">piano</a></div>
+											</div>
+											<div class="slider-wvwnts_bottom">
+												<div class="p-20-30 w20">20 December, 22:00—00:00</div>
+												<div class="p-30-45 bold">Angela Hewitt</div>
+												<div class="p-17-25 home-card">Couperin, Mesian, Brahms</div><a bgline="1" href="#" class="booktickets-btn home-page"><strong>Book tickets</strong></a>
+											</div>
+										</div>
+									</div>
+									<div class="slider-wvwnts_slide wo-slider_item wo-slide">
+										<div class="link-block">
+											<div class="slider-wvwnts_top"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6103852615c8_img-event.jpg" loading="eager" alt class="img-cover">
+												<div class="slider-wvwnts_top-cats"><a href="#" class="slider-wvwnts_top-cats_a">baroque</a><a href="#" class="slider-wvwnts_top-cats_a">piano</a></div>
+											</div>
+											<div class="slider-wvwnts_bottom">
+												<div class="p-20-30 w20">20 December, 22:00—00:00</div>
+												<div class="p-30-45 bold">Angela Hewitt</div>
+												<div class="p-17-25 home-card">Couperin, Mesian, Brahms</div><a bgline="1" href="#" class="booktickets-btn home-page"><strong>Book tickets</strong></a>
+											</div>
+										</div>
+									</div>
+									<div class="slider-wvwnts_slide wo-slider_item wo-slide">
 										<div class="link-block">
 											<div class="slider-wvwnts_top"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6103852615c8_img-event.jpg" loading="eager" alt class="img-cover">
 												<div class="slider-wvwnts_top-cats"><a href="#" class="slider-wvwnts_top-cats_a">baroque</a><a href="#" class="slider-wvwnts_top-cats_a">piano</a></div>
