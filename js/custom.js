@@ -1,3 +1,70 @@
+class UserCart {
+  constructor(userData = {}) {
+    this._orders = userData.order?.items || [];
+    this._user = userData?.user || {};
+    this._profileUrl = userData?.profile || '#';
+    this._logoutUrl = 'https://tix.bechsteinhall.func.agency/en/logout/';
+    this._loginUrl = 'https://tix.bechsteinhall.func.agency/en/login/';
+
+    this._init();
+  }
+
+  setData(data = {}) {
+    this._orders = data?.order?.items || [];
+    this._user = data?.user || null;
+    this._profileUrl = data?.profile || '#';
+    document.querySelector('[data-account="container"]').remove();
+    this._setMarkup();
+  }
+
+  _setMarkup() {
+    const links = this._user?.email
+      ? `<a href="${this._profileUrl}" class="account__link">Profile</a>
+    <a href="${this._logoutUrl}" class="account__link">Log out</a>`
+      : `<a href="${this._loginUrl}" class="account__link">Log in</a>`;
+
+    const markup = `<div class="account" data-account="container">
+      <div class="account__cart cart">
+        <svg class="cart__bag" version="1.1" id="Capa_1" x="0px" y="0px"width="20px" height="20px" viewBox="0 0 502.714 502.715" style="enable-background:new 0 0 502.714 502.715;" xml:space="preserve">
+          <path d="M449.958,485.949l-32.375-327.957c-0.682-6.923-6.508-12.195-13.465-12.195h-60.545V92.289
+		C343.573,41.394,302.173,0,251.292,0c-50.887,0-92.282,41.395-92.282,92.289v53.509H98.458c-6.956,0-12.776,5.272-13.464,12.195
+		L52.433,487.852c-0.377,3.805,0.872,7.586,3.436,10.412c2.563,2.84,6.209,4.451,10.027,4.451h370.792c0.04,0,0.085,0,0.132,0
+		c7.473,0,13.529-6.062,13.529-13.527C450.348,488.064,450.216,486.982,449.958,485.949z M186.068,92.289
+		c0-35.963,29.259-65.23,65.223-65.23s65.223,29.268,65.223,65.23v53.509H186.068V92.289z M110.718,172.857h48.291v27.376
+		c0,7.464,6.059,13.528,13.53,13.528c7.472,0,13.529-6.064,13.529-13.528v-27.376h130.446v27.376
+		c0,7.464,6.058,13.528,13.528,13.528c7.472,0,13.529-6.064,13.529-13.528v-27.376h48.286l24.62,249.37H86.098L110.718,172.857z
+		 M80.825,475.66l2.603-26.373h335.727l2.603,26.373H80.825z"/>
+      </svg>
+        <div class="cart__counter">${this._orders.length}</div>
+      </div>
+      <div class="account__actions" data-account="actions">
+        ${links}
+      </div>
+    </div>`;
+
+    document.body.insertAdjacentHTML('beforeend', markup);
+  }
+
+  _clickHandler(event) {
+    if (event.target.closest('[data-account="container"]')) {
+      const target = event.target.closest('[data-account="container"]');
+
+      target.classList.toggle(
+        'account--open',
+        !target.classList.contains('account--open')
+      );
+    }
+  }
+
+  _init() {
+    this._setMarkup();
+    this._clickHandler = this._clickHandler.bind(this);
+    document.body.addEventListener('click', this._clickHandler);
+  }
+}
+
+window.tixCart = new UserCart();
+
 class WhatsOnSlider {
   constructor(data = []) {
     this._data = data;
@@ -227,16 +294,13 @@ const initTixSessions = () => {
   const tixIframe = document.getElementById('tix');
   if (!tixIframe) return;
 
-  tixIframe.addEventListener('load', (event) => {
-    console.log('loaded Iframe');
-    event.target.contentWindow.postMessage(
-      'GetSession',
-      'https://tixbechsteinhall.func.agency/en/itix'
-    );
-  });
+  tixIframe.contentWindow.postMessage(
+    'GetSession',
+    'https://tix.bechsteinhall.func.agency/en/itix'
+  );
 
   window.addEventListener('message', (event) => {
-    console.log(event);
+    window.tixCart.setData(event.data);
   });
 };
 
