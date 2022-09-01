@@ -148,7 +148,8 @@ class WhatsOnSlider {
   }
 
   dragging(x) {
-    this.currentIndex = this.startIndex + x;
+    this.currentIndex = this.startIndex - x;
+    console.log(this.currentIndex);
     this.setSlidesPosition();
   }
 
@@ -167,19 +168,19 @@ class WhatsOnSlider {
     this.deckSlides = [];
 
     this.slideNodes.forEach((slide, index) => {
-      if (index <= Math.floor(this._currentIndex + 2)) {
+      if (index >= Math.ceil(this._currentIndex)) {
         this.firstSlides.push(slide);
       } else {
-        this.deckSlides.push(slide);
+        this.deckSlides.unshift(slide);
       }
     });
 
-    const diff = this.currentIndex - Math.floor(this.currentIndex);
+    const diff = this.currentIndex - Math.ceil(this.currentIndex);
 
     this.firstSlides.forEach((slide, index) => {
       this.setSlideStyles(slide, {
         transform: `translate3d(${
-          this._slideSize.width * (this.firstSlides.length - (index + 1 - diff))
+          this._slideSize.width * (index - diff)
         }px, 0, 0)`,
         zIndex: '',
         opacity: '',
@@ -190,16 +191,14 @@ class WhatsOnSlider {
     this.deckSlides.forEach((slide, index) => {
       if (index < 2) {
         this.setSlideStyles(slide, {
-          zIndex: -(index + 1),
-          opacity: 1 - 0.2 * (index + 1 - diff),
-          transform: `translate3d(-${
-            this._slideSize.width * 0.05 * (index + 1 - diff)
-          }px, 0, 0) scale(${1 - 0.05 * (index + 1 - diff)})`,
           pointerEvents: 'none',
+          opacity: '',
+          transform: `translate3d(-${
+            this._slideSize.width * 0.05 * (index + 1 + diff)
+          }px, 0, 0) scale(${1 - 0.05 * (index + 1 + diff)})`,
         });
       } else {
         this.setSlideStyles(slide, {
-          opacity: 0,
           zIndex: -(index + 1),
         });
       }
