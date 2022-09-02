@@ -608,10 +608,10 @@ Template name: Copy of Bechstein Hall
 									</label>
 								</div>
 								<div class="calendar-devider"></div>
-								<input type="submit" value="Submit" data-wait="Please wait..." class="hidden w-button">
 								<div class="p-20-30 white">When would you like to visit?</div>
-								<div class="cal-slider">
-									<div class="top-slider-line">
+								<input id="date" type="hidden" name="start_date" value="<?php echo date('Y.m.d H:i'); ?>" />
+								<div id="calendar" class="cal-slider">
+									<!-- <div class="top-slider-line">
 										<div data-delay="4000" data-animation="slide" class="slider-month w-slider" data-autoplay="false" data-easing="ease" data-hide-arrows="false" data-disable-swipe="true" data-autoplay-limit="0" data-nav-spacing="3" data-duration="500" data-infinite="true">
 											<div class="slider-month_mask w-slider-mask">
 												<div class="w-slide">
@@ -898,8 +898,9 @@ Template name: Copy of Bechstein Hall
 											</div>
 											<div class="none w-slider-nav w-round"></div>
 										</div>
-									</div>
+									</div> -->
 								</div>
+								<input type="submit" value="Submit" data-wait="Please wait..." class="hidden w-button">
 							</form>
 							<div class="w-form-done">
 								<div>Thank you! Your submission has been received!</div>

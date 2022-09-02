@@ -1,3 +1,236 @@
+class BechCalendar {
+  constructor(containerId = '', options = {}) {
+    this.containerNode = document.getElementById(containerId);
+    if (!this.containerNode) {
+      return console.warn('There is no element to insert into');
+    }
+    this.options = {
+      parentElement: 'form',
+      onlyCurrentMonth: true,
+      inputSelector: '#date',
+      ...options,
+    };
+
+    this._months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    this._today = new Date();
+    this._num = 0;
+    this._chosenDate = this._today;
+
+    this.containerNode.innerHTML = this._getCalendarHTML();
+    this._setDate();
+
+    this.Prev = new Date(this._year, this._month - 1, 1);
+    if (this._month == 0) {
+      this.Prev = new Date(this._year - 1, 11, 1);
+    }
+    this.Prev.Days = new Date(
+      this.Prev.getFullYear(),
+      this.Prev.getMonth() + 1,
+      0
+    ).getDate();
+
+    this.Next = new Date(this._year, this._month + 1, 1);
+    if (this._month == 11) {
+      this.Next = new Date(this._year + 1, 0, 1);
+    }
+    this.Next.Days = new Date(
+      this.Next.getFullYear(),
+      this.Next.getMonth() + 1,
+      0
+    ).getDate();
+
+    this._handleButtonClick = this._handleButtonClick.bind(this);
+    this._handleBodyClick = this._handleBodyClick.bind(this);
+    this._setEvents();
+  }
+
+  get chosenDate() {
+    return this._chosenDate;
+  }
+
+  set chosenDate(dateString) {
+    const dateParts = dateString.split('.');
+    this._chosenDate = new Date(
+      Number(dateParts[0]),
+      Number(dateParts[1][1]),
+      Number(dateParts[2])
+    );
+  }
+
+  _setEvents() {
+    this.buttonNodes = this.containerNode.querySelectorAll(
+      '[data-type="prev"], [data-type="next"]'
+    );
+
+    this.buttonNodes.forEach((button) => {
+      button.addEventListener('click', this._handleButtonClick);
+    });
+
+    this.calendarBody.addEventListener('click', this._handleBodyClick);
+  }
+
+  _setDate() {
+    this._selectedDate = new Date();
+    this._selectedDate.setMonth(new Date().getMonth() + this._num);
+    this._month = this._selectedDate.getMonth();
+    this._day = this._selectedDate.getDate();
+    this._weekday = this._selectedDate.getDay();
+    this._year = this._selectedDate.getFullYear();
+    this.Days = new Date(this._year, this._month + 1, 0).getDate();
+    this.FirstDay = new Date(this._year, this._month, 1).getDay();
+    this.LastDay = new Date(this._year, this._month + 1, 0).getDay();
+
+    this._setArrayDays();
+    this._setMonthHTML();
+    this._setLabelsHTML();
+  }
+
+  _handleButtonClick(event) {
+    event.preventDefault();
+    const button = event.target.closest('button');
+    const { type } = button.dataset;
+
+    type === 'prev' ? this.prev() : this.next();
+    this._setDate();
+  }
+
+  _handleBodyClick(event) {
+    event.preventDefault();
+    const dayNode = event.target.closest('[data-date]');
+
+    if (!dayNode) return;
+
+    const { date } = dayNode.dataset;
+    const dateInput = document.querySelector(this.options.inputSelector);
+    const dateNodes = this.calendarBody.querySelectorAll('[data-date]');
+
+    dateInput.value = date;
+    this.chosenDate = date;
+
+    dateNodes.forEach((node) => node.classList.remove('wo-day--selected'));
+    dayNode.classList.add('wo-day--selected');
+
+    console.log(this._chosenDate);
+  }
+
+  next() {
+    this._num += 1;
+  }
+
+  prev() {
+    this._num -= 1;
+  }
+
+  _setArrayDays() {
+    this.arrayOfDays = [];
+    const cellsCount = this.FirstDay + this.Days + (6 - this.LastDay);
+    let dayNum = 1;
+
+    for (let index = 1; index < cellsCount; index++) {
+      if (index < this.FirstDay) {
+        this.arrayOfDays.push('');
+        continue;
+      }
+
+      if (dayNum > this.Days) {
+        if (this.options.onlyCurrentMonth) {
+          break;
+        }
+
+        dayNum = 1;
+      }
+
+      this.arrayOfDays.push(new Date(this._year, this._month, dayNum));
+      dayNum++;
+    }
+  }
+
+  _getFormattedDate(date) {
+    const formattedMonth =
+      date.getMonth() < 10 ? `0${date.getMonth()}` : date.getMonth().toString();
+    const formattedDay =
+      date.getDate() < 10 ? `0${date.getDate()}` : date.getDate().toString();
+    return `${date.getFullYear()}.${formattedMonth}.${formattedDay}`;
+  }
+
+  _setMonthHTML() {
+    const monthNode = this.containerNode.querySelector('[data-type="month"]');
+    monthNode.innerHTML = this._months[this._month];
+  }
+
+  _getCalendarHTML() {
+    return `<${this.options.parentElement} class="wo-calendar" data-type="calendar">
+      <div class="wo-calendar__header">
+        <button class="wo-calendar__button" data-type="prev">←</button>
+        <div class="wo-calendar__month" data-type="month"></div>
+        <button class="wo-calendar__button wo-calendar__button--right" data-type="next">→</button>
+      </div>
+      <div class="wo-calendar__body" data-type="body"></div>
+    </${this.options.parentElement}>`;
+  }
+
+  _setLabelsHTML() {
+    this.calendarBody = this.containerNode.querySelector('[data-type="body"]');
+    this.calendarBody.innerHTML = this.arrayOfDays
+      .map((day) =>
+        day
+          ? `<div 
+            class="wo-day ${
+              this._getFormattedDate(day) ===
+              this._getFormattedDate(this._today)
+                ? 'wo-day--today'
+                : ''
+            } ${
+              this._getFormattedDate(day) ===
+              this._getFormattedDate(this._chosenDate)
+                ? 'wo-day--selected'
+                : ''
+            }"
+              data-date="${this._getFormattedDate(day)}"
+            >
+            <div class="wo-day__label">${day.getDate()}</div>
+      
+    </div>`
+          : '<div class="wo-day"></div>'
+      )
+      .join('');
+  }
+}
+
+/* <input 
+        id="${this._getFormattedDate(day)}" 
+        type="radio" 
+        name="start_date"
+        class="wo-day__input visually-hidden" 
+        value="${this._getFormattedDate(day)}" 
+        ${
+          this._getFormattedDate(day) === this._getFormattedDate(this._today)
+            ? 'checked'
+            : ''
+        }
+      />
+      <label for="${this._getFormattedDate(
+        day
+      )}" class="wo-day__label">${day.getDate()}</label> */
+
+new BechCalendar('calendar', {
+  parentElement: 'div',
+  onlyCurrentMonth: true,
+});
+
 class UserCart {
   constructor(userData = {}) {
     this._orders = userData.order?.items || [];
