@@ -34,30 +34,32 @@ Template name: What's on
                         <div class="p-20-30">Time to go</div>
                         <a href="#" class="calendar-btn w-inline-block">
                           <img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
-                          <input type="text" id="date-picker" placeholder="Calendar">
-                          <!-- <div>calendar</div> -->
+                          <input type="text" id="filter-date" class="calendar-btn__input" placeholder="Calendar" name="time">
+                          <button class="calendar-btn__reset" data-type="reset">✕</button>
+                          <div class="calendar-btn__close">Close</div>
+                          <div id="filter-calendar" class="filter-calendar"></div>
                         </a>
                       </div>
                       <div class="filters-bottom-div">
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox" name="checkbox" data-name="Checkbox" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx w-form-label" for="checkbox">today</span>
+                        <label class="w-radio cbx-mom">
+                          <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
+                          <input type="radio" id="today" name="time" value="today" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx w-form-label" for="today">today</span>
                         </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx w-form-label" for="checkbox-2">tomorrow</span>
+                        <label class="w-radio cbx-mom">
+                          <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
+                          <input type="radio" id="tomorrow" name="time" value="tomorrow" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx w-form-label" for="tomorrow">tomorrow</span>
                         </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx w-form-label" for="checkbox-2">this weekend</span>
+                        <label class="w-radio cbx-mom">
+                          <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
+                          <input type="radio" id="weekend" name="time" value="weekend" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx w-form-label" for="weekend">this weekend</span>
                         </label>
-                        <label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                          <input type="checkbox" id="checkbox-2" name="checkbox-2" data-name="Checkbox 2" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx w-form-label" for="checkbox-2">next week</span>
+                        <label class="w-radio cbx-mom">
+                          <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
+                          <input type="radio" id="next-week" name="time" value="next-week" style="opacity:0;position:absolute;z-index:-1" />
+                          <span class="filter-cbx w-form-label" for="next-week">next week</span>
                         </label>
                       </div>
                     </div>

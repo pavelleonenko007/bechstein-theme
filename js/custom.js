@@ -8,6 +8,8 @@ class BechCalendar {
       parentElement: 'form',
       onlyCurrentMonth: true,
       inputSelector: '#date',
+      theme: 'dark',
+      callback: () => {},
       ...options,
     };
 
@@ -100,6 +102,7 @@ class BechCalendar {
 
   _handleButtonClick(event) {
     event.preventDefault();
+    event.stopPropagation();
     const button = event.target.closest('button');
     const { type } = button.dataset;
 
@@ -122,6 +125,8 @@ class BechCalendar {
 
     dateNodes.forEach((node) => node.classList.remove('wo-day--selected'));
     dayNode.classList.add('wo-day--selected');
+
+    this.options.callback();
 
     console.log(this._chosenDate);
   }
@@ -160,7 +165,9 @@ class BechCalendar {
 
   _getFormattedDate(date) {
     const formattedMonth =
-      date.getMonth() < 10 ? `0${date.getMonth()}` : date.getMonth().toString();
+      date.getMonth() + 1 < 10
+        ? `0${date.getMonth() + 1}`
+        : (date.getMonth() + 1).toString();
     const formattedDay =
       date.getDate() < 10 ? `0${date.getDate()}` : date.getDate().toString();
     return `${date.getFullYear()}.${formattedMonth}.${formattedDay}`;
@@ -172,7 +179,16 @@ class BechCalendar {
   }
 
   _getCalendarHTML() {
-    return `<${this.options.parentElement} class="wo-calendar" data-type="calendar">
+    const classes = [];
+    classes.push('wo-calendar');
+
+    if (this.options.theme === 'light') {
+      classes.push('wo-calendar--light');
+    }
+
+    return `<${this.options.parentElement} class="${classes.join(
+      ' '
+    )}" data-type="calendar">
       <div class="wo-calendar__header">
         <button class="wo-calendar__button" data-type="prev">←</button>
         <div class="wo-calendar__month" data-type="month"></div>
@@ -207,6 +223,12 @@ class BechCalendar {
           : '<div class="wo-day"></div>'
       )
       .join('');
+  }
+
+  reset() {
+    this._num = 0;
+    this._chosenDate = this._today;
+    this._setDate();
   }
 }
 
@@ -302,6 +324,10 @@ class WhatsOnSlider {
   constructor(data = []) {
     this._data = data;
     this.sliderContainerNode = document.querySelector('.wo-slider');
+
+    if (!this.sliderContainerNode) {
+      return;
+    }
 
     this.sliderContainerNode.innerHTML = this._getMarkup();
     this.slideNodes = this.sliderContainerNode.querySelectorAll('.wo-slide');
@@ -448,6 +474,8 @@ class WhatsOnSlider {
   }
 }
 
+const initCalendarFilterButton = () => {};
+
 const initWhatsOnFilters = () => {
   const $form = document.querySelector('[data-filter="form"]');
   const $filterFields = Array.from(
@@ -468,6 +496,22 @@ const initWhatsOnFilters = () => {
     selectedTextBlock.textContent = selectedString;
   };
   const handleChange = async (event) => {
+    event?.preventDefault();
+    // const target = event.target;
+
+    // if (target.getAttribute('name') === 'time') {
+    //   const timeInputs = Array.from(
+    //     $form.querySelectorAll('[name="time"]')
+    //   ).filter(($input) => $input !== target);
+
+    //   timeInputs?.forEach((input) => {
+    //     if (input.getAttribute('type') === 'radio') {
+    //       input.checked = false;
+    //     } else {
+    //       calendar.reset();
+    //     }
+    //   });
+    // }
     const formData = new FormData($form);
 
     try {
@@ -501,6 +545,7 @@ const initWhatsOnFilters = () => {
       console.error(error);
     }
   };
+
   const initClearFiltersButton = () => {
     const clearButton = document.getElementById('clear');
 
@@ -512,12 +557,50 @@ const initWhatsOnFilters = () => {
     });
   };
 
+  const calendarFilterNode = document.querySelector('.calendar-btn');
+  const dateInputNode = calendarFilterNode.querySelector('input');
+  const resetButtonNode = calendarFilterNode.querySelector(
+    '[data-type="reset"]'
+  );
+  const calendar = new BechCalendar('filter-calendar', {
+    parentElement: 'div',
+    onlyCurrentMonth: true,
+    theme: 'light',
+    inputSelector: '#filter-date',
+    callback: () => {
+      const value = dateInputNode.value;
+      calendarFilterNode.classList.toggle('calendar-btn--selected', !!value);
+      handleChange();
+    },
+  });
+  const handleReset = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dateInputNode.value = '';
+    calendarFilterNode.classList.remove('calendar-btn--selected');
+
+    calendar.reset();
+  };
+
+  calendarFilterNode.addEventListener('click', (event) => {
+    event.preventDefault();
+    console.log('clicked');
+    calendarFilterNode.classList.toggle(
+      'calendar-btn--active',
+      !calendarFilterNode.classList.contains('calendar-btn--active')
+    );
+  });
+
+  resetButtonNode.addEventListener('click', handleReset);
+
   initClearFiltersButton();
   for (let i = 0; i < $filterFields.length; i++) {
     const $field = $filterFields[i];
     $field.addEventListener('change', handleChange);
     // $($checkbox).change(handleChange);
   }
+
+  $form.addEventListener('submit', handleChange);
 };
 
 initWhatsOnFilters();
@@ -542,5 +625,6 @@ window.addEventListener('load', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   initTixSessions();
+  initCalendarFilterButton();
   new WhatsOnSlider(Array.from(document.querySelectorAll('.wo-slide')));
 });

@@ -7,3 +7,8 @@
 [] Single Press
 [] Header
 [] Footer
+
+
+[] Кнопки времени на whats on
+[] Кнопки show all на whats on
+[] Выпадающие подсказки на для поиска на whats on

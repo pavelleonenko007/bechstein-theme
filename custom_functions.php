@@ -269,19 +269,19 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 {
   $params = $request->get_params();
 
-  if (!wp_verify_nonce($params['bech_filter_nonce'], 'bech_filter_nonce_action')) {
-    $rest_response = rest_ensure_response([
-      'code' => 'fail',
-      'message' => 'Something goes wrong',
-      'data' => [
-        'status' => 400
-      ]
-    ]);
+  // if (!wp_verify_nonce($params['bech_filter_nonce'], 'bech_filter_nonce_action')) {
+  //   $rest_response = rest_ensure_response([
+  //     'code' => 'fail',
+  //     'message' => 'Something goes wrong',
+  //     'data' => [
+  //       'status' => 400
+  //     ]
+  //   ]);
 
-    $rest_response->set_status(400);
+  //   $rest_response->set_status(400);
 
-    return $rest_response;
-  }
+  //   return $rest_response;
+  // }
 
   $selected_string = '';
 
@@ -311,6 +311,65 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
     ]
   ];
 
+  if (isset($params['time'])) {
+    if ($params['time'] === 'today') {
+      $datetime = new DateTime('today');
+      $next_date = new DateTime('tomorrow');
+
+      $args['meta_query'][0] = [
+        'key' => 'start_date',
+        'value' => [$datetime->format('Y.m.d H:i'), $next_date->format('Y.m.d H:i')],
+        'compare' => 'BETWEEN',
+        'type' => 'DATETIME'
+      ];
+    } elseif ($params['time'] === 'tomorrow') {
+      $datetime = new DateTime('tomorrow');
+      $next_date = new DateTime('tomorrow');
+      $next_date->modify('+1 day');
+
+      $args['meta_query'][0] = [
+        'key' => 'start_date',
+        'value' => [$datetime->format('Y.m.d H:i'), $next_date->format('Y.m.d H:i')],
+        'compare' => 'BETWEEN',
+        'type' => 'DATETIME'
+      ];
+    } elseif ($params['time'] === 'next-week') {
+      $dt = new DateTime();
+      $dt->setISODate($dt->format('o'), $dt->format('W') + 1);
+      $periods = new DatePeriod($dt, new DateInterval('P1D'), 7);
+      $days = array_map(function ($datetime) {
+        return $datetime->format('Y.m.d H:i');
+      }, iterator_to_array($periods));
+
+      $args['meta_query'][0] = [
+        'key' => 'start_date',
+        'value' => [$days[0], $days[7]],
+        'compare' => 'BETWEEN',
+        'type' => 'DATETIME'
+      ];
+    } elseif ($params['time'] === 'weekend') {
+      $dt = new DateTime('next Saturday');
+      $periods = new DatePeriod($dt, new DateInterval('P1D'), 2);
+      $days = array_map(function ($datetime) {
+        return $datetime->format('Y.m.d H:i');
+      }, iterator_to_array($periods));
+      $args['meta_query'][0] = [
+        'key' => 'start_date',
+        'value' => [$days[0], $days[2]],
+        'compare' => 'BETWEEN',
+        'type' => 'DATETIME'
+      ];
+    } else {
+      $dt = new DateTime(str_replace('.', '/', $params['time']));
+      $args['meta_query'][0] = [
+        'key' => 'start_date',
+        'value' => $dt->format('Y.m.d H:i'),
+        'compare' => '>=',
+        'type' => 'DATETIME'
+      ];
+    }
+  }
+
   if (isset($params['genre'])) {
     $args['tax_query'][] = [
       'taxonomy' => 'genres',
@@ -327,7 +386,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
     ];
   }
 
-  if (isset($params['s'])) {
+  if (!empty($params['s'])) {
     $args['s'] = $params['s'];
   }
 
