@@ -474,8 +474,6 @@ class WhatsOnSlider {
   }
 }
 
-const initCalendarFilterButton = () => {};
-
 const initWhatsOnFilters = () => {
   const $form = document.querySelector('[data-filter="form"]');
   const $filterFields = Array.from(
@@ -497,21 +495,9 @@ const initWhatsOnFilters = () => {
   };
   const handleChange = async (event) => {
     event?.preventDefault();
-    // const target = event.target;
-
-    // if (target.getAttribute('name') === 'time') {
-    //   const timeInputs = Array.from(
-    //     $form.querySelectorAll('[name="time"]')
-    //   ).filter(($input) => $input !== target);
-
-    //   timeInputs?.forEach((input) => {
-    //     if (input.getAttribute('type') === 'radio') {
-    //       input.checked = false;
-    //     } else {
-    //       calendar.reset();
-    //     }
-    //   });
-    // }
+    if (event?.target.name === 'time' && event?.target.type === 'radio') {
+      $form.querySelector('.calendar-btn__reset').click();
+    }
     const formData = new FormData($form);
 
     try {
@@ -546,6 +532,14 @@ const initWhatsOnFilters = () => {
     }
   };
 
+  for (let i = 0; i < $filterFields.length; i++) {
+    const $field = $filterFields[i];
+    $field.addEventListener('change', handleChange);
+    // $($checkbox).change(handleChange);
+  }
+
+  $form.addEventListener('submit', handleChange);
+
   const initClearFiltersButton = () => {
     const clearButton = document.getElementById('clear');
 
@@ -558,8 +552,8 @@ const initWhatsOnFilters = () => {
   };
 
   const calendarFilterNode = document.querySelector('.calendar-btn');
-  const dateInputNode = calendarFilterNode.querySelector('input');
-  const resetButtonNode = calendarFilterNode.querySelector(
+  const dateInputNode = calendarFilterNode?.querySelector('input');
+  const resetButtonNode = calendarFilterNode?.querySelector(
     '[data-type="reset"]'
   );
   const calendar = new BechCalendar('filter-calendar', {
@@ -569,6 +563,13 @@ const initWhatsOnFilters = () => {
     inputSelector: '#filter-date',
     callback: () => {
       const value = dateInputNode.value;
+      const timeFilterButtons = $form.querySelectorAll(
+        '[name="time"]:not([type="text"])'
+      );
+      timeFilterButtons?.forEach((timeFilterButton) => {
+        timeFilterButton.removeAttribute('checked');
+        timeFilterButton.checked = false;
+      });
       calendarFilterNode.classList.toggle('calendar-btn--selected', !!value);
       handleChange();
     },
@@ -592,15 +593,7 @@ const initWhatsOnFilters = () => {
   });
 
   resetButtonNode.addEventListener('click', handleReset);
-
   initClearFiltersButton();
-  for (let i = 0; i < $filterFields.length; i++) {
-    const $field = $filterFields[i];
-    $field.addEventListener('change', handleChange);
-    // $($checkbox).change(handleChange);
-  }
-
-  $form.addEventListener('submit', handleChange);
 };
 
 initWhatsOnFilters();
@@ -625,6 +618,5 @@ window.addEventListener('load', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   initTixSessions();
-  initCalendarFilterButton();
   new WhatsOnSlider(Array.from(document.querySelectorAll('.wo-slide')));
 });
