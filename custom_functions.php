@@ -333,7 +333,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
   $selected_string = '';
 
   foreach ($params as $prop => $param) {
-    if ($prop === 'genre' || $prop === 'instrument') {
+    if ($prop === 'genre' || $prop === 'instrument' || $prop === 'time') {
       $selected_string .= is_array($param) ? implode(', ', $param) : $param;
       $selected_string .= ', ';
     }

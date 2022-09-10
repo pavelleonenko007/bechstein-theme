@@ -123,12 +123,11 @@ class BechCalendar {
     dateInput.value = date;
     this.chosenDate = date;
 
-    dateNodes.forEach((node) => node.classList.remove('wo-day--selected'));
-    dayNode.classList.add('wo-day--selected');
-
     this.options.callback();
 
-    console.log(this._chosenDate);
+    dateNodes.forEach((node) => node.classList.remove('wo-day--selected'));
+    dayNode.classList.add('wo-day--selected');
+    dateInput.dispatchEvent(new Event('change'));
   }
 
   next() {
@@ -226,6 +225,7 @@ class BechCalendar {
   }
 
   reset() {
+    console.log('BechCalendar reset');
     this._num = 0;
     this._chosenDate = this._today;
     this._setDate();
@@ -474,13 +474,112 @@ class WhatsOnSlider {
   }
 }
 
+function debounce(callback, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      callback.apply(this, args);
+    }, delay);
+  };
+}
+
+class CalendarWidget {
+  constructor(input) {
+    this.input = input;
+    if (!this.input) return;
+    this._setHTML();
+
+    this.toggleCalendar = this.toggleCalendar.bind(this);
+    this.reset = this.reset.bind(this);
+
+    this._setEvents();
+  }
+
+  _setHTML() {
+    this.widgetContainerNode = document.createElement('div');
+    this.widgetContainerNode.className = 'calendar-btn w-inline-block';
+    this.input.insertAdjacentElement('beforebegin', this.widgetContainerNode);
+    this.widgetContainerNode.append(this.input);
+
+    this.widgetResetButton = document.createElement('button');
+    this.widgetResetButton.className = 'calendar-btn__reset';
+    this.widgetResetButton.setAttribute('data-type', 'reset');
+    this.widgetResetButton.textContent = '✕';
+    this.input.insertAdjacentElement('afterend', this.widgetResetButton);
+
+    this.widgetCloseNode = document.createElement('div');
+    this.widgetCloseNode.className = 'calendar-btn__close';
+    this.widgetCloseNode.textContent = 'Close';
+    this.widgetResetButton.insertAdjacentElement(
+      'afterend',
+      this.widgetCloseNode
+    );
+
+    this.calendarContainerNode = document.createElement('div');
+    this.calendarContainerNode.className = 'filter-calendar';
+    this.calendarContainerNode.setAttribute('id', 'filter-calendar');
+    this.widgetCloseNode.insertAdjacentElement(
+      'afterend',
+      this.calendarContainerNode
+    );
+
+    this.calendar = new BechCalendar(this.calendarContainerNode.id, {
+      parentElement: 'div',
+      onlyCurrentMonth: true,
+      theme: 'light',
+      inputSelector: `#${this.input.id}`,
+      callback: () => {
+        const value = this.input.value;
+        const timeFilterButtons = document.querySelectorAll(
+          '[name="time"]:not([type="text"])'
+        );
+        timeFilterButtons?.forEach((timeFilterButton) => {
+          timeFilterButton.removeAttribute('checked');
+          timeFilterButton.checked = false;
+        });
+        this.widgetContainerNode.classList.toggle(
+          'calendar-btn--selected',
+          !!value
+        );
+      },
+    });
+  }
+
+  _setEvents() {
+    this.widgetContainerNode.addEventListener('click', this.toggleCalendar);
+    this.widgetResetButton.addEventListener('click', this.reset);
+  }
+
+  reset(event) {
+    event?.preventDefault();
+    event?.stopPropagation();
+    this.input.value = '';
+    this.input.dispatchEvent(new Event('change'));
+    this.widgetContainerNode.classList.remove('calendar-btn--selected');
+    this.calendar.reset();
+  }
+
+  toggleCalendar(event) {
+    event.preventDefault();
+
+    this.widgetContainerNode.classList.toggle(
+      'calendar-btn--active',
+      !this.widgetContainerNode.classList.contains('calendar-btn--active')
+    );
+  }
+}
+
 const initWhatsOnFilters = () => {
-  const $form = document.querySelector('[data-filter="form"]');
-  const $filterFields = Array.from(
-    $form?.querySelectorAll(
-      'input:not([type="hidden"]):not([type="submit"])'
-    ) || []
+  const calendarWidget = new CalendarWidget(
+    document.getElementById('filter-date')
   );
+  const filterFormNode = document.querySelector('[data-filter="form"]');
+  const ticketsContainer = document.getElementById('tickets-container');
+  if (!filterFormNode && !ticketsContainer) return;
+  const filterInputs = Array.from(filterFormNode.querySelectorAll('input'));
+  const searchInput = filterInputs.find((input) => input.type === 'search');
+  const clearFiltersButton = document.getElementById('clear');
   const showSelectedFilters = (selectedString = '') => {
     const selectedBlock = document.getElementById('selected-filters');
     const selectedTextBlock = selectedBlock?.querySelector(
@@ -493,107 +592,73 @@ const initWhatsOnFilters = () => {
     );
     selectedTextBlock.textContent = selectedString;
   };
-  const handleChange = async (event) => {
+  const getTickets = async (event) => {
+    console.log(event);
     event?.preventDefault();
-    if (event?.target.name === 'time' && event?.target.type === 'radio') {
-      $form.querySelector('.calendar-btn__reset').click();
-    }
-    const formData = new FormData($form);
+
+    const formData = new FormData(filterFormNode);
+    const fetchOptions = {
+      method: 'POST',
+      body: formData,
+    };
+
+    console.log('formData: ', Object.fromEntries(formData.entries()));
 
     try {
-      const response = await fetch(
-        `${bech_var.home_url}/wp-json/tix-webhook/v1/whats-on-filter`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
+      const data = await (
+        await fetch(
+          `${bech_var.home_url}/wp-json/tix-webhook/v1/whats-on-filter`,
+          fetchOptions
+        )
+      ).json();
 
-      const data = await response.json();
       console.log(data);
+
       if (data.code !== 'success') {
         throw new Error(data.message);
       }
 
-      showSelectedFilters(data.data.selected_string);
-      const ticketsContainer = document.getElementById('tickets-container');
-
-      ticketsContainer.innerHTML = data.data.html;
-      $([document.documentElement, document.body]).animate(
-        {
-          scrollTop:
-            $('h1').offset().top -
-            document.querySelector('.navbar').clientHeight,
-        },
-        1500
-      );
-    } catch (error) {
-      console.error(error);
+      showSelectedFilters(data?.data?.selected_string);
+      ticketsContainer.innerHTML = data?.data?.html;
+    } catch (e) {
+      console.error(e);
+      alert('Something goes wrong, please try again later!');
     }
   };
-
-  for (let i = 0; i < $filterFields.length; i++) {
-    const $field = $filterFields[i];
-    $field.addEventListener('change', handleChange);
-    // $($checkbox).change(handleChange);
-  }
-
-  $form.addEventListener('submit', handleChange);
-
-  const initClearFiltersButton = () => {
-    const clearButton = document.getElementById('clear');
-
-    clearButton?.addEventListener('click', (event) => {
-      $form.reset();
-      handleChange();
-      // $($filterFields).change();
-      // $form.querySelector('[type="submit"]').click();
-    });
+  const clearFilters = (event) => {
+    event?.preventDefault();
+    filterFormNode.reset();
+    calendarWidget.reset();
+    getTickets();
+  };
+  const searchInputMiddleware = (callback) => {
+    let inputValue = '';
+    return function (...args) {
+      if (inputValue !== args[0].target.value) {
+        inputValue = args[0].target.value;
+        return callback.apply(this, args);
+      } else {
+        return;
+      }
+    };
   };
 
-  const calendarFilterNode = document.querySelector('.calendar-btn');
-  const dateInputNode = calendarFilterNode?.querySelector('input');
-  const resetButtonNode = calendarFilterNode?.querySelector(
-    '[data-type="reset"]'
+  filterInputs.forEach((filterInput) => {
+    if (filterInput.type === 'search') {
+      filterInput.addEventListener('change', searchInputMiddleware(getTickets));
+    } else {
+      filterInput.addEventListener('change', getTickets);
+    }
+  });
+
+  searchInput.addEventListener(
+    'input',
+    debounce((event) => {
+      event.target.dispatchEvent(new Event('change'));
+    }, 500)
   );
-  const calendar = new BechCalendar('filter-calendar', {
-    parentElement: 'div',
-    onlyCurrentMonth: true,
-    theme: 'light',
-    inputSelector: '#filter-date',
-    callback: () => {
-      const value = dateInputNode.value;
-      const timeFilterButtons = $form.querySelectorAll(
-        '[name="time"]:not([type="text"])'
-      );
-      timeFilterButtons?.forEach((timeFilterButton) => {
-        timeFilterButton.removeAttribute('checked');
-        timeFilterButton.checked = false;
-      });
-      calendarFilterNode.classList.toggle('calendar-btn--selected', !!value);
-      handleChange();
-    },
-  });
-  const handleReset = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    dateInputNode.value = '';
-    calendarFilterNode.classList.remove('calendar-btn--selected');
 
-    calendar.reset();
-  };
-
-  calendarFilterNode.addEventListener('click', (event) => {
-    event.preventDefault();
-    console.log('clicked');
-    calendarFilterNode.classList.toggle(
-      'calendar-btn--active',
-      !calendarFilterNode.classList.contains('calendar-btn--active')
-    );
-  });
-
-  resetButtonNode.addEventListener('click', handleReset);
-  initClearFiltersButton();
+  clearFiltersButton.addEventListener('click', clearFilters);
 };
 
 initWhatsOnFilters();

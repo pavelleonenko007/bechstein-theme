@@ -32,13 +32,14 @@ Template name: What's on
                     <div class="filters-div">
                       <div class="filters-top-div">
                         <div class="p-20-30">Time to go</div>
-                        <a href="#" class="calendar-btn w-inline-block">
+                        <input type="text" id="filter-date" class="calendar-btn__input" placeholder="Calendar" name="time">
+                        <!-- <a href="#" class="calendar-btn w-inline-block">
                           <img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
-                          <input type="text" id="filter-date" class="calendar-btn__input" placeholder="Calendar" name="time">
+                          
                           <button class="calendar-btn__reset" data-type="reset">✕</button>
                           <div class="calendar-btn__close">Close</div>
                           <div id="filter-calendar" class="filter-calendar"></div>
-                        </a>
+                        </a> -->
                       </div>
                       <div class="filters-bottom-div">
                         <label class="w-radio cbx-mom">
