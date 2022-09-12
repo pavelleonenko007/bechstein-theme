@@ -1,3 +1,8 @@
+<style>
+  html {
+    margin-top: 0 !important;
+  }
+</style>
 <div data-animation="default" data-collapse="none" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
   <header class="header">
     <div class="left-header">
@@ -123,4 +128,4 @@
     </div>
   </div>
 </div>
-<iframe src="https://tix.bechsteinhall.func.agency/en/itix" onload="(function(){ console.log('iFrame Loaded'); })();" frameborder="0" id="tix"></iframe>
+<iframe src="https://tix.bechsteinhall.func.agency/en/itix" style="display: none;" onload="(function(){ console.log('iFrame Loaded'); })();" frameborder="0" id="tix"></iframe>

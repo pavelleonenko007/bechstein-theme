@@ -6,7 +6,7 @@ Template name: Copy of Bechstein Hall
 <!DOCTYPE html>
 <!-- This site was created in Webflow. https://www.webflow.com -->
 <!-- Last Published: Wed Jul 13 2022 13:06:33 GMT+0000 (Coordinated Universal Time) -->
-<html <?php language_attributes(); ?> data-wf-page="62bc3fe7d9cc612f89261594" data-wf-site="62bc3fe7d9cc6134bf261592">
+<html <?php language_attributes(); ?> data-wf-page="624c5364ec30465eea0a1090" data-wf-site="624c5364ec3046603b0a108f">
 <?php get_template_part("header_block", ""); ?>
 
 <body <?php body_class("body"); ?>>
@@ -85,8 +85,8 @@ Template name: Copy of Bechstein Hall
 			}
 
 			.body.menuopen .b-line:nth-child(1) {
-				transform: rotate(45deg) translateY(15rem) translateX(12.5rem);
-				transform-origin: 50% 50%;
+				/* transform: rotate(45deg) translateY(15rem) translateX(12.5rem);
+				transform-origin: 50% 50%; */
 			}
 
 			.body.menuopen .b-line:nth-child(2) {
@@ -94,8 +94,8 @@ Template name: Copy of Bechstein Hall
 			}
 
 			.body.menuopen .b-line:nth-child(3) {
-				transform: rotate(-45deg) translateY(-5rem) translateX(2.5rem);
-				transform-origin: 50% 50%;
+				/* transform: rotate(-45deg) translateY(-5rem) translateX(2.5rem);
+				transform-origin: 50% 50%; */
 			}
 
 			.body.menuopen .header {
@@ -909,21 +909,57 @@ Template name: Copy of Bechstein Hall
 								<div>Oops! Something went wrong while submitting the form.</div>
 							</div>
 						</div>
+						<?php $args = [
+							'post_type' => 'event',
+							'posts_per_page' => -1,
+							'post_status' => 'publish'
+						];
+
+						// $datetime = new DateTime('today');
+						// $next_date = new DateTime('tomorrow');
+
+						// $args['meta_query'][0] = [
+						// 	'key' => 'start_date',
+						// 	'value' => [$datetime->format('Y.m.d H:i'), $next_date->format('Y.m.d H:i')],
+						// 	'compare' => 'BETWEEN',
+						// 	'type' => 'DATETIME'
+						// ];
+
+						$query = new WP_Query($args);
+
+						// var_dump($query->posts); 
+						?>
 						<div class="slider-wvwnts-home">
 							<div class="slider-wvwnts">
 								<div class="slider-wvwnts_mask wo-slider">
-									<div class="slider-wvwnts_slide wo-slider_item wo-slide">
-										<div class="link-block">
-											<div class="slider-wvwnts_top"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6103852615c8_img-event.jpg" loading="eager" alt class="img-cover">
-												<div class="slider-wvwnts_top-cats"><a href="#" class="slider-wvwnts_top-cats_a">baroque</a><a href="#" class="slider-wvwnts_top-cats_a">piano</a></div>
-											</div>
-											<div class="slider-wvwnts_bottom">
-												<div class="p-20-30 w20">20 December, 22:00—00:00</div>
-												<div class="p-30-45 bold">Angela Hewitt</div>
-												<div class="p-17-25 home-card">Couperin, Mesian, Brahms</div><a bgline="1" href="#" class="booktickets-btn home-page"><strong>Book tickets</strong></a>
+
+
+									<?php while ($query->have_posts()) : $query->the_post(); ?>
+										<div class="slider-wvwnts_slide wo-slider_item wo-slide">
+											<div class="link-block">
+												<div class="slider-wvwnts_top">
+													<?php $event_cat = get_the_terms($post, 'event_cat'); ?>
+													<img src="<?php echo get_field('event_image', $event_cat[0]); ?>" loading="eager" alt class="img-cover">
+													<?php $term_query = wp_get_object_terms($post->ID, ['event_tag', 'genres', 'instruments']); ?>
+													<div class="slider-wvwnts_top-cats">
+														<?php foreach ($term_query as $term) : ?>
+															<a href="#" class="slider-wvwnts_top-cats_a"><?php echo $term->name; ?></a>
+														<?php endforeach; ?>
+													</div>
+												</div>
+												<div class="slider-wvwnts_bottom">
+													<div class="p-20-30 w20"><?php echo date('d F', strtotime(get_field('start_date'))); ?></div>
+													<div class="p-30-45 bold"><?php the_title(); ?></div>
+													<div class="p-17-25 home-card">Couperin, Mesian, Brahms</div>
+													<?php $purchase_urls = get_field('purchase_urls'); ?>
+													<a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" class="booktickets-btn home-page">
+														<strong>Book tickets</strong>
+													</a>
+												</div>
 											</div>
 										</div>
-									</div>
+									<?php endwhile;
+									wp_reset_postdata(); ?>
 									<div class="slider-wvwnts_slide wo-slider_item wo-slide">
 										<div class="link-block">
 											<div class="slider-wvwnts_top"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6103852615c8_img-event.jpg" loading="eager" alt class="img-cover">
@@ -1065,46 +1101,7 @@ Template name: Copy of Bechstein Hall
 				<div class="grey-z"></div>
 			</section>
 		</main>
-		<footer class="footer">
-			<div class="foo-mom">
-				<div class="footer-container top-container">
-					<div id="w-node-e1be876e-05a4-9245-628d-78602bcc79a4-2bcc79a3" class="footer-col _1 top-col"><a href="/whats-on" class="link-foo-big">What’s on?</a>
-						<div class="foo-menu-div"><a href="#" class="link-foo-small">Schedule</a><a href="#" class="link-foo-small">Priority booking</a></div>
-						<div class="foo-marger"></div><a href="/festival" class="link-foo-whats_last w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc612f532615c7_Rectangle2039.jpg" loading="lazy" alt class="img-cover foters">
-							<div class="text-block">Autumn Festival ‘22</div>
-						</a><a href="#" class="link-foo-small no-mob">Rachmaninov Days at Bechstein Hall</a>
-					</div>
-					<div id="w-node-e1be876e-05a4-9245-628d-78602bcc79ba-2bcc79a3" class="footer-col top-col center-col"><a href="/your-visit" class="link-foo-big">your visit</a>
-						<div class="foo-menu-div"><a href="/box-office" class="link-foo-small">Health and safety</a></div>
-						<div class="foo-marger"></div>
-						<div class="foo-menu-div"><a href="/box-office" class="link-foo-small">Ticketing Info</a><a href="#" class="link-foo-small">Getting here</a><a href="#" class="link-foo-small">Security & Rules</a><a href="#" class="link-foo-small">Contact Us</a></div>
-						<div class="foo-marger"></div>
-						<div class="foo-menu-div"><a href="/about" class="link-foo-small">Around Bechstein Hall</a><a href="#" class="link-foo-small">Tours</a><a href="#" class="link-foo-small">Eat & drink</a><a href="#" class="link-foo-small">Venue & seating plan</a></div>
-						<div class="foo-marger"></div>
-						<div class="foo-menu-div"><a href="#" class="link-foo-small">Accesible facilities</a><a href="#" class="link-foo-small">Accesibility statement</a><a href="/contacts" class="link-foo-small">Contacts</a></div>
-						<div class="foo-bottom no-pc"><a href="#" class="link-foo-small _2">Terms and Conditions</a><a href="#" class="link-foo-small last">Privacy policy</a></div>
-					</div>
-					<div id="w-node-e1be876e-05a4-9245-628d-78602bcc79dd-2bcc79a3" class="footer-col _3 top-col"><a href="/history" class="link-foo-big _2">History</a><a href="#" class="link-foo-big _2">friends</a><a href="/press-office" class="link-foo-big _2">Press</a><a href="#" class="link-foo-big _2">hire the hall</a></div>
-				</div>
-				<div class="footer-container bottom">
-					<div class="footer-col _1">
-						<div class="div-block-2">
-							<div class="p-20-27">(020) 1234 5678 support@bechsteinhall.com London, W1U 2RJ, 22–28 Wigmore St.</div>
-						</div>
-						<div class="foo-soc-line"><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a></div>
-					</div>
-					<div class="footer-col no-mob">
-						<div class="foo-bottom nz"><a href="#" class="link-foo-small _2">Terms and Conditions</a><a href="#" class="link-foo-small last">Privacy policy</a></div>
-					</div>
-					<div class="footer-col _3">
-						<div class="foo-bottomer">
-							<div>© 2022, Bechstein Hall</div><a href="#" class="funk-link">Website made by Func. ↗</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="white-z"></div>
-		</footer>
+		<?php get_footer(); ?>
 	</div><a href="#" class="button clear-cookie w-button">clear cache</a>
 	<!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
 	<script>

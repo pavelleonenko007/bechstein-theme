@@ -1,14 +1,4 @@
-[x] Скопировать js и css из песочницы, чтобы сохранить корзину
-[] Страница Your Visit
-[] Страница Bechstein hall 
-[] Страница History
-[] Страница Friends
-[] страница Press
-[] Single Press
-[] Header
-[] Footer
-
-
-[] Кнопки времени на whats on
-[] Кнопки show all на whats on
-[] Выпадающие подсказки на для поиска на whats on
+[] Переписать календарь
+[] Подключить главную страницу
+[] Подключить страницу your visit
+[] Подключить header и footer

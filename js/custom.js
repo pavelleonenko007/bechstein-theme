@@ -1,3 +1,138 @@
+class Calendar {
+  constructor(container, options = {}) {
+    this.containerNode =
+      container instanceof HTMLElement
+        ? container
+        : document.querySelector(container);
+    if (!this.containerNode) return;
+    this.options = {
+      dateInput: '#date',
+      theme: 'dark',
+      ...options,
+    };
+    this._months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    this._today = new Date();
+    this._monthOffset = 0;
+    this._chosenDate = this._today;
+
+    this._setCalendarHTML();
+    this._setDate();
+
+    console.log(this);
+  }
+
+  _setDate() {
+    this._settedDate = new Date();
+    this._settedDate.setMonth(new Date().getMonth() + this._monthOffset);
+    this._month = this._settedDate.getMonth();
+    this._day = this._settedDate.getDate();
+    this._weekday = this._settedDate.getDay();
+    this._year = this._settedDate.getFullYear();
+    this._numberOfDays = new Date(this._year, this._month + 1, 0).getDate();
+    this._firstDay = new Date(this._year, this._month, 1).getDay();
+    this._lastDay = new Date(this._year, this._month + 1, 0).getDay();
+
+    this._setMonthHTML();
+    this._setArrayOfDays();
+    this._setDaysHTML();
+  }
+
+  _setCalendarHTML() {
+    const classes = ['wo-calendar'];
+
+    if (this.options.theme === 'light') {
+      classes.push('wo-calendar--light');
+    }
+
+    const classesString = classes.join(' ');
+
+    this.containerNode.innerHTML = `<div class="${classesString}" data-type="calendar">
+      <div class="wo-calendar__header">
+        <button class="wo-calendar__button" data-type="prev">←</button>
+        <div class="wo-calendar__month" data-type="month"></div>
+        <button class="wo-calendar__button wo-calendar__button--right" data-type="next">→</button>
+      </div>
+      <div class="wo-calendar__body" data-type="body"></div>
+    </div>`;
+  }
+
+  _setArrayOfDays() {
+    this._arrayOfDays = [];
+    const cellsCount =
+      this._firstDay + this._numberOfDays + (6 - this._lastDay);
+    let dayNum = 1;
+
+    for (let index = 1; index < cellsCount; index++) {
+      if (index < this._firstDay) {
+        this._arrayOfDays.push('');
+        continue;
+      }
+
+      if (dayNum > this._numberOfDays) {
+        break;
+      }
+
+      this._arrayOfDays.push(new Date(this._year, this._month, dayNum));
+      dayNum++;
+    }
+  }
+
+  _formatDate(date) {
+    const formattedMonth =
+      date.getMonth() + 1 < 10
+        ? `0${date.getMonth() + 1}`
+        : (date.getMonth() + 1).toString();
+    const formattedDay =
+      date.getDate() < 10 ? `0${date.getDate()}` : date.getDate().toString();
+    return `${date.getFullYear()}.${formattedMonth}.${formattedDay}`;
+  }
+
+  _setDaysHTML() {
+    this.calendarBodyNode =
+      this.containerNode.querySelector('[data-type="body"]');
+    this.calendarBodyNode.innerHTML = this._arrayOfDays
+      .map((day) => {
+        if (day) {
+          const classes = ['wo-day'];
+
+          if (this._formatDate(day) === this._formatDate(this._today)) {
+            classes.push('wo-day--today');
+          }
+
+          if (this._formatDate(day) === this._formatDate(this._chosenDate)) {
+            classes.push('wo-day--selected');
+          }
+          return `<div class="${classes.join(
+            ' '
+          )}"><div class="wo-day__label">${day.getDate()}</div></div>`;
+        } else {
+          return '<div class="wo-day"></div>';
+        }
+      })
+      .join('');
+  }
+
+  _setMonthHTML() {
+    this.monthNode = this.containerNode.querySelector('[data-type="month"]');
+    this.monthNode.textContent = this._months[this._month];
+  }
+}
+
+// new Calendar(document.getElementById('calendar'));
+
 class BechCalendar {
   constructor(containerId = '', options = {}) {
     this.containerNode = document.getElementById(containerId);
