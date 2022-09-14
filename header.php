@@ -1,3 +1,9 @@
+<?php
+
+$main_menu_items = wp_get_nav_menu_items('Main menu');
+$phone = get_field('phone_number', 'option');
+$email = get_field('email', 'option');
+?>
 <style>
   html {
     margin-top: 0 !important;
@@ -6,17 +12,18 @@
 <div data-animation="default" data-collapse="none" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
   <header class="header">
     <div class="left-header">
-      <a href="/" aria-current="page" class="brand w-nav-brand w--current">
-        <img src="<?php echo get_template_directory_uri() ?>/images/624c599c0b1f3739c684a6af_logo.svg" loading="lazy" alt class="logo"></a>
+      <a href="<?php echo home_url('/'); ?>" aria-current="page" class="brand w-nav-brand">
+        <?php echo bech_custom_logo(true); ?>
+      </a>
       <a href="#" class="header-video-link w-inline-block">
         <img src="<?php echo get_template_directory_uri() ?>/images/624c599c9aa7a1be3a3e7425_header-video-link.png" loading="lazy" alt>
       </a>
     </div>
     <div class="right-header">
       <nav role="navigation" class="nav-menu w-nav-menu">
-        <a href="/whats-on" class="navbar-links w-nav-link">What’s on</a>
-        <a href="/your-visit" class="navbar-links w-nav-link">your Visit</a>
-        <a href="/history-copy" class="navbar-links no-mob w-nav-link">bechstein hall</a>
+        <?php foreach ($main_menu_items as $main_menu_item) : ?>
+          <a href="<?php echo $main_menu_item->url; ?>" title="Go to <?php echo $main_menu_item->title; ?> page" class="navbar-links w-nav-link"><?php echo $main_menu_item->title; ?></a>
+        <?php endforeach; ?>
       </nav>
       <div class="w-nav-button">
         <div class="w-icon-nav-menu"></div>
@@ -62,7 +69,7 @@
     <div class="foo-mom">
       <div class="footer-container top-container">
         <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79a4-2bcc79a3" class="footer-col _1 top-col">
-          <a href="/whats-on" class="link-foo-big">What’s on?</a>
+          <a href="<?php echo get_the_permalink(255); ?>" class="link-foo-big">What’s on?</a>
           <a href="#" class="link-foo-small">Schedule</a>
           <a href="#" class="link-foo-small">Priority booking</a>
           <div class="foo-marger"></div>
@@ -73,7 +80,7 @@
           <a href="#" class="link-foo-small no-mob">Rachmaninov Days at Bechstein Hall</a>
         </div>
         <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79ba-2bcc79a3" class="footer-col top-col center-col">
-          <a href="/your-visit" class="link-foo-big">your visit</a>
+          <a href="<?php echo get_post_type_archive_link('your-visit'); ?>" class="link-foo-big">your visit</a>
           <a href="/box-office" class="link-foo-small">Health and safety</a>
           <div class="foo-marger"></div>
           <a href="/box-office" class="link-foo-small">Ticketing Info</a>
@@ -104,7 +111,15 @@
       <div class="footer-container bottom">
         <div class="footer-col _1">
           <div class="div-block-2">
-            <div class="p-20-27">(020) 1234 5678 support@bechsteinhall.com London, W1U 2RJ, 22–28 Wigmore St.</div>
+            <div class="p-20-27">
+              <?php if (!empty($phone)) : ?>
+                <a href="<?php echo 'tel:' . str_replace(['(', ')', '-', '–', ' '], '', $phone); ?>"><?php echo $phone; ?></a>
+              <?php endif; ?>
+              <?php if (!empty($email)) : ?>
+                <a href="<?php echo 'mailto:' . $email; ?>"><?php echo $email; ?></a>
+              <?php endif; ?>
+              London, W1U 2RJ, 22–28 Wigmore St.
+            </div>
           </div>
           <div class="foo-soc-line">
             <a href="#" class="link-soc w-inline-block"></a>
@@ -121,7 +136,8 @@
         </div>
         <div class="footer-col _3">
           <div class="foo-bottomer">
-            <div>© 2022, Bechstein Hall</div><a href="#" class="funk-link">Website made by Func. ↗</a>
+            <div><?php echo get_field('copyright', 'option'); ?></div>
+            <a href="https://func.agency/" class="funk-link" rel="nofollow">Website made by Func. ↗</a>
           </div>
         </div>
       </div>

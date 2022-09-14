@@ -33,8 +33,6 @@ Template name: Your Visit archive template
 				top: calc(100vh - 80rem)
 			}
 
-			.images-grid a:nth-child(1) {}
-
 			.images-grid a:nth-child(6n+1) {
 				-ms-grid-column: span 3 !Important;
 				grid-column-start: span 3 !Important;
@@ -130,8 +128,6 @@ Template name: Your Visit archive template
 			}
 
 
-
-
 			*[bgline="3"]:after,
 			*[bgline="3"]:before {
 				content: "";
@@ -154,7 +150,6 @@ Template name: Your Visit archive template
 				left: auto;
 			}
 
-
 			.year-horizontal.first,
 			.cursor {
 				pointer-events: none
@@ -175,6 +170,7 @@ Template name: Your Visit archive template
 
 			.catalog-column:after {
 				content: "";
+
 
 				content: "";
 				position: absolute;

@@ -1,4 +1,6 @@
 <?php
+add_theme_support('custom-logo');
+
 add_action('wp_enqueue_scripts', 'bech_add_scripts');
 function bech_add_scripts()
 {
@@ -527,4 +529,21 @@ function bech_get_youtube_video_id_from_link($link = '')
 {
   preg_match('/watch\?v=(.+)/', $link, $matches);
   return $matches[1];
+}
+
+function bech_custom_logo($return = false)
+{
+  $logo_img = '';
+  if ($custom_logo_id = get_theme_mod('custom_logo')) {
+    $logo_img = wp_get_attachment_image($custom_logo_id, 'full', false, array(
+      'class'    => 'logo custom-logo',
+      'itemprop' => 'logo',
+    ));
+  }
+
+  if ($return) {
+    return $logo_img;
+  } else {
+    echo $logo_img;
+  }
 }
