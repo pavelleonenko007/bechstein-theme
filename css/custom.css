@@ -1,3 +1,49 @@
+/* Page.php sidebar */
+
+.page-sidebar-block {
+  margin-bottom: 58rem;
+}
+
+.page-sidebar-block:last-child {
+  margin-bottom: 0;
+}
+
+.p-30-40.med.w35 + .page-sidebar-block__content {
+  margin-top: 28rem;
+}
+
+.p-20-30.med.w20::after {
+  margin-left: 5rem;
+}
+
+.ui-yourvisit_link-in {
+  margin-top: 0 !important;
+  margin-bottom: 26rem;
+}
+
+.ui-yourvisit_link-in:last-child {
+  margin-bottom: 0;
+}
+
+.small-text-content,
+.small-text-content * {
+  color: #030e14;
+  font-size: 20rem;
+  line-height: 30rem;
+  text-decoration: none;
+}
+
+.small-text-content a {
+  transition: color 0.2s ease-in-out;
+}
+
+.small-text-content a:hover,
+.small-text-content a:focus {
+  color: #dcca99;
+}
+
+/* Page.php sidebar */
+
 [property='itemListElement']:last-child a.breadcrumbs-link:after {
   display: none;
 }

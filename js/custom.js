@@ -798,6 +798,71 @@ const initWhatsOnFilters = () => {
 
 initWhatsOnFilters();
 
+const initPressReleaseFilters = () => {
+  const formFiltersNode = document.getElementById('press-filter-form');
+
+  if (!formFiltersNode) return;
+
+  const inputNodes = Array.from(formFiltersNode.querySelectorAll('input'));
+  const pressPostsContainerNode = document.getElementById(
+    'press-office-container'
+  );
+  const changeInputHandler = async (event) => {
+    if (event.target.name === 'tag') {
+      inputNodes.find((input) => input.name === 'page').value = 1;
+    }
+
+    const formData = new FormData(formFiltersNode);
+
+    console.log(Object.fromEntries(formData.entries()));
+
+    try {
+      const data = await (
+        await fetch(bech_var.url, {
+          method: 'POST',
+          body: formData,
+        })
+      ).json();
+
+      console.log(data);
+
+      if (data.status !== 'success') {
+        throw new Error('Something goes wrong');
+      }
+
+      if (parseInt(formData.get('page')) > 1) {
+        pressPostsContainerNode.querySelector('.showmore-btn').remove();
+        pressPostsContainerNode.insertAdjacentHTML('beforeend', data.html);
+      } else {
+        pressPostsContainerNode.innerHTML = data.html;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const showMoreHandler = (event) => {
+    const showMoreButton = event.target.closest('.showmore-btn');
+    if (showMoreButton) {
+      event.stopPropagation();
+      event.preventDefault();
+      showMoreButton.classList.add('showmore-btn--loading');
+
+      const pageNomberInputNode = document.querySelector('[name="page"]');
+
+      pageNomberInputNode.value = parseInt(pageNomberInputNode.value) + 1;
+      pageNomberInputNode.dispatchEvent(new Event('change'));
+    }
+  };
+
+  inputNodes.forEach((inputNode) =>
+    inputNode.addEventListener('change', changeInputHandler)
+  );
+
+  document.addEventListener('click', showMoreHandler);
+};
+
+initPressReleaseFilters();
+
 const initTixSessions = () => {
   const tixIframe = document.getElementById('tix');
   if (!tixIframe) return;

@@ -1,6 +1,6 @@
 <?php
 /*
-Template name: Your Visit single page template
+Template name: Simple page template
 */
 ?>
 <!DOCTYPE html>
@@ -525,55 +525,66 @@ Template name: Your Visit single page template
 			}
 		</style>
 	</div>
-	<?php get_header(); ?>
+	<?php get_header();
+	the_post();
+	global $post; ?>
 	<main class="wrapper">
 		<section class="section wf-section">
 			<div class="breadcrumbs-line">
 				<?php if (function_exists('bcn_display')) bcn_display(); ?>
 			</div>
-			<div class="breadcrumbs-line"><a href="#" class="breadcrumbs-link">Home</a><a href="/whats-on" class="breadcrumbs-link">what’s on</a></div>
 		</section>
 		<section class="section wf-section">
 			<div class="head-fest _2">
-				<h1 class="h1-50-65">Around Bechstein Hall</h1>
+				<h1 class="h1-50-65"><?php the_title(); ?></h1>
 			</div>
-			<?php if (!get_field('hide_image')) { ?>
-				<div class="mom-fest-img"><img src="<?php $field = get_field('main_image');
-																						if (isset($field['url'])) {
-																							echo ($field['url']);
-																						} elseif (is_numeric($field)) {
-																							echo (wp_get_attachment_image_url($field, 'full'));
-																						} else {
-																							echo ($field);
-																						} ?>" loading="lazy" alt="<?php echo esc_attr($field['alt']); ?>" class="img-fest" title="<?php echo pathinfo($field['filename'])['filename'] !== $field['title'] ? esc_attr($field['title']) : ''; ?>"></div>
-			<?php } ?>
+			<?php $thumbnail = get_the_post_thumbnail($post, 'full', [
+				'class' => "img-fest",
+				'loading' => 'lazy'
+			]);
+
+			if (!empty($thumbnail)) : ?>
+				<div class="mom-fest-img">
+					<?php echo $thumbnail; ?>
+				</div>
+			<?php endif; ?>
 		</section>
 		<section class="section wf-section">
 			<div class="catalog-row m-revert">
 				<div class="festival-column yvisit">
-					<div class="yvisit-styk yvis _2">
-						<div id="w-node-b4f2a2bf-0315-f758-a56f-5ed7b3867d97-e526159f" class="p-30-40 med w35">
-							<?php echo get_field('sidebar_header') ?>
+					<?php $sidebar_items = get_field('sidebar_flexible_content');
+					if (!empty($sidebar_items)) : ?>
+						<div class="yvisit-styk yvis _2">
+							<?php foreach ($sidebar_items as $sidebar_item) : ?>
+								<?php if ($sidebar_item['acf_fc_layout'] === 'list_block') : ?>
+									<div class="page-sidebar-block">
+										<div id="w-node-b4f2a2bf-0315-f758-a56f-5ed7b3867d97-e526159f" class="p-30-40 med w35">
+											<?php echo $sidebar_item['heading']; ?>
+										</div>
+										<div class="page-sidebar-block__content">
+											<?php foreach ($sidebar_item['link_list'] as $list_item) : ?>
+												<a href="<?php echo $sidebar_item['item_link']; ?>" class="ui-yourvisit_link-in w-inline-block" target="_blank">
+													<div class="p-20-30 med w20"><?php echo $list_item['item_title']; ?></div>
+													<div class="p-17-25 mar10"><?php echo $list_item['item_short_description']; ?></div>
+												</a>
+											<?php endforeach; ?>
+										</div>
+									</div>
+								<?php elseif ($sidebar_item['acf_fc_layout'] === 'small_text_block') : ?>
+									<div class="page-sidebar-block">
+										<div id="w-node-b4f2a2bf-0315-f758-a56f-5ed7b3867d97-e526159f" class="p-30-40 med w35">
+											<?php echo $sidebar_item['heading']; ?>
+										</div>
+										<div class="page-sidebar-block__content">
+											<div class="small-text-content">
+												<?php echo $sidebar_item['small_text']; ?>
+											</div>
+										</div>
+									</div>
+								<?php endif; ?>
+							<?php endforeach; ?>
 						</div>
-						<?php if (have_rows('sidebar_loop')) { ?>
-							<div>
-								<?php global $parent_id;
-								$parent_id = $loop_id;
-								$loop_index = 0;
-								$loop_title = "Sidebar loop";
-								$loop_field = "sidebar_loop";
-								while (have_rows('sidebar_loop')) {
-									global $loop_id;
-									$loop_index++;
-									$loop_id++;
-									the_row(); ?><a href="<?php echo get_sub_field('link') ?>" class="ui-yourvisit_link-in w-inline-block">
-										<div class="p-20-30 med w20"><?php echo get_sub_field('header') ?></div>
-										<div class="p-17-25 mar10"><?php echo get_sub_field('description') ?></div>
-									</a>
-								<?php } ?>
-							</div>
-						<?php } ?>
-					</div>
+					<?php endif; ?>
 				</div>
 				<?php if (have_rows('site_sections')) { ?>
 					<div class="yourvisit-column">

@@ -19,53 +19,6 @@ function bech_add_scripts()
   ));
 }
 
-/* Register Post Types */
-
-add_action('init', 'bech_register_post_types');
-function bech_register_post_types()
-{
-  register_post_type('your-visit', [
-    'label'  => null,
-    'labels' => [
-      'name'               => 'Your visit', // основное название для типа записи
-      'singular_name'      => 'Your visit', // название для одной записи этого типа
-      'add_new'            => 'Add visit', // для добавления новой записи
-      'add_new_item'       => 'Add new visit', // заголовка у вновь создаваемой записи в админ-панели.
-      'edit_item'          => 'Edit visit', // для редактирования типа записи
-      'new_item'           => 'New visit', // текст новой записи
-      'view_item'          => 'Watch visit', // для просмотра записи этого типа.
-      'search_items'       => 'Search visits', // для поиска по этим типам записи
-      'not_found'          => 'Visits not found', // если в результате поиска ничего не было найдено
-      'not_found_in_trash' => 'No found in trash', // если не было найдено в корзине
-      'parent_item_colon'  => '', // для родителей (у древовидных типов)
-      'menu_name'          => 'Your visit', // название меню
-    ],
-    'description'         => '',
-    'public'              => true,
-    // 'publicly_queryable'  => null, // зависит от public
-    // 'exclude_from_search' => null, // зависит от public
-    // 'show_ui'             => null, // зависит от public
-    // 'show_in_nav_menus'   => null, // зависит от public
-    'show_in_menu'        => true, // показывать ли в меню адмнки
-    // 'show_in_admin_bar'   => null, // зависит от show_in_menu
-    'show_in_rest'        => true, // добавить в REST API. C WP 4.7
-    'rest_base'           => null, // $post_type. C WP 4.7
-    'menu_position'       => null,
-    'menu_icon'           => 'dashicons-search',
-    //'capability_type'   => 'post',
-    //'capabilities'      => 'post', // массив дополнительных прав для этого типа записи
-    //'map_meta_cap'      => null, // Ставим true чтобы включить дефолтный обработчик специальных прав
-    'hierarchical'        => false,
-    'supports'            => ['title', 'editor', 'thumbnail'], // 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
-    'taxonomies'          => [],
-    'has_archive'         => true,
-    'rewrite'             => true,
-    'query_var'           => true,
-  ]);
-}
-
-/* Register Post Types */
-
 /* Tix Utils Functions */
 
 function bech_format_date($str = '', $format = 'Y-m-d H:i:s')
@@ -503,7 +456,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
           <?php endforeach; ?>
         </div>
       </div>
-<?php
+  <?php
     endforeach;
     $data = ob_get_clean();
   endif;
@@ -546,4 +499,63 @@ function bech_custom_logo($return = false)
   } else {
     echo $logo_img;
   }
+}
+
+
+add_action('wp_ajax_get_press_release_posts', 'bech_get_press_release_posts');
+add_action('wp_ajax_nopriv_get_press_release_posts', 'bech_get_press_release_posts');
+
+function bech_get_press_release_posts()
+{
+  $args = [
+    'post_type' => 'post',
+    'posts_per_page' => 1,
+    'post_status' => 'publish'
+  ];
+
+  if (!empty($_POST['tag'])) {
+    $args['tax_query'][] = [
+      'taxonomy' => 'post_tag',
+      'field' => 'slug',
+      'terms' => trim($_POST['tag'])
+    ];
+  }
+
+  if (!empty($_POST['page'])) {
+    $args['paged'] = intval($_POST['page']);
+  }
+
+  $press_query = new WP_Query($args);
+
+  ob_start();
+  ?>
+  <div class="cms-press-ajax">
+    <?php
+    if ($press_query->have_posts()) {
+      while ($press_query->have_posts()) {
+        $press_query->the_post(); ?>
+        <a href="<?php echo get_the_permalink(); ?>" class="ui-pressrelease-a w-inline-block">
+          <div class="p-20-30 w20"><?php echo get_the_date('j F Y'); ?></div>
+          <div class="p-25-40 mar13"><?php echo get_the_title(); ?></div>
+        </a>
+      <?php }
+      wp_reset_postdata();
+
+      if ($press_query->max_num_pages > 1 && intval($_POST['page']) < $press_query->max_num_pages) { ?>
+        <a href="#" class="showmore-btn w-inline-block">
+          <div>SHOW MORE</div>
+        </a>
+      <?php }
+    } else { ?>
+      <p>NO POSTS</p>
+    <?php } ?>
+  </div>
+<?php
+  $html = ob_get_clean();
+  $response = [
+    'status' => 'success',
+    'html' => $html
+  ];
+  wp_send_json($response, 200);
+  wp_die();
 }
