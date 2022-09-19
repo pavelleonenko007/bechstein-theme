@@ -1,5 +1,9 @@
 <?php
+
+require get_template_directory() . '/inc/widgets/class-bech-text-widget.php';
+require get_template_directory() . '/inc/widgets/class-bech-repeater-links-widget/class-bech-repeater-links-widget.php';
 add_theme_support('custom-logo');
+add_theme_support('widgets');
 
 add_action('wp_enqueue_scripts', 'bech_add_scripts');
 function bech_add_scripts()
@@ -17,6 +21,15 @@ function bech_add_scripts()
     'nonce' => wp_create_nonce('ajax-nonce'),
     'home_url' => get_home_url()
   ));
+}
+
+add_action('widgets_init', 'bech_register_sidebar');
+function bech_register_sidebar()
+{
+  register_sidebar([
+    'name' => 'Bechstein Sidebar',
+    'id' => 'custom_bechstein_sidebar',
+  ]);
 }
 
 /* Tix Utils Functions */

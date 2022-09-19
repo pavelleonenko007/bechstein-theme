@@ -531,6 +531,7 @@ Template name: Press office template
             <div class="catalog-row m-revert">
                 <div class="festival-column yvisit">
                     <div class="yvisit-styk yvis">
+                        <?php dynamic_sidebar('custom_bechstein_sidebar'); ?>
                         <div id="w-node-e2a4b54f-db07-d972-40d4-89e5e03639ea-8073c07c" class="p-30-40 med w35">Press resources</div>
                         <a href="#" class="ui-yourvisit_link-in w-inline-block">
                             <div class="p-20-30 med w20">Press releases →</div>

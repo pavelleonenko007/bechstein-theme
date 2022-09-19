@@ -1,4 +1,11 @@
 /* Page.php sidebar */
+.widget {
+  list-style: none;
+}
+.widget_bech_repeater_links_widget {
+  display: flex;
+  flex-direction: column;
+}
 
 .page-sidebar-block {
   margin-bottom: 58rem;

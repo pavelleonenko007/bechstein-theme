@@ -552,6 +552,7 @@ Template name: Simple page template
 		<section class="section wf-section">
 			<div class="catalog-row m-revert">
 				<div class="festival-column yvisit">
+					<?php dynamic_sidebar('custom_bechstein_sidebar'); ?>
 					<?php $sidebar_items = get_field('sidebar_flexible_content');
 					if (!empty($sidebar_items)) : ?>
 						<div class="yvisit-styk yvis _2">
