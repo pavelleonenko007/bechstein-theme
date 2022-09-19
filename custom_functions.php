@@ -1,7 +1,7 @@
 <?php
-
-require get_template_directory() . '/inc/widgets/class-bech-text-widget.php';
 require get_template_directory() . '/inc/widgets/class-bech-repeater-links-widget/class-bech-repeater-links-widget.php';
+require get_template_directory() . '/inc/widgets/class-bech-contact-widget/class-bech-contact-widget.php';
+
 add_theme_support('custom-logo');
 add_theme_support('widgets');
 

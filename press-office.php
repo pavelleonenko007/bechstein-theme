@@ -3,14 +3,14 @@
 Template name: Press office template
 */
 ?>
-<!DOCTYPE html>
-<!-- This site was created in Webflow. https://www.webflow.com -->
-<!-- Last Published: Wed Aug 24 2022 15:21:23 GMT+0000 (Coordinated Universal Time) -->
+    <!DOCTYPE html>
+    <!-- This site was created in Webflow. https://www.webflow.com -->
+    <!-- Last Published: Wed Aug 24 2022 15:21:23 GMT+0000 (Coordinated Universal Time) -->
 <html <?php language_attributes(); ?> data-wf-page="625fd286caf248048073c07c" data-wf-site="624c5364ec3046603b0a108f">
-<?php get_template_part("header_block", ""); ?>
+<?php get_template_part( "header_block", "" ); ?>
 
-<body <?php body_class("body"); ?>>
-    <?php wp_body_open(); ?>
+<body <?php body_class( "body" ); ?>>
+<?php wp_body_open(); ?>
     <div class="css w-embed">
         <style>
             html {
@@ -34,7 +34,8 @@ Template name: Press office template
                 top: calc(100vh - 80rem)
             }
 
-            .images-grid a:nth-child(1) {}
+            .images-grid a:nth-child(1) {
+            }
 
             .images-grid a:nth-child(6n+1) {
                 -ms-grid-column: span 3 !Important;
@@ -121,8 +122,6 @@ Template name: Press office template
             }
 
 
-
-
             *[bgline="3"]:after,
             *[bgline="3"]:before {
                 content: "";
@@ -196,7 +195,7 @@ Template name: Press office template
                 content: " →"
             }
 
-            .event-row_right-col>h2 {
+            .event-row_right-col > h2 {
                 margin-top: 55rem;
             }
 
@@ -234,7 +233,7 @@ Template name: Press office template
                 margin-right: 20rem
             }
 
-            .filter-chek .w--redirected-checked~span {
+            .filter-chek .w--redirected-checked ~ span {
                 text-decoration: underline
             }
 
@@ -407,7 +406,7 @@ Template name: Press office template
                     display: none
                 }
 
-                .event-row_right-col>* {
+                .event-row_right-col > * {
                     max-width: 755rem;
                     margin-left: auto;
                     margin-right: auto
@@ -452,7 +451,6 @@ Template name: Press office template
                     background-color: transparent;
                     background-image: linear-gradient(180deg, #030e14 30%, rgb(3 14 20 / 98%) 65%, transparent);
                 }
-
 
 
                 .navbar.grey-head {
@@ -519,91 +517,116 @@ Template name: Press office template
             }
         </style>
     </div>
-    <?php get_header();
-    the_post(); ?>
+<?php get_header();
+the_post(); ?>
     <main class="wrapper">
         <section class="section wf-section">
             <div class="breadcrumbs-line">
-                <?php if (function_exists('bcn_display')) bcn_display(); ?>
+				<?php if ( function_exists( 'bcn_display' ) ) {
+					bcn_display();
+				} ?>
             </div>
         </section>
         <section class="section wf-section">
             <div class="catalog-row m-revert">
                 <div class="festival-column yvisit">
                     <div class="yvisit-styk yvis">
-                        <?php dynamic_sidebar('custom_bechstein_sidebar'); ?>
-                        <div id="w-node-e2a4b54f-db07-d972-40d4-89e5e03639ea-8073c07c" class="p-30-40 med w35">Press resources</div>
-                        <a href="#" class="ui-yourvisit_link-in w-inline-block">
-                            <div class="p-20-30 med w20">Press releases →</div>
-                            <div class="p-17-25 mar10">Read about concerts, education and social impact programs, and special events.</div>
-                        </a><a href="#" class="ui-yourvisit_link-in w-inline-block">
-                            <div class="p-20-30 med w20">Press photos →</div>
-                            <div class="p-17-25 mar10">We provide artist, hall, and performance images to the media upon request.</div>
-                        </a><a href="#" class="ui-yourvisit_link-in w-inline-block">
-                            <div class="p-20-30 med w20">Ticket and media guidelines →</div>
-                            <div class="p-17-25 mar10">Are you a journalist seeking press tickets or an interview? Get answers.</div>
-                        </a>
-                        <div id="w-node-_341e6c62-62ed-3cc9-423e-d0543ec04ef7-8073c07c" class="yvisit-styk_cont-block">
-                            <div class="p-30-40 med w35">Contacts</div>
-                            <div class="rich cont w-richtext">
-                                <p><a href="http://pr@bechsteinhall.com">pr@bechsteinhall.com</a></p>
-                                <p><a href="http://google.com">(020) 1234 5678</a></p>
-                                <p>Monday–Friday, 10:30–18:30</p>
-                            </div>
-                        </div>
+						<?php $hide_sidebar = get_field( 'hide_original_sidebar' );
+						! $hide_sidebar && dynamic_sidebar( 'custom_bechstein_sidebar' );
+						?>
+						<?php $sidebar_items = get_field( 'sidebar_flexible_content' );
+						if ( ! empty( $sidebar_items ) ) : ?>
+							<?php foreach ( $sidebar_items as $sidebar_item ) : ?>
+								<?php if ( $sidebar_item['acf_fc_layout'] === 'list_block' ) : ?>
+                                    <div class="page-sidebar-block">
+                                        <div id="w-node-b4f2a2bf-0315-f758-a56f-5ed7b3867d97-e526159f"
+                                             class="p-30-40 med w35">
+											<?php echo $sidebar_item['heading']; ?>
+                                        </div>
+                                        <div class="page-sidebar-block__content">
+											<?php foreach ( $sidebar_item['link_list'] as $list_item ) : ?>
+                                                <a href="<?php echo $sidebar_item['item_link']; ?>"
+                                                   class="ui-yourvisit_link-in w-inline-block" target="_blank">
+                                                    <div class="p-20-30 med w20"><?php echo $list_item['item_title']; ?></div>
+                                                    <div class="p-17-25 mar10"><?php echo $list_item['item_short_description']; ?></div>
+                                                </a>
+											<?php endforeach; ?>
+                                        </div>
+                                    </div>
+								<?php elseif ( $sidebar_item['acf_fc_layout'] === 'small_text_block' ) : ?>
+                                    <div class="page-sidebar-block">
+                                        <div id="w-node-b4f2a2bf-0315-f758-a56f-5ed7b3867d97-e526159f"
+                                             class="p-30-40 med w35">
+											<?php echo $sidebar_item['heading']; ?>
+                                        </div>
+                                        <div class="page-sidebar-block__content">
+                                            <div class="small-text-content">
+												<?php echo $sidebar_item['small_text']; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						<?php endif; ?>
                     </div>
                 </div>
                 <div class="pressres-column">
                     <h1 class="h1-75-90"><?php the_title(); ?></h1>
                     <h2 class="h2-50-65 w70">Press releases</h2>
-                    <?php $args = [
-                        'post_type' => 'post',
-                        'posts_per_page' => 1,
-                        'post_status' => 'publish'
-                    ];
-                    $posts = new WP_Query($args);
+					<?php $args = [
+						'post_type'      => 'post',
+						'posts_per_page' => 1,
+						'post_status'    => 'publish'
+					];
+					$posts      = new WP_Query( $args );
 
-                    if ($posts->have_posts()) : ?>
-                        <?php $tags = get_terms([
-                            'taxonomy' => 'post_tag',
-                            'hide_empty' => false,
-                            'parent' => 0
-                        ]); ?>
+					if ( $posts->have_posts() ) : ?>
+						<?php $tags = get_terms( [
+							'taxonomy'   => 'post_tag',
+							'hide_empty' => false,
+							'parent'     => 0
+						] ); ?>
                         <div class="filter-press">
                             <form id="press-filter-form" class="form-filter-press tabs-menu">
-                                <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button">
+                                <input type="submit" value="Submit" data-wait="Please wait..."
+                                       class="hidden-input w-button">
                                 <label class="filter-chek w-radio">
                                     <div class="w-form-formradioinput w-form-formradioinput--inputType-custom none w-radio-input"></div>
-                                    <input type="radio" data-name="tag" id="tag-0" name="tag" value="" style="opacity:0;position:absolute;z-index:-1" checked><span class="radio-button-label w-form-label" for="tag-0">all</span>
+                                    <input type="radio" data-name="tag" id="tag-0" name="tag" value=""
+                                           style="opacity:0;position:absolute;z-index:-1" checked><span
+                                            class="radio-button-label w-form-label" for="tag-0">all</span>
                                 </label>
-                                <?php foreach ($tags as $tag) : ?>
+								<?php foreach ( $tags as $tag ) : ?>
                                     <label class="filter-chek w-radio">
                                         <div class="w-form-formradioinput w-form-formradioinput--inputType-custom none w-radio-input"></div>
-                                        <input type="radio" data-name="tag" id="tag-<?php echo $tag->term_id; ?>" name="tag" value="<?php echo $tag->slug; ?>" style="opacity:0;position:absolute;z-index:-1">
-                                        <span class="radio-button-label w-form-label" for="tag-<?php echo $tag->term_id; ?>"><?php echo $tag->name; ?></span>
+                                        <input type="radio" data-name="tag" id="tag-<?php echo $tag->term_id; ?>"
+                                               name="tag" value="<?php echo $tag->slug; ?>"
+                                               style="opacity:0;position:absolute;z-index:-1">
+                                        <span class="radio-button-label w-form-label"
+                                              for="tag-<?php echo $tag->term_id; ?>"><?php echo $tag->name; ?></span>
                                     </label>
-                                <?php endforeach; ?>
-                                <input type="hidden" name="page" value="1" />
-                                <input type="hidden" name="action" value="get_press_release_posts" />
+								<?php endforeach; ?>
+                                <input type="hidden" name="page" value="1"/>
+                                <input type="hidden" name="action" value="get_press_release_posts"/>
                             </form>
                         </div>
                         <div id="press-office-container">
                             <div class="cms-press-ajax">
-                                <?php while ($posts->have_posts()) : $posts->the_post(); ?>
+								<?php while ( $posts->have_posts() ) : $posts->the_post(); ?>
                                     <a href="<?php the_permalink(); ?>" class="ui-pressrelease-a w-inline-block">
-                                        <div class="p-20-30 w20"><?php echo get_the_date('j F Y'); ?></div>
+                                        <div class="p-20-30 w20"><?php echo get_the_date( 'j F Y' ); ?></div>
                                         <div class="p-25-40 mar13"><?php the_title(); ?></div>
                                     </a>
-                                <?php endwhile;
-                                wp_reset_postdata(); ?>
+								<?php endwhile;
+								wp_reset_postdata(); ?>
                             </div>
-                            <?php if ($posts->max_num_pages > 1) : ?>
+							<?php if ( $posts->max_num_pages > 1 ) : ?>
                                 <a href="#" class="showmore-btn w-inline-block">
                                     <div>SHOW MORE</div>
                                 </a>
-                            <?php endif; ?>
+							<?php endif; ?>
                         </div>
-                    <?php endif; ?>
+					<?php endif; ?>
                 </div>
             </div>
         </section>
@@ -611,43 +634,74 @@ Template name: Press office template
     <footer class="footer">
         <div class="foo-mom">
             <div class="footer-container top-container">
-                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79a4-2bcc79a3" class="footer-col _1 top-col"><a href="/whats-on" class="link-foo-big">What’s on?</a><a href="#" class="link-foo-small">Schedule</a><a href="#" class="link-foo-small">Priority booking</a>
-                    <div class="foo-marger"></div><a href="/festival" class="link-foo-whats_last w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/625032fe74f84b30f4448559_Rectangle2039.jpg" loading="lazy" alt class="img-cover foters">
+                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79a4-2bcc79a3" class="footer-col _1 top-col"><a
+                            href="/whats-on" class="link-foo-big">What’s on?</a><a href="#" class="link-foo-small">Schedule</a><a
+                            href="#" class="link-foo-small">Priority booking</a>
+                    <div class="foo-marger"></div>
+                    <a href="/festival" class="link-foo-whats_last w-inline-block"><img
+                                src="<?php echo get_template_directory_uri() ?>/images/625032fe74f84b30f4448559_Rectangle2039.jpg"
+                                loading="lazy" alt class="img-cover foters">
                         <div class="text-block">Autumn Festival ‘22</div>
                     </a><a href="#" class="link-foo-small no-mob">Rachmaninov Days at Bechstein Hall</a>
                 </div>
-                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79ba-2bcc79a3" class="footer-col top-col center-col"><a href="/your-visit" class="link-foo-big">your visit</a><a href="/box-office" class="link-foo-small">Health and safety</a>
-                    <div class="foo-marger"></div><a href="/box-office" class="link-foo-small">Ticketing Info</a><a href="#" class="link-foo-small">Getting here</a><a href="#" class="link-foo-small">Security & Rules</a><a href="#" class="link-foo-small">Contact Us</a>
-                    <div class="foo-marger"></div><a href="/about" class="link-foo-small">Around Bechstein Hall</a><a href="#" class="link-foo-small">Tours</a><a href="#" class="link-foo-small">Eat & drink</a><a href="#" class="link-foo-small">Venue & seating plan</a>
-                    <div class="foo-marger"></div><a href="#" class="link-foo-small">Accesible facilities</a><a href="#" class="link-foo-small">Accesibility statement</a><a href="/contacts" class="link-foo-small">Contacts</a>
-                    <div class="foo-bottom no-pc"><a href="#" class="link-foo-small _2">Terms and Conditions</a><a href="#" class="link-foo-small last">Privacy policy</a></div>
+                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79ba-2bcc79a3" class="footer-col top-col center-col"><a
+                            href="/your-visit" class="link-foo-big">your visit</a><a href="/box-office"
+                                                                                     class="link-foo-small">Health and
+                        safety</a>
+                    <div class="foo-marger"></div>
+                    <a href="/box-office" class="link-foo-small">Ticketing Info</a><a href="#" class="link-foo-small">Getting
+                        here</a><a href="#" class="link-foo-small">Security & Rules</a><a href="#"
+                                                                                          class="link-foo-small">Contact
+                        Us</a>
+                    <div class="foo-marger"></div>
+                    <a href="/about" class="link-foo-small">Around Bechstein Hall</a><a href="#" class="link-foo-small">Tours</a><a
+                            href="#" class="link-foo-small">Eat & drink</a><a href="#" class="link-foo-small">Venue &
+                        seating plan</a>
+                    <div class="foo-marger"></div>
+                    <a href="#" class="link-foo-small">Accesible facilities</a><a href="#" class="link-foo-small">Accesibility
+                        statement</a><a href="/contacts" class="link-foo-small">Contacts</a>
+                    <div class="foo-bottom no-pc"><a href="#" class="link-foo-small _2">Terms and Conditions</a><a
+                                href="#" class="link-foo-small last">Privacy policy</a></div>
                 </div>
-                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79dd-2bcc79a3" class="footer-col _3 top-col"><a href="/history" class="link-foo-big _2">History</a><a href="#" class="link-foo-big _2">friends</a><a href="/press-office" aria-current="page" class="link-foo-big _2 w--current">Press</a><a href="#" class="link-foo-big _2">hire the hall</a></div>
+                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79dd-2bcc79a3" class="footer-col _3 top-col"><a
+                            href="/history" class="link-foo-big _2">History</a><a href="#" class="link-foo-big _2">friends</a><a
+                            href="/press-office" aria-current="page" class="link-foo-big _2 w--current">Press</a><a
+                            href="#" class="link-foo-big _2">hire the hall</a></div>
             </div>
             <div class="footer-container bottom">
                 <div class="footer-col _1">
                     <div class="div-block-2">
-                        <div class="p-20-27">(020) 1234 5678 support@bechsteinhall.com London, W1U 2RJ, 22–28 Wigmore St.</div>
+                        <div class="p-20-27">(020) 1234 5678 support@bechsteinhall.com London, W1U 2RJ, 22–28 Wigmore
+                            St.
+                        </div>
                     </div>
-                    <div class="foo-soc-line"><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a><a href="#" class="link-soc w-inline-block"></a></div>
+                    <div class="foo-soc-line"><a href="#" class="link-soc w-inline-block"></a><a href="#"
+                                                                                                 class="link-soc w-inline-block"></a><a
+                                href="#" class="link-soc w-inline-block"></a><a href="#"
+                                                                                class="link-soc w-inline-block"></a>
+                    </div>
                 </div>
                 <div class="footer-col no-mob">
-                    <div class="foo-bottom nz"><a href="#" class="link-foo-small _2">Terms and Conditions</a><a href="#" class="link-foo-small last">Privacy policy</a></div>
+                    <div class="foo-bottom nz"><a href="#" class="link-foo-small _2">Terms and Conditions</a><a href="#"
+                                                                                                                class="link-foo-small last">Privacy
+                            policy</a></div>
                 </div>
                 <div class="footer-col _3">
                     <div class="foo-bottomer">
-                        <div>© 2022, Bechstein Hall</div><a href="#" class="funk-link">Website made by Func. ↗</a>
+                        <div>© 2022, Bechstein Hall</div>
+                        <a href="#" class="funk-link">Website made by Func. ↗</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="white-z"></div>
     </footer>
-    <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
+<!--[if lte IE 9]>
+<script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
     <script>
         let headwidth;
 
-        $(".b-menu").click(function() {
+        $(".b-menu").click(function () {
 
             headwidth = $(".navbar").width();
             console.log(headwidth);
@@ -655,14 +709,10 @@ Template name: Press office template
                 "max-width": headwidth
             });
 
-            if ($(".body").hasClass("menuopen"))
-
-            {
+            if ($(".body").hasClass("menuopen")) {
                 $(".body").removeClass("menuopen");
                 $(".navbar").removeClass("grey-head");
-            } else
-
-            {
+            } else {
                 $(".body").addClass("menuopen");
                 $(".navbar").addClass("grey-head");
             }
@@ -670,8 +720,7 @@ Template name: Press office template
         });
 
 
-
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             function reportWindowSize() {
                 headwidth = $(".navbar").width();
                 console.log(headwidth);
@@ -684,4 +733,4 @@ Template name: Press office template
         });
     </script>
     <script type="text/javascript" src="//thevogne.ru/bech/script-cus.js?ver=6.0.1" id="script-cus-js"></script>
-    <?php get_template_part("footer_block", ""); ?>
+<?php get_template_part( "footer_block", "" ); ?>
