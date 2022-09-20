@@ -1,3 +1,8 @@
+#user-actions {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Page.php sidebar */
 .widget {
   list-style: none;

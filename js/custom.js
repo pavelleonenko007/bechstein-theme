@@ -407,7 +407,7 @@ class UserCart {
           </div>`
         : '';
 
-    const userCartHTML = this._orders.length
+    const userCartHTML = this._user.name
         ? `<div id="user-basket">
               <div class="p-17-25 card-block-txt">Your basket contains</div>
               <div class="p-20-30 cart-block-text">${this._orders.length} tickets</div>
