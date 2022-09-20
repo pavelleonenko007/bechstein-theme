@@ -575,7 +575,7 @@ the_post(); ?>
                     <h2 class="h2-50-65 w70">Press releases</h2>
 					<?php $args = [
 						'post_type'      => 'post',
-						'posts_per_page' => 1,
+						'posts_per_page' => 10,
 						'post_status'    => 'publish'
 					];
 					$posts      = new WP_Query( $args );
