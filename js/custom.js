@@ -367,22 +367,6 @@ class BechCalendar {
   }
 }
 
-/* <input 
-        id="${this._getFormattedDate(day)}" 
-        type="radio" 
-        name="start_date"
-        class="wo-day__input visually-hidden" 
-        value="${this._getFormattedDate(day)}" 
-        ${
-          this._getFormattedDate(day) === this._getFormattedDate(this._today)
-            ? 'checked'
-            : ''
-        }
-      />
-      <label for="${this._getFormattedDate(
-        day
-      )}" class="wo-day__label">${day.getDate()}</label> */
-
 new BechCalendar('calendar', {
   parentElement: 'div',
   onlyCurrentMonth: true,
@@ -390,11 +374,13 @@ new BechCalendar('calendar', {
 
 class UserCart {
   constructor(userData = {}) {
+    this.cartContainerNode = document.querySelector('.cart-block_contant');
     this._orders = userData.order?.items || [];
     this._user = userData?.user || {};
     this._profileUrl = userData?.profile || '#';
     this._logoutUrl = 'https://tix.bechsteinhall.func.agency/en/logout/';
     this._loginUrl = 'https://tix.bechsteinhall.func.agency/en/login/';
+    this._checkoutUrl = 'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
 
     this._init();
   }
@@ -403,53 +389,43 @@ class UserCart {
     this._orders = data?.order?.items || [];
     this._user = data?.user || null;
     this._profileUrl = data?.profile || '#';
-    document.querySelector('[data-account="container"]').remove();
     this._setMarkup();
   }
 
   _setMarkup() {
     const links = this._user?.email
-      ? `<a href="${this._profileUrl}" class="account__link">Profile</a>
-    <a href="${this._logoutUrl}" class="account__link">Log out</a>`
-      : `<a href="${this._loginUrl}" class="account__link">Log in</a>`;
+      ? `<div id="user-actions">
+            <a href="${this._profileUrl}" class="p-17-25 card-block-a">View your account</a>
+            <a href="${this._logoutUrl}" class="p-17-25 card-block-a">Log out</a>
+         </div>`
+        : `<div id="user-actions"><a href="${this._loginUrl}" class="p-17-25 card-block-a">Log in</a></div>`;
 
-    const markup = `<div class="account" data-account="container">
-      <div class="account__cart cart">
-        <svg class="cart__bag" version="1.1" id="Capa_1" x="0px" y="0px"width="20px" height="20px" viewBox="0 0 502.714 502.715" style="enable-background:new 0 0 502.714 502.715;" xml:space="preserve">
-          <path d="M449.958,485.949l-32.375-327.957c-0.682-6.923-6.508-12.195-13.465-12.195h-60.545V92.289
-		C343.573,41.394,302.173,0,251.292,0c-50.887,0-92.282,41.395-92.282,92.289v53.509H98.458c-6.956,0-12.776,5.272-13.464,12.195
-		L52.433,487.852c-0.377,3.805,0.872,7.586,3.436,10.412c2.563,2.84,6.209,4.451,10.027,4.451h370.792c0.04,0,0.085,0,0.132,0
-		c7.473,0,13.529-6.062,13.529-13.527C450.348,488.064,450.216,486.982,449.958,485.949z M186.068,92.289
-		c0-35.963,29.259-65.23,65.223-65.23s65.223,29.268,65.223,65.23v53.509H186.068V92.289z M110.718,172.857h48.291v27.376
-		c0,7.464,6.059,13.528,13.53,13.528c7.472,0,13.529-6.064,13.529-13.528v-27.376h130.446v27.376
-		c0,7.464,6.058,13.528,13.528,13.528c7.472,0,13.529-6.064,13.529-13.528v-27.376h48.286l24.62,249.37H86.098L110.718,172.857z
-		 M80.825,475.66l2.603-26.373h335.727l2.603,26.373H80.825z"/>
-      </svg>
-        <div class="cart__counter">${this._orders.length}</div>
-      </div>
-      <div class="account__actions" data-account="actions">
-        ${links}
-      </div>
-    </div>`;
+    const userNameHTML = this._user.name
+        ? `<div id="user-name">
+              <div class="p-20-30 cart-block_top">Sir ${this._user.name}</div>
+              <div class="cart-block_divider"></div>
+          </div>`
+        : '';
 
-    document.body.insertAdjacentHTML('beforeend', markup);
-  }
+    const userCartHTML = this._orders.length
+        ? `<div id="user-basket">
+              <div class="p-17-25 card-block-txt">Your basket contains</div>
+              <div class="p-20-30 cart-block-text">${this._orders.length} tickets</div>
+              <div class="p-17-25 card-block-txt">for a total amount of</div>
+              <div class="p-20-30">£ 340</div>
+              <a bgline="1" href="${this._checkoutUrl}" class="header-book-head-btn-chk w-inline-block">
+                  <div>checkout</div>
+              </a>
+              <div class="p-17-25 card-block-txt" data-cart="timer">10:28&nbsp;left to purchase</div>
+              <div class="cart-block_divider"></div>
+          </div>`
+        : '';
 
-  _clickHandler(event) {
-    if (event.target.closest('[data-account="container"]')) {
-      const target = event.target.closest('[data-account="container"]');
-
-      target.classList.toggle(
-        'account--open',
-        !target.classList.contains('account--open')
-      );
-    }
+    this.cartContainerNode.innerHTML = userNameHTML + userCartHTML + links;
   }
 
   _init() {
     this._setMarkup();
-    this._clickHandler = this._clickHandler.bind(this);
-    document.body.addEventListener('click', this._clickHandler);
   }
 }
 
