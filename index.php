@@ -14,7 +14,7 @@ Template name: Copy of Bechstein Hall
 	<div class="page-wrapper">
 		<?php get_header(); ?>
 		<main class="wrapper home-wrapper">
-			<section class="section home-grey wf-section">
+			<section class="section home-grey wf-section" data-type="cursor-area">
 				<div class="head-event-container">
 					<div class="head-event-content">
                         <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc61d3bb2615e6_img.jpg" loading="lazy" alt class="img-fw mob-cover">
@@ -23,12 +23,13 @@ Template name: Copy of Bechstein Hall
 								<div class="home-slid-timer">21 December, 19:00</div>
 								<h1 class="h1-75-90 event-h">Daniil Trifonov</h1>
 								<div class="p-25-40">Prokofiev, Szymanowski, Debussy, Brahms</div>
-								<div bgline="3" class="book-pseudo-b">
-									<div><strong>Book tickets</strong></div>
-								</div>
 							</div>
-						</a></div>
+						</a>
+                    </div>
 				</div>
+                <div data-type="cursor" bgline="3" class="book-pseudo-b">
+                    <div><strong>Book tickets</strong></div>
+                </div>
 				<div class="grey-z top-z"></div>
 			</section>
 			<section class="section home-grey wf-section">

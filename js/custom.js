@@ -815,6 +815,20 @@ const initLoader = () => {
   });
 }
 
+const initMainBookTicketsCursor = () => {
+  const cursor = document.querySelector('[data-type="cursor"]');
+  if (!cursor) return;
+  const cursorContainer = document.querySelector('[data-type="cursor-area"]');
+
+  cursorContainer.addEventListener('mousemove', (event) => {
+    const targetCoords = cursorContainer.getBoundingClientRect();
+    const xCoord = (event.clientX - targetCoords.left) + (cursor.clientWidth / 2);
+    const yCoord = (event.clientY - targetCoords.top) + (cursor.clientHeight / 2);
+
+    cursor.style.transform = `translate3d(${xCoord}px, ${yCoord}px, 0)`;
+  })
+}
+
 const initWhatsOnFilters = () => {
   const calendarWidget = new CalendarWidget(
     document.getElementById('filter-date')
@@ -987,6 +1001,7 @@ const initTixSessions = () => {
 
 window.addEventListener('load', () => {
   $('#date-picker').datepicker();
+  initMainBookTicketsCursor();
 });
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -12,6 +12,15 @@
   flex-direction: column;
 }
 
+[data-type="cursor-area"] {
+  cursor: none;
+}
+
+.book-pseudo-b {
+  transform: none;
+  z-index: 9;
+}
+
 /* Page.php sidebar */
 .widget {
   list-style: none;
