@@ -387,7 +387,7 @@ class UserCart {
   }
 
   handleClick(event) {
-    if (this._user.name) {
+    if (this._user?.name) {
       event.preventDefault();
       document.body.classList.toggle('opencart', !!document.body.classList.contains('opencart'));
     }
@@ -408,14 +408,14 @@ class UserCart {
          </div>`
         : `<div id="user-actions"><a href="${this._loginUrl}" class="p-17-25 card-block-a">Log in</a></div>`;
 
-    const userNameHTML = this._user.name
+    const userNameHTML = this._user?.name
         ? `<div id="user-name">
               <div class="p-20-30 cart-block_top">Sir ${this._user.name}</div>
               <div class="cart-block_divider"></div>
           </div>`
         : '';
 
-    const userCartHTML = this._user.name
+    const userCartHTML = this._user?.name
         ? `<div id="user-basket">
               <div class="p-17-25 card-block-txt">Your basket contains</div>
               <div class="p-20-30 cart-block-text">${this._orders.length} tickets</div>
