@@ -16,10 +16,15 @@ $email           = get_field( 'email', 'option' );
             <a href="<?php echo home_url( '/' ); ?>" aria-current="page" class="brand w-nav-brand">
 				<?php echo bech_custom_logo( true ); ?>
             </a>
-            <a href="#" class="header-video-link w-inline-block">
-                <img src="<?php echo get_template_directory_uri() ?>/images/624c599c9aa7a1be3a3e7425_header-video-link.png"
-                     loading="lazy" alt>
-            </a>
+			<?php $loader = get_field( 'loader', 'option' );
+			$video_files  = $loader['video_files'];
+			$poster       = $loader['poster'];
+			if ( ! empty( $video_files ) && $poster ):
+				?>
+                <a href="#" data-button="open-player" class="header-video-link w-inline-block">
+					<?php echo preg_replace( '/(width|height)=\"(\d+)\"/', '', wp_get_attachment_image( $poster['ID'], 'large', false ) ); ?>
+                </a>
+			<?php endif; ?>
         </div>
         <div class="right-header">
             <nav role="navigation" class="nav-menu w-nav-menu">
@@ -43,17 +48,17 @@ $email           = get_field( 'email', 'option' );
                             </svg>
                         </div>
                     </a>
-                    <a bgline="1" href="#" class="header-book-head-btn w-inline-block">
+                    <a bgline="1" href="<?php echo get_the_permalink(255); ?>" class="header-book-head-btn w-inline-block">
                         <div>Book tickets</div>
                     </a>
                     <div class="cart-block">
                         <img src="https://assets.website-files.com/624c5364ec3046603b0a108f/63281dc2d1525dfbdb3cac55_Union.svg"
-                                loading="lazy" alt="" class="image-6">
+                             loading="lazy" alt="" class="image-6">
                         <div class="cart-block_top-block">
                             <div class="p-30-45 m-30">Tickets</div>
                             <a href="#" class="cart-block_mob-close w-inline-block">
                                 <img src="https://assets.website-files.com/624c5364ec3046603b0a108f/63281e9f165b7903b728153d_Vector%2015.svg"
-                                        loading="lazy" alt="" />
+                                     loading="lazy" alt=""/>
                             </a>
                         </div>
                         <div class="cart-block_contant">
@@ -98,47 +103,97 @@ $email           = get_field( 'email', 'option' );
     <div class="burger-menu">
         <div class="foo-mom">
             <div class="footer-container top-container">
-                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79a4-2bcc79a3" class="footer-col _1 top-col">
-                    <a href="<?php echo get_the_permalink( 255 ); ?>" class="link-foo-big">What’s on?</a>
-                    <a href="#" class="link-foo-small">Schedule</a>
-                    <a href="#" class="link-foo-small">Priority booking</a>
-                    <div class="foo-marger"></div>
-                    <a href="/festival" class="link-foo-whats_last w-inline-block">
-                        <img src="<?php echo get_template_directory_uri() ?>/images/625032fe74f84b30f4448559_Rectangle2039.jpg"
-                             loading="lazy" alt class="img-cover foters">
-                        <div class="text-block">Autumn Festival ‘22</div>
-                    </a>
-                    <a href="#" class="link-foo-small no-mob">Rachmaninov Days at Bechstein Hall</a>
-                </div>
-                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79ba-2bcc79a3" class="footer-col top-col center-col">
-                    <a href="<?php echo get_post_type_archive_link( 'your-visit' ); ?>" class="link-foo-big">your
-                        visit</a>
-                    <a href="/box-office" class="link-foo-small">Health and safety</a>
-                    <div class="foo-marger"></div>
-                    <a href="/box-office" class="link-foo-small">Ticketing Info</a>
-                    <a href="#" class="link-foo-small">Getting here</a>
-                    <a href="#" class="link-foo-small">Security & Rules</a>
-                    <a href="#" class="link-foo-small">Contact Us</a>
-                    <div class="foo-marger"></div>
-                    <a href="/about" class="link-foo-small">Around Bechstein Hall</a>
-                    <a href="#" class="link-foo-small">Tours</a>
-                    <a href="#" class="link-foo-small">Eat & drink</a>
-                    <a href="#" class="link-foo-small">Venue & seating plan</a>
-                    <div class="foo-marger"></div>
-                    <a href="#" class="link-foo-small">Accesible facilities</a>
-                    <a href="#" class="link-foo-small">Accesibility statement</a>
-                    <a href="/contacts" class="link-foo-small">Contacts</a>
-                    <div class="foo-bottom no-pc">
-                        <a href="#" class="link-foo-small _2">Terms and Conditions</a>
-                        <a href="#" class="link-foo-small last">Privacy policy</a>
+				<?php $footer_columns = get_field( 'footer', 'option' );
+				foreach ( $footer_columns as $index => $footer_column ): ?>
+					<?php $classes = [
+						'footer-col'
+					];
+					if ( $index === 0 ) {
+						$classes[] = '_1';
+						$classes[] = 'top-col';
+					} elseif ( $index === 1 ) {
+						$classes[] = 'top-col';
+						$classes[] = 'center-col';
+					} elseif ( $index === 2 ) {
+						$classes[] = '_3';
+						$classes[] = 'top-col';
+					}
+					?>
+                    <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79a4-2bcc79a3"
+                         class="<?php echo implode( ' ', $classes ); ?>">
+						<?php $column_elements = $footer_column['footer_elements'];
+						foreach ( $column_elements as $column_element ): ?>
+							<?php if ( $column_element['acf_fc_layout'] === 'big_link' ): ?>
+                                <a href="<?php echo $column_element['url']; ?>"
+                                   class="link-foo-big"><?php echo $column_element['link_title']; ?></a>
+							<?php elseif ( $column_element['acf_fc_layout'] === 'small_link' ): ?>
+                                <a href="<?php echo $column_element['url']; ?>"
+                                   class="link-foo-small <?php echo ! $column_element['show_on_mobile'] ? 'no-mob' : ''; ?>"><?php echo $column_element['link_title']; ?></a>
+							<?php elseif ( $column_element['acf_fc_layout'] === 'separator' ): ?>
+                                <div class="foo-marger"></div>
+							<?php elseif ( $column_element['acf_fc_layout'] === 'card' ): ?>
+                                <a href="<?php echo $column_element['url']; ?>"
+                                   class="link-foo-whats_last w-inline-block">
+									<?php echo wp_get_attachment_image( $column_element['background_image']['ID'], 'large', false, [
+										'class' => 'img-cover foters'
+									] ); ?>
+                                    <div class="text-block"><?php echo $column_element['title']; ?></div>
+                                </a>
+							<?php elseif ( $column_element['acf_fc_layout'] === 'desktop_hidden_links' ): ?>
+                                <div class="foo-bottom no-pc">
+									<?php foreach ( $column_element['hidden_desktop_links'] as $hidden_desktop_link ): ?>
+                                        <a href="<?php echo $hidden_desktop_link['url']; ?>"
+                                           class="link-foo-small _2"><?php echo $hidden_desktop_link['title']; ?></a>
+									<?php endforeach; ?>
+                                </div>
+							<?php endif; ?>
+						<?php endforeach; ?>
                     </div>
-                </div>
-                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79dd-2bcc79a3" class="footer-col _3 top-col">
-                    <a href="/history" class="link-foo-big _2">History</a>
-                    <a href="#" class="link-foo-big _2">friends</a>
-                    <a href="/press-office" class="link-foo-big _2">Press</a>
-                    <a href="#" class="link-foo-big _2">hire the hall</a>
-                </div>
+				<?php endforeach; ?>
+                <!--                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79a4-2bcc79a3" class="footer-col _1 top-col">-->
+                <!--                    <a href="-->
+				<?php //echo get_the_permalink( 255 ); ?><!--" class="link-foo-big">What’s on?</a>-->
+                <!--                    <a href="#" class="link-foo-small">Schedule</a>-->
+                <!--                    <a href="#" class="link-foo-small">Priority booking</a>-->
+                <!--                    <div class="foo-marger"></div>-->
+                <!--                    <a href="/festival" class="link-foo-whats_last w-inline-block">-->
+                <!--                        <img src="-->
+				<?php //echo get_template_directory_uri() ?><!--/images/625032fe74f84b30f4448559_Rectangle2039.jpg"-->
+                <!--                             loading="lazy" alt class="img-cover foters">-->
+                <!--                        <div class="text-block">Autumn Festival ‘22</div>-->
+                <!--                    </a>-->
+                <!--                    <a href="#" class="link-foo-small no-mob">Rachmaninov Days at Bechstein Hall</a>-->
+                <!--                </div>-->
+                <!--                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79ba-2bcc79a3" class="footer-col top-col center-col">-->
+                <!--                    <a href="-->
+				<?php //echo get_post_type_archive_link( 'your-visit' ); ?><!--" class="link-foo-big">your-->
+                <!--                        visit</a>-->
+                <!--                    <a href="/box-office" class="link-foo-small">Health and safety</a>-->
+                <!--                    <div class="foo-marger"></div>-->
+                <!--                    <a href="/box-office" class="link-foo-small">Ticketing Info</a>-->
+                <!--                    <a href="#" class="link-foo-small">Getting here</a>-->
+                <!--                    <a href="#" class="link-foo-small">Security & Rules</a>-->
+                <!--                    <a href="#" class="link-foo-small">Contact Us</a>-->
+                <!--                    <div class="foo-marger"></div>-->
+                <!--                    <a href="/about" class="link-foo-small">Around Bechstein Hall</a>-->
+                <!--                    <a href="#" class="link-foo-small">Tours</a>-->
+                <!--                    <a href="#" class="link-foo-small">Eat & drink</a>-->
+                <!--                    <a href="#" class="link-foo-small">Venue & seating plan</a>-->
+                <!--                    <div class="foo-marger"></div>-->
+                <!--                    <a href="#" class="link-foo-small">Accesible facilities</a>-->
+                <!--                    <a href="#" class="link-foo-small">Accesibility statement</a>-->
+                <!--                    <a href="/contacts" class="link-foo-small">Contacts</a>-->
+                <!--                    <div class="foo-bottom no-pc">-->
+                <!--                        <a href="#" class="link-foo-small _2">Terms and Conditions</a>-->
+                <!--                        <a href="#" class="link-foo-small last">Privacy policy</a>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--                <div id="w-node-e1be876e-05a4-9245-628d-78602bcc79dd-2bcc79a3" class="footer-col _3 top-col">-->
+                <!--                    <a href="/history" class="link-foo-big _2">History</a>-->
+                <!--                    <a href="#" class="link-foo-big _2">friends</a>-->
+                <!--                    <a href="/press-office" class="link-foo-big _2">Press</a>-->
+                <!--                    <a href="#" class="link-foo-big _2">hire the hall</a>-->
+                <!--                </div>-->
             </div>
             <div class="footer-container bottom">
                 <div class="footer-col _1">

@@ -1,3 +1,12 @@
+.body--freeze {
+  overflow: hidden;
+}
+
+.loader--active {
+  display: block;
+  position: fixed;
+}
+
 #user-actions {
   display: flex;
   flex-direction: column;

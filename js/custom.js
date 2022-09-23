@@ -374,6 +374,7 @@ new BechCalendar('calendar', {
 
 class UserCart {
   constructor(userData = {}) {
+    this.cartButton = document.querySelector('.header-book-head-btn');
     this.cartContainerNode = document.querySelector('.cart-block_contant');
     this._orders = userData.order?.items || [];
     this._user = userData?.user || {};
@@ -383,6 +384,13 @@ class UserCart {
     this._checkoutUrl = 'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
 
     this._init();
+  }
+
+  handleClick(event) {
+    if (this._user.name) {
+      event.preventDefault();
+      document.body.classList.toggle('opencart', !!document.body.classList.contains('opencart'));
+    }
   }
 
   setData(data = {}) {
@@ -426,6 +434,9 @@ class UserCart {
 
   _init() {
     this._setMarkup();
+
+    this.handleClick = this.handleClick.bind(this);
+    this.cartButton.addEventListener('click', this.handleClick);
   }
 }
 
@@ -681,6 +692,129 @@ class CalendarWidget {
   }
 }
 
+class VideoPlayer {
+  constructor(playerNode) {
+    this.playerNode = playerNode;
+    if (!this.playerNode) {
+      console.error('Player node is not defined')
+      return;
+    }
+    this._video = this.playerNode.querySelector('video');
+    this._soundButton = this.playerNode.querySelector('[data-type="sound"]');
+    this._playButton = this.playerNode.querySelector('[data-type="play"]');
+    this._progressBar = this.playerNode.querySelector('[data-type="progress-bar"]');
+    this._progressLine = this.playerNode.querySelector('[data-type="progress-line"]');
+    this._timeCounter = this.playerNode.querySelector('[data-type="time-counter"]');
+
+    this.duration = this._video.duration;
+    this.handleMute();
+
+    this.handleMute = this.handleMute.bind(this);
+    this.handlePlay = this.handlePlay.bind(this);
+    this.handleProgress = this.handleProgress.bind(this);
+
+    this.handleMute();
+
+    this._soundButton.addEventListener('click', this.handleMute);
+    this._playButton?.addEventListener('click', this.handlePlay);
+    this._video.addEventListener('timeupdate', this.handleProgress);
+  }
+
+  handleMute(event) {
+    this._video.muted ? this.unmute() : this.mute();
+    this._soundButton.textContent = this._video.muted ? 'unmute' : 'mute';
+  }
+
+  handlePlay(event) {
+    this._video.paused ? this.play() : this.pause();
+  }
+
+  handleProgress(event) {
+    const percent = (this._video.currentTime / this.duration) * 100;
+    const timeLeft = this.duration - this._video.currentTime;
+
+    this._progressLine.style.width = `${percent}%`;
+    this._timeCounter.textContent = this.formatTime(timeLeft);
+  }
+
+  formatTime(time) {
+    const minutes = Math.floor(time / 60) < 10 ? `0${Math.floor(time / 60)}` : `${Math.floor(time / 60)}`;
+    const seconds = Math.floor(time % 60) < 10 ? `0${Math.floor(time % 60)}` : `${Math.floor(time % 60)}`;
+    return `${minutes}:${seconds}`
+  }
+
+  play() {
+    this._video.play();
+  }
+
+  pause() {
+    this._video.pause();
+  }
+
+  mute() {
+    this._video.muted = true;
+  }
+
+  unmute() {
+    this._video.muted = false;
+  }
+}
+
+class SkipVideoPlayer extends VideoPlayer {
+  constructor(playerNode, skipCallback) {
+    super(playerNode);
+    this._callback = skipCallback;
+    this._skipButton = this.playerNode.querySelector('[data-type="skip-button"]');
+
+    this.handleSkip = this.handleSkip.bind(this);
+    this._skipButton.addEventListener('click', this.handleSkip);
+  }
+
+  handleSkip(event) {
+    this.skip();
+  }
+
+  skip() {
+    this._video.pause();
+    this._callback();
+  }
+}
+
+const initLoader = () => {
+  const loaderNode = document.querySelector('.loader');
+
+  if (!loaderNode) return;
+
+  const loaderData = JSON.parse(window.localStorage.getItem('loader'));
+  const skipCallback = () => {
+    const data = {
+      skipped: true,
+      date: Date.now() + 1000 * 60 * 60 * 24
+    }
+    window.localStorage.setItem('loader', JSON.stringify(data));
+    loaderNode.classList.remove('loader--active');
+    document.body.classList.remove('body--freeze');
+  }
+  const openPlayerButton = document.querySelector('[data-button="open-player"]');
+  const player = new SkipVideoPlayer(loaderNode.querySelector('[data-type="video-player"]'), skipCallback);
+  player.pause();
+
+  if (!loaderData || loaderData.date <= Date.now()) {
+    loaderNode.classList.add('loader--active');
+    document.body.classList.add('body--freeze');
+    player.play();
+  } else {
+    console.log('hide loader');
+  }
+
+  openPlayerButton.addEventListener('click', event => {
+    event.preventDefault();
+    loaderNode.classList.add('loader--active');
+    document.body.classList.add('body--freeze');
+    player.play();
+  });
+}
+
 const initWhatsOnFilters = () => {
   const calendarWidget = new CalendarWidget(
     document.getElementById('filter-date')
@@ -790,8 +924,6 @@ const initPressReleaseFilters = () => {
 
     const formData = new FormData(formFiltersNode);
 
-    console.log(Object.fromEntries(formData.entries()));
-
     try {
       const data = await (
         await fetch(bech_var.url, {
@@ -858,6 +990,7 @@ window.addEventListener('load', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  initLoader();
   initTixSessions();
   new WhatsOnSlider(Array.from(document.querySelectorAll('.wo-slide')));
 });
