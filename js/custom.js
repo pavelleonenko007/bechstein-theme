@@ -387,9 +387,10 @@ class UserCart {
   }
 
   handleClick(event) {
+    console.log(event);
     if (this._user?.name) {
       event.preventDefault();
-      document.body.classList.toggle('opencart', !!document.body.classList.contains('opencart'));
+      document.body.classList.toggle('opencart', !document.body.classList.contains('opencart'));
     }
   }
 
