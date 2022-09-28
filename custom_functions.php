@@ -52,6 +52,54 @@ function bech_purchase_url_format_data( $arr ): array {
 	return $formatted_arr;
 }
 
+add_action( 'init', 'bech_register_post_types' );
+
+function bech_register_post_types() {
+	register_post_type( 'team', [
+		'label'         => null,
+		'labels'        => [
+			'name'               => 'Team', // основное название для типа записи
+			'singular_name'      => 'Teammate', // название для одной записи этого типа
+			'add_new'            => 'Add new', // для добавления новой записи
+			'add_new_item'       => 'Add new teammate', // заголовка у вновь создаваемой записи в админ-панели.
+			'edit_item'          => "Edit teammate's info", // для редактирования типа записи
+			'new_item'           => 'New teammate', // текст новой записи
+			'view_item'          => 'View teammate', // для просмотра записи этого типа.
+			'search_items'       => 'Search teammates', // для поиска по этим типам записи
+			'not_found'          => 'Not Found', // если в результате поиска ничего не было найдено
+			'not_found_in_trash' => 'Not Found in trash', // если не было найдено в корзине
+			'parent_item_colon'  => '', // для родителей (у древовидных типов)
+			'menu_name'          => 'Team', // название меню
+		],
+		'description'   => '',
+		'public'        => true,
+		// 'publicly_queryable'  => null, // зависит от public
+		// 'exclude_from_search' => null, // зависит от public
+		// 'show_ui'             => null, // зависит от public
+		// 'show_in_nav_menus'   => null, // зависит от public
+		'show_in_menu'  => null,
+		// показывать ли в меню адмнки
+		// 'show_in_admin_bar'   => null, // зависит от show_in_menu
+		'show_in_rest'  => null,
+		// добавить в REST API. C WP 4.7
+		'rest_base'     => null,
+		// $post_type. C WP 4.7
+		'menu_position' => null,
+		'menu_icon'     => 'dashicons-groups',
+		//'capability_type'   => 'post',
+		//'capabilities'      => 'post', // массив дополнительных прав для этого типа записи
+		//'map_meta_cap'      => null, // Ставим true чтобы включить дефолтный обработчик специальных прав
+		'hierarchical'  => false,
+		'supports'      => [ 'title', 'editor', 'thumbnail' ],
+		// 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
+		'taxonomies'    => [],
+		'has_archive'   => false,
+		'rewrite'       => true,
+		'query_var'     => true,
+	] );
+
+}
+
 /* Tix Utils Functions */
 
 /**
@@ -622,34 +670,35 @@ function bech_get_homepage_slider_items() {
 	}
 
 	$tickets_query = new WP_Query( $args );
-    ob_start();
-    if ($tickets_query->have_posts()) {
-        while ($tickets_query->have_posts()) { $tickets_query->the_post(); ?>
+	ob_start();
+	if ( $tickets_query->have_posts() ) {
+		while ( $tickets_query->have_posts() ) {
+			$tickets_query->the_post(); ?>
             <div class="slider-wvwnts_slide wo-slider_item wo-slide">
                 <div class="link-block">
                     <div class="slider-wvwnts_top">
-				        <?php
-                        global $post;
-                        $event_cat = get_the_terms( $post, 'event_cat' ); ?>
+						<?php
+						global $post;
+						$event_cat = get_the_terms( $post, 'event_cat' ); ?>
                         <img src="<?php echo get_field( 'event_image', $event_cat[0] ); ?>"
                              loading="eager" alt class="img-cover">
-				        <?php $term_query = wp_get_object_terms( $post->ID, [
-					        'event_tag',
-					        'genres',
-					        'instruments'
-				        ] ); ?>
+						<?php $term_query = wp_get_object_terms( $post->ID, [
+							'event_tag',
+							'genres',
+							'instruments'
+						] ); ?>
                         <div class="slider-wvwnts_top-cats">
-					        <?php foreach ( $term_query as $term ) : ?>
+							<?php foreach ( $term_query as $term ) : ?>
                                 <a href="#"
                                    class="slider-wvwnts_top-cats_a"><?php echo $term->name; ?></a>
-					        <?php endforeach; ?>
+							<?php endforeach; ?>
                         </div>
                     </div>
                     <div class="slider-wvwnts_bottom">
                         <div class="p-20-30 w20"><?php echo date( 'd F', strtotime( get_field( 'start_date' ) ) ); ?></div>
                         <div class="p-30-45 bold"><?php the_title(); ?></div>
                         <div class="p-17-25 home-card">Couperin, Mesian, Brahms</div>
-				        <?php $purchase_urls = get_field( 'purchase_urls' ); ?>
+						<?php $purchase_urls = get_field( 'purchase_urls' ); ?>
                         <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>"
                            class="booktickets-btn home-page">
                             <strong>Book tickets</strong>
@@ -657,14 +706,15 @@ function bech_get_homepage_slider_items() {
                     </div>
                 </div>
             </div>
-    <?php }} else { ?>
+		<?php }
+	} else { ?>
         <p>There is no tickets with this filter parameters</p>
-    <?php }
-    $html = ob_get_clean();
+	<?php }
+	$html = ob_get_clean();
 
-    wp_send_json([
-	    'status' => 'success',
-	    'html' => $html
-    ]);
+	wp_send_json( [
+		'status' => 'success',
+		'html'   => $html
+	] );
 	wp_die();
 }
