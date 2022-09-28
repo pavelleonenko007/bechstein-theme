@@ -1,3 +1,40 @@
+function animate(element, styles = {}, duration, callback = () => {}) {
+  let startAnimation;
+  const currentStyles = {};
+
+  for (const prop in styles) {
+    if (Object.hasOwnProperty.call(styles, prop)) {
+      currentStyles[prop] = parseFloat(
+        window.getComputedStyle(element)[prop]
+      );
+    }
+  }
+
+  const step = (time) => {
+    if (!startAnimation) {
+      startAnimation = time;
+    }
+
+    let progress = (time - startAnimation) / duration;
+
+    for (const prop in styles) {
+      if (Object.hasOwnProperty.call(styles, prop)) {
+        const value = styles[prop];
+        element.style[prop] =
+          currentStyles[prop] + (value - currentStyles[prop]) * progress;
+      }
+    }
+
+    if (progress < 1) {
+      return window.requestAnimationFrame(step);
+    } else {
+      callback();
+    }
+  };
+
+  return window.requestAnimationFrame(step);
+}
+
 class Calendar {
   constructor(container, options = {}) {
     this.containerNode =
@@ -144,7 +181,8 @@ class BechCalendar {
       onlyCurrentMonth: true,
       inputSelector: '#date',
       theme: 'dark',
-      callback: () => {},
+      callback: () => {
+      },
       ...options,
     };
 
@@ -239,7 +277,7 @@ class BechCalendar {
     event.preventDefault();
     event.stopPropagation();
     const button = event.target.closest('button');
-    const { type } = button.dataset;
+    const {type} = button.dataset;
 
     type === 'prev' ? this.prev() : this.next();
     this._setDate();
@@ -251,7 +289,7 @@ class BechCalendar {
 
     if (!dayNode) return;
 
-    const { date } = dayNode.dataset;
+    const {date} = dayNode.dataset;
     const dateInput = document.querySelector(this.options.inputSelector);
     const dateNodes = this.calendarBody.querySelectorAll('[data-date]');
 
@@ -339,16 +377,16 @@ class BechCalendar {
         day
           ? `<div 
             class="wo-day ${
-              this._getFormattedDate(day) ===
-              this._getFormattedDate(this._today)
-                ? 'wo-day--today'
-                : ''
-            } ${
-              this._getFormattedDate(day) ===
-              this._getFormattedDate(this._chosenDate)
-                ? 'wo-day--selected'
-                : ''
-            }"
+            this._getFormattedDate(day) ===
+            this._getFormattedDate(this._today)
+              ? 'wo-day--today'
+              : ''
+          } ${
+            this._getFormattedDate(day) ===
+            this._getFormattedDate(this._chosenDate)
+              ? 'wo-day--selected'
+              : ''
+          }"
               data-date="${this._getFormattedDate(day)}"
             >
             <div class="wo-day__label">${day.getDate()}</div>
@@ -407,17 +445,17 @@ class UserCart {
             <a href="${this._profileUrl}" class="p-17-25 card-block-a">View your account</a>
             <a href="${this._logoutUrl}" class="p-17-25 card-block-a">Log out</a>
          </div>`
-        : `<div id="user-actions"><a href="${this._loginUrl}" class="p-17-25 card-block-a">Log in</a></div>`;
+      : `<div id="user-actions"><a href="${this._loginUrl}" class="p-17-25 card-block-a">Log in</a></div>`;
 
     const userNameHTML = this._user?.name
-        ? `<div id="user-name">
+      ? `<div id="user-name">
               <div class="p-20-30 cart-block_top">Sir ${this._user.name}</div>
               <div class="cart-block_divider"></div>
           </div>`
-        : '';
+      : '';
 
     const userCartHTML = this._user?.name
-        ? `<div id="user-basket">
+      ? `<div id="user-basket">
               <div class="p-17-25 card-block-txt">Your basket contains</div>
               <div class="p-20-30 cart-block-text">${this._orders.length} tickets</div>
               <div class="p-17-25 card-block-txt">for a total amount of</div>
@@ -428,7 +466,7 @@ class UserCart {
               <div class="p-17-25 card-block-txt" data-cart="timer">10:28&nbsp;left to purchase</div>
               <div class="cart-block_divider"></div>
           </div>`
-        : '';
+      : '';
 
     this.cartContainerNode.innerHTML = userNameHTML + userCartHTML + links;
   }
@@ -594,6 +632,17 @@ class WhatsOnSlider {
         slide.style[property] = value;
       }
     }
+  }
+
+  reset(data) {
+    this.currentIndex = 0;
+    this._data = data ? data : this._data;
+    this.sliderContainerNode.innerHTML = this._getMarkup();
+    this.slideNodes = this.sliderContainerNode.querySelectorAll('.wo-slide');
+    console.log(this.slideNodes)
+    this._slideSize = this.slideNodes[0].getBoundingClientRect();
+    this.setSlidesPosition();
+    this.sliderContainerNode.classList.add('wo-slider--ready');
   }
 }
 
@@ -780,6 +829,115 @@ class SkipVideoPlayer extends VideoPlayer {
     this._callback();
   }
 }
+
+class BechCarouser {
+  constructor(sliderNode, options) {
+    this.sliderNode = sliderNode;
+    if (!this.sliderNode) return;
+    this.options = {
+      duration: 4000,
+      changingDuration: 600,
+      ...options,
+    }
+    this._currentIndex = 0;
+    this.slidesArray = Array.from(this.sliderNode.querySelectorAll('[data-type="slide"]'));
+    this.prevButton = this.sliderNode.querySelector('[data-type="prev"]');
+    this.nextButton = this.sliderNode.querySelector('[data-type="next"]');
+    this.slidesCurrentNumberNode = this.sliderNode.querySelector('[data-type="current"]');
+    this.slidesCountNode = this.sliderNode.querySelector('[data-type="count"]');
+
+    this.handleButtonClick = this.handleButtonClick.bind(this);
+
+    this.prevButton.addEventListener('click', this.handleButtonClick);
+    this.nextButton.addEventListener('click', this.handleButtonClick);
+
+    this.setSlidesStyles();
+    this.initDuration();
+  }
+
+  get currentIndex() {
+    return this._currentIndex;
+  }
+
+  set currentIndex(num) {
+    let number = parseInt(num);
+    switch (true) {
+      case number < 0:
+        this._currentIndex = this.slidesArray.length - 1;
+        break;
+      case number >= this.slidesArray.length:
+        this._currentIndex = 0;
+        break;
+      default:
+        this._currentIndex = number;
+        break;
+    }
+
+    return this._currentIndex;
+  }
+
+  setSlidesStyles() {
+    this.slidesArray.forEach((slide, index) => {
+      if (index === this.currentIndex) {
+        slide.classList.add('bech-slider__slide--active');
+        // $(slide).animate({opacity: 1}, this.options.changingDuration);
+        animate(slide, {opacity: 1}, this.options.changingDuration);
+      } else {
+        slide.classList.remove('bech-slider__slide--active');
+        // $(slide).animate({opacity: 0}, this.options.changingDuration);
+        animate(slide, {opacity: 0}, this.options.changingDuration);
+      }
+    });
+  }
+
+  initDuration() {
+    if (this.options.duration < 1000) {
+      this.options.duration = 1000;
+    }
+
+    clearInterval(this.interval);
+    cancelAnimationFrame(this.animation);
+    console.log(this.animation)
+
+    this.interval = setInterval(() => {
+      // $('.arrow-button__progress').css({strokeDashoffset: 0})
+      this.nextButton.querySelector('.arrow-button__progress').style.strokeDashoffset = 0;
+      this.next();
+      this.animation = animate(this.nextButton.querySelector('.arrow-button__progress'), {strokeDashoffset: Math.PI*(24*2)}, this.options.duration);
+    }, this.options.duration);
+  }
+
+  handleButtonClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const button = event.target.closest('button');
+    if (!button) return;
+    const {type} = button.dataset;
+
+    type === 'prev' ? this.prev() : this.next();
+    this.initDuration();
+  }
+
+  setCurrentSlideNumber() {
+    this.slidesCurrentNumberNode.innerText = this.currentIndex + 1;
+  }
+
+  prev() {
+    this.currentIndex = this.currentIndex - 1;
+    this.setCurrentSlideNumber();
+    this.setSlidesStyles();
+  }
+
+  next() {
+    this.currentIndex = this.currentIndex + 1;
+    this.setCurrentSlideNumber();
+    this.setSlidesStyles();
+  }
+}
+
+new BechCarouser(document.querySelector('[data-type="slider"]'), {
+  duration: 4000
+});
 
 const initLoader = () => {
   const loaderNode = document.querySelector('.loader');
@@ -1000,13 +1158,50 @@ const initTixSessions = () => {
   });
 };
 
+const initHomeFilterForm = () => {
+  const formNode = document.getElementById('home-filter-form');
+  if (!formNode) return;
+  const inputNodes = Array.from(formNode.querySelectorAll('input:not([type="submit"]):not([name="action"])'));
+  const getTickets = async event => {
+    event?.preventDefault();
+    const formData = new FormData(formNode);
+
+    console.log(Object.fromEntries(formData.entries()));
+
+    try {
+      const fetchOptions = {
+        method: 'POST',
+        body: formData
+      }
+
+      const response = await fetch(bech_var.url, fetchOptions);
+      const data = await response.json();
+
+      console.log(data);
+
+      if (data.status === 'bad') {
+        throw new Error('wrong request');
+      }
+
+      document.querySelector('.wo-slider').innerHTML = data.html;
+      console.log(window.whatsOnSlider);
+      window.whatsOnSlider.reset(Array.from(document.querySelectorAll('.wo-slide')));
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  inputNodes.forEach(input => input.addEventListener('change', getTickets));
+}
+
 window.addEventListener('load', () => {
   $('#date-picker').datepicker();
-  initMainBookTicketsCursor();
+  // initMainBookTicketsCursor();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initTixSessions();
-  new WhatsOnSlider(Array.from(document.querySelectorAll('.wo-slide')));
+  initHomeFilterForm();
+  window.whatsOnSlider = new WhatsOnSlider(Array.from(document.querySelectorAll('.wo-slide')));
 });

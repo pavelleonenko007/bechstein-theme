@@ -341,7 +341,7 @@ function bech_filter_whats_on_tickets( WP_REST_Request $request ) {
 			];
 		} elseif ( $params['time'] === 'next-week' ) {
 			$dt = new DateTime();
-			$dt->setISODate( $dt->format( 'o' ), absint($dt->format( 'W' )) + 1 );
+			$dt->setISODate( $dt->format( 'o' ), absint( $dt->format( 'W' ) ) + 1 );
 			$periods = new DatePeriod( $dt, new DateInterval( 'P1D' ), 7 );
 			$days    = array_map( function ( $datetime ) {
 				return $datetime->format( 'Y.m.d H:i' );
@@ -568,5 +568,103 @@ function bech_get_press_release_posts(): void {
 		'html'   => $html
 	];
 	wp_send_json( $response, 200 );
+	wp_die();
+}
+
+add_action( 'wp_ajax_get_homepage_slider_items', 'bech_get_homepage_slider_items' );
+add_action( 'wp_ajax_nopriv_get_homepage_slider_items', 'bech_get_homepage_slider_items' );
+
+function bech_get_homepage_slider_items() {
+	if ( ! wp_verify_nonce( $_POST['home_filter_action'], 'home_filter_action_nonce' ) ) {
+		return wp_send_json( [
+			'status'  => 'bad',
+			'message' => 'Something went wrong. Please try again later'
+		], 400 );
+	}
+
+	$args = [
+		'post_type'      => 'event',
+		'posts_per_page' => - 1,
+		'post_status'    => 'publish'
+	];
+
+	if ( ! empty( $_POST['instruments'] ) ) {
+		$args['tax_query'][] = [
+			'taxonomy' => 'instruments',
+			'field'    => 'slug',
+			'terms'    => $_POST['instruments']
+		];
+	}
+
+	if ( ! empty( $_POST['genres'] ) ) {
+		$args['tax_query'][] = [
+			'taxonomy' => 'genres',
+			'field'    => 'slug',
+			'terms'    => $_POST['genres']
+		];
+	}
+
+	if ( ! empty( $_POST['event_tag'] ) ) {
+		$args['tax_query'][] = [
+			'taxonomy' => 'event_tag',
+			'field'    => 'slug',
+			'terms'    => $_POST['event_tag']
+		];
+	}
+
+	if ( ! empty( $_POST['start_date'] ) ) {
+		$args['meta_query'][] = [
+			'key'     => 'start_date',
+			'value'   => $_POST['start_date'],
+			'compare' => '>=',
+			'type'    => 'DATETIME'
+		];
+	}
+
+	$tickets_query = new WP_Query( $args );
+    ob_start();
+    if ($tickets_query->have_posts()) {
+        while ($tickets_query->have_posts()) { $tickets_query->the_post(); ?>
+            <div class="slider-wvwnts_slide wo-slider_item wo-slide">
+                <div class="link-block">
+                    <div class="slider-wvwnts_top">
+				        <?php
+                        global $post;
+                        $event_cat = get_the_terms( $post, 'event_cat' ); ?>
+                        <img src="<?php echo get_field( 'event_image', $event_cat[0] ); ?>"
+                             loading="eager" alt class="img-cover">
+				        <?php $term_query = wp_get_object_terms( $post->ID, [
+					        'event_tag',
+					        'genres',
+					        'instruments'
+				        ] ); ?>
+                        <div class="slider-wvwnts_top-cats">
+					        <?php foreach ( $term_query as $term ) : ?>
+                                <a href="#"
+                                   class="slider-wvwnts_top-cats_a"><?php echo $term->name; ?></a>
+					        <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="slider-wvwnts_bottom">
+                        <div class="p-20-30 w20"><?php echo date( 'd F', strtotime( get_field( 'start_date' ) ) ); ?></div>
+                        <div class="p-30-45 bold"><?php the_title(); ?></div>
+                        <div class="p-17-25 home-card">Couperin, Mesian, Brahms</div>
+				        <?php $purchase_urls = get_field( 'purchase_urls' ); ?>
+                        <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>"
+                           class="booktickets-btn home-page">
+                            <strong>Book tickets</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+    <?php }} else { ?>
+        <p>There is no tickets with this filter parameters</p>
+    <?php }
+    $html = ob_get_clean();
+
+    wp_send_json([
+	    'status' => 'success',
+	    'html' => $html
+    ]);
 	wp_die();
 }

@@ -1,3 +1,86 @@
+.bech-slider {
+  width: 100%;
+  position: relative;
+}
+
+.bech-slider__slides {
+  width: 100%;
+  height: 915rem;
+  position: relative;
+}
+
+.bech-slider__slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  opacity: 0;
+  /*transition: opacity 0.4s ease-in-out;*/
+}
+
+.bech-slider__slide--active {
+  z-index: 2;
+  opacity: 1;
+}
+
+.bech-slider__slide .head-event-content {
+  height: 100%;
+}
+
+.bech-slider__controls {
+  position: absolute;
+  right: 40rem;
+  bottom: 40rem;
+  color: #FFFFFF;
+  z-index: 9;
+}
+
+.bech-slider__counter {
+  margin-right: auto;
+  margin-bottom: 13rem;
+  margin-left: auto;
+  width: 100%;
+  max-width: 35rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 15rem;
+  line-height: 30rem;
+}
+
+.arrow-button {
+  position: relative;
+  width: 50rem;
+  height: 50rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #FFFFFF;
+  color: #FFFFFF;
+  font-size: 20rem;
+  background: transparent;
+}
+
+.arrow-button svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.arrow-button svg circle {
+  stroke-dashoffset: 0;
+  stroke: transparent;
+  stroke-width: 2rem;
+}
+
+.arrow-button svg .arrow-button__progress {
+  stroke: #FFFFFF;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
 .body--freeze {
   overflow: hidden;
 }
