@@ -13,7 +13,9 @@ function bech_add_scripts(): void {
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'main', get_template_directory_uri() . '/js/main.js', [ 'jquery' ], time(), true );
 	wp_enqueue_script( 'front', get_template_directory_uri() . '/js/front.js', [ 'main' ], false, true );
-	wp_enqueue_script( 'custom', get_template_directory_uri() . '/js/custom.js', [ 'main' ], false, true );
+	wp_enqueue_script( 'splide', '//cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js', [ 'front' ], false, true );
+	wp_enqueue_script( 'tween-max', '//thevogne.ru/wp-content/themes/twentyfifteen/js/TweenMax.min.js', [ 'front' ], false, true );
+	wp_enqueue_script( 'custom', get_template_directory_uri() . '/js/custom.js', [ 'front' ], false, true );
 	wp_enqueue_script( 'script-cus', '//thevogne.ru/bech/script-cus.js', [ 'custom' ], false, true );
 	wp_localize_script( 'custom', 'bech_var', array(
 		'url'      => admin_url( 'admin-ajax.php' ),

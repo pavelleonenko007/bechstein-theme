@@ -35,6 +35,57 @@ function animate(element, styles = {}, duration, callback = () => {}) {
   return window.requestAnimationFrame(step);
 }
 
+class CustomCursor {
+  constructor(cursorId, parentElement) {
+    this.cursor = document.getElementById(cursorId);
+    this.parentElement = parentElement;
+    this.mouseCoordinates = {
+      x: 0,
+      y: 0
+    };
+    this.positionCoordinates = {
+      x: 0,
+      y: 0
+    };
+    this.ratio = 0.2;
+
+    TweenLite.set(this.cursor, {
+      xPercent: -50,
+      yPercent: -50
+    });
+
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleHover = this.handleHover.bind(this)
+
+    this.parentElement.addEventListener('mousemove', this.handleMouseMove);
+    this.parentElement.addEventListener('mouseenter', this.handleHover);
+    this.parentElement.addEventListener('mouseleave', this.handleHover);
+    TweenLite.ticker.addEventListener("tick", this.handleUpdate);
+  }
+
+  handleHover() {
+    this.cursor.classList.toggle('splide__cursor--active', !this.cursor.classList.contains('splide__cursor--active'));
+  }
+
+  handleMouseMove(event) {
+    console.log(this.cursor)
+    this.mouseCoordinates.x = event.clientX;
+    this.mouseCoordinates.y = event.clientY;
+  }
+
+  handleUpdate() {
+    this.positionCoordinates.x += (this.mouseCoordinates.x - this.positionCoordinates.x) * this.ratio;
+    this.positionCoordinates.y += (this.mouseCoordinates.y - this.positionCoordinates.y) * this.ratio;
+    TweenLite.set(this.cursor, {
+      x: this.positionCoordinates.x,
+      y: this.positionCoordinates.y
+    });
+  }
+}
+
+new CustomCursor('ball', document.getElementById('w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'));
+
 class Calendar {
   constructor(container, options = {}) {
     this.containerNode =
@@ -835,7 +886,7 @@ class BechCarouser {
     this.sliderNode = sliderNode;
     if (!this.sliderNode) return;
     this.options = {
-      duration: 4000,
+      duration: 5000,
       changingDuration: 600,
       ...options,
     }
@@ -845,12 +896,30 @@ class BechCarouser {
     this.nextButton = this.sliderNode.querySelector('[data-type="next"]');
     this.slidesCurrentNumberNode = this.sliderNode.querySelector('[data-type="current"]');
     this.slidesCountNode = this.sliderNode.querySelector('[data-type="count"]');
+    this.cursor = this.sliderNode.querySelector('[data-type="cursor"]');
 
     this.handleButtonClick = this.handleButtonClick.bind(this);
+    this.hoverCallback = this.hoverCallback.bind(this);
+    this.unhoverCallback = this.unhoverCallback.bind(this);
+    this.mouseMoveCallback = this.mouseMoveCallback.bind(this);
+    this.buttonMouseLeave = this.buttonMouseLeave.bind(this);
+    this.buttonMouseOver = this.buttonMouseOver.bind(this);
 
     this.prevButton.addEventListener('click', this.handleButtonClick);
-    this.nextButton.addEventListener('click', this.handleButtonClick);
+    this.prevButton.addEventListener('mouseover', this.buttonMouseOver);
+    this.prevButton.addEventListener('mouseleave', this.buttonMouseLeave);
 
+    this.nextButton.addEventListener('click', this.handleButtonClick);
+    this.nextButton.addEventListener('mouseover', this.buttonMouseOver);
+    this.nextButton.addEventListener('mouseleave', this.buttonMouseLeave);
+
+    this.sliderNode.addEventListener('mouseover', this.hoverCallback);
+    this.sliderNode.addEventListener('mouseleave', this.unhoverCallback);
+    this.sliderNode.addEventListener('mousemove', this.mouseMoveCallback);
+
+    this.slidesCountNode.innerText = this.slidesArray.length;
+
+    this.setCurrentSlideNumber()
     this.setSlidesStyles();
     this.initDuration();
   }
@@ -880,11 +949,9 @@ class BechCarouser {
     this.slidesArray.forEach((slide, index) => {
       if (index === this.currentIndex) {
         slide.classList.add('bech-slider__slide--active');
-        // $(slide).animate({opacity: 1}, this.options.changingDuration);
         animate(slide, {opacity: 1}, this.options.changingDuration);
       } else {
         slide.classList.remove('bech-slider__slide--active');
-        // $(slide).animate({opacity: 0}, this.options.changingDuration);
         animate(slide, {opacity: 0}, this.options.changingDuration);
       }
     });
@@ -897,14 +964,41 @@ class BechCarouser {
 
     clearInterval(this.interval);
     cancelAnimationFrame(this.animation);
+
+    this.animation = animate(this.nextButton.querySelector('.arrow-button__progress'), {strokeDashoffset: Math.PI*(24*2)}, this.options.duration);
+
     console.log(this.animation)
 
     this.interval = setInterval(() => {
-      // $('.arrow-button__progress').css({strokeDashoffset: 0})
       this.nextButton.querySelector('.arrow-button__progress').style.strokeDashoffset = 0;
       this.next();
       this.animation = animate(this.nextButton.querySelector('.arrow-button__progress'), {strokeDashoffset: Math.PI*(24*2)}, this.options.duration);
     }, this.options.duration);
+  }
+
+  hoverCallback(event) {
+    clearInterval(this.interval);
+    cancelAnimationFrame(this.animation);
+  }
+
+  unhoverCallback(event) {
+    this.initDuration();
+  }
+
+  mouseMoveCallback(event) {
+    const targetCoords = this.sliderNode.getBoundingClientRect();
+    const xCoord = (event.clientX - targetCoords.left) + (this.cursor.clientWidth / 2);
+    const yCoord = (event.clientY - targetCoords.top) + (this.cursor.clientHeight / 2);
+
+    this.cursor.style.transform = `translate3d(${xCoord}px, ${yCoord}px, 0)`;
+  }
+
+  buttonMouseLeave() {
+    this.cursor.classList.remove('hidden')
+  }
+
+  buttonMouseOver() {
+    this.cursor.classList.add('hidden')
   }
 
   handleButtonClick(event) {
@@ -935,9 +1029,58 @@ class BechCarouser {
   }
 }
 
+
 new BechCarouser(document.querySelector('[data-type="slider"]'), {
-  duration: 4000
+  duration: 5000
 });
+
+function initSplideCarousel() {
+  const splideCarouselContainer = document.querySelector('.splide');
+  // const customCursor = splideCarouselContainer.querySelector('.splide__cursor');
+  // const mouseOverCallback = event => {
+  //   customCursor.classList.add('splide__cursor--loading');
+  //   setTimeout(() => customCursor.classList.remove('splide__cursor--loading'), 200);
+  // }
+  // const mouseLeaveCallback = event => {
+  //   customCursor.classList.add('splide__cursor--loading');
+  //   customCursor.style.transform = 'scale(0)';
+  //   setTimeout(() => customCursor.classList.remove('splide__cursor--loading'), 200);
+  // }
+  // const mouseMoveCallback = event => {
+  //   const target = event.target.closest('.splide'); // Здесь что-то уникальное, что может указать на род. блок
+  //   const targetCoords = target.getBoundingClientRect();
+  //   const xCoord = (event.clientX - targetCoords.left) - (customCursor.clientWidth / 2);
+  //   const yCoord = (event.clientY - targetCoords.top) - (customCursor.clientHeight / 2);
+  //
+  //   customCursor.style.transform = `scale(1) translate3d(${xCoord}px, ${yCoord}px, 0)`;
+  // }
+
+
+  // splideCarouselContainer.addEventListener('mouseenter', mouseOverCallback)
+  // splideCarouselContainer.addEventListener('mouseleave', mouseLeaveCallback)
+  // splideCarouselContainer.addEventListener('mousemove', mouseMoveCallback)
+
+  new Splide('.splide', {
+    perPage: 1,
+    perMove: 1,
+    focus: 'center',
+    type: 'loop',
+    gap: '20px',
+    breakpoints: {
+
+      991: {
+        perPage: 1,
+        focus: 'left'
+      },
+      479: {
+        perPage: 1,
+        focus: 'left'
+      }
+    }
+  }).mount();
+
+  new CustomCursor('splide-cursor', document.querySelector('.splide'));
+};
 
 const initLoader = () => {
   const loaderNode = document.querySelector('.loader');
@@ -1203,5 +1346,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initTixSessions();
   initHomeFilterForm();
+  initSplideCarousel();
   window.whatsOnSlider = new WhatsOnSlider(Array.from(document.querySelectorAll('.wo-slide')));
 });
