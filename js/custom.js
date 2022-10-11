@@ -1,12 +1,12 @@
+console.log(1);
+
 function animate(element, styles = {}, duration, callback = () => {}) {
   let startAnimation;
   const currentStyles = {};
 
   for (const prop in styles) {
     if (Object.hasOwnProperty.call(styles, prop)) {
-      currentStyles[prop] = parseFloat(
-        window.getComputedStyle(element)[prop]
-      );
+      currentStyles[prop] = parseFloat(window.getComputedStyle(element)[prop]);
     }
   }
 
@@ -38,53 +38,64 @@ function animate(element, styles = {}, duration, callback = () => {}) {
 class CustomCursor {
   constructor(cursorId, parentElement) {
     this.cursor = document.getElementById(cursorId);
+    if (!this.cursor) return;
     this.parentElement = parentElement;
     this.mouseCoordinates = {
       x: 0,
-      y: 0
+      y: 0,
     };
     this.positionCoordinates = {
       x: 0,
-      y: 0
+      y: 0,
     };
     this.ratio = 0.2;
 
     TweenLite.set(this.cursor, {
       xPercent: -50,
-      yPercent: -50
+      yPercent: -50,
     });
 
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
-    this.handleHover = this.handleHover.bind(this)
+    this.handleHover = this.handleHover.bind(this);
 
     this.parentElement.addEventListener('mousemove', this.handleMouseMove);
     this.parentElement.addEventListener('mouseenter', this.handleHover);
     this.parentElement.addEventListener('mouseleave', this.handleHover);
-    TweenLite.ticker.addEventListener("tick", this.handleUpdate);
+    TweenLite.ticker.addEventListener('tick', this.handleUpdate);
   }
 
   handleHover() {
-    this.cursor.classList.toggle('splide__cursor--active', !this.cursor.classList.contains('splide__cursor--active'));
+    this.cursor.classList.toggle(
+      'splide__cursor--active',
+      !this.cursor.classList.contains('splide__cursor--active')
+    );
   }
 
   handleMouseMove(event) {
-    console.log(this.cursor)
+    console.log(this.cursor);
     this.mouseCoordinates.x = event.clientX;
     this.mouseCoordinates.y = event.clientY;
   }
 
   handleUpdate() {
-    this.positionCoordinates.x += (this.mouseCoordinates.x - this.positionCoordinates.x) * this.ratio;
-    this.positionCoordinates.y += (this.mouseCoordinates.y - this.positionCoordinates.y) * this.ratio;
+    this.positionCoordinates.x +=
+      (this.mouseCoordinates.x - this.positionCoordinates.x) * this.ratio;
+    this.positionCoordinates.y +=
+      (this.mouseCoordinates.y - this.positionCoordinates.y) * this.ratio;
     TweenLite.set(this.cursor, {
       x: this.positionCoordinates.x,
-      y: this.positionCoordinates.y
+      y: this.positionCoordinates.y,
     });
   }
 }
 
-new CustomCursor('ball', document.getElementById('w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'));
+new CustomCursor(
+  'ball',
+  document.getElementById(
+    'w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'
+  )
+);
 
 class Calendar {
   constructor(container, options = {}) {
@@ -232,8 +243,7 @@ class BechCalendar {
       onlyCurrentMonth: true,
       inputSelector: '#date',
       theme: 'dark',
-      callback: () => {
-      },
+      callback: () => {},
       ...options,
     };
 
@@ -328,7 +338,7 @@ class BechCalendar {
     event.preventDefault();
     event.stopPropagation();
     const button = event.target.closest('button');
-    const {type} = button.dataset;
+    const { type } = button.dataset;
 
     type === 'prev' ? this.prev() : this.next();
     this._setDate();
@@ -340,7 +350,7 @@ class BechCalendar {
 
     if (!dayNode) return;
 
-    const {date} = dayNode.dataset;
+    const { date } = dayNode.dataset;
     const dateInput = document.querySelector(this.options.inputSelector);
     const dateNodes = this.calendarBody.querySelectorAll('[data-date]');
 
@@ -428,16 +438,16 @@ class BechCalendar {
         day
           ? `<div 
             class="wo-day ${
-            this._getFormattedDate(day) ===
-            this._getFormattedDate(this._today)
-              ? 'wo-day--today'
-              : ''
-          } ${
-            this._getFormattedDate(day) ===
-            this._getFormattedDate(this._chosenDate)
-              ? 'wo-day--selected'
-              : ''
-          }"
+              this._getFormattedDate(day) ===
+              this._getFormattedDate(this._today)
+                ? 'wo-day--today'
+                : ''
+            } ${
+              this._getFormattedDate(day) ===
+              this._getFormattedDate(this._chosenDate)
+                ? 'wo-day--selected'
+                : ''
+            }"
               data-date="${this._getFormattedDate(day)}"
             >
             <div class="wo-day__label">${day.getDate()}</div>
@@ -470,7 +480,8 @@ class UserCart {
     this._profileUrl = userData?.profile || '#';
     this._logoutUrl = 'https://tix.bechsteinhall.func.agency/en/logout/';
     this._loginUrl = 'https://tix.bechsteinhall.func.agency/en/login/';
-    this._checkoutUrl = 'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
+    this._checkoutUrl =
+      'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
 
     this._init();
   }
@@ -479,7 +490,10 @@ class UserCart {
     console.log(event);
     if (this._user?.name) {
       event.preventDefault();
-      document.body.classList.toggle('opencart', !document.body.classList.contains('opencart'));
+      document.body.classList.toggle(
+        'opencart',
+        !document.body.classList.contains('opencart')
+      );
     }
   }
 
@@ -690,7 +704,7 @@ class WhatsOnSlider {
     this._data = data ? data : this._data;
     this.sliderContainerNode.innerHTML = this._getMarkup();
     this.slideNodes = this.sliderContainerNode.querySelectorAll('.wo-slide');
-    console.log(this.slideNodes)
+    console.log(this.slideNodes);
     this._slideSize = this.slideNodes[0].getBoundingClientRect();
     this.setSlidesPosition();
     this.sliderContainerNode.classList.add('wo-slider--ready');
@@ -797,15 +811,21 @@ class VideoPlayer {
   constructor(playerNode) {
     this.playerNode = playerNode;
     if (!this.playerNode) {
-      console.error('Player node is not defined')
+      console.error('Player node is not defined');
       return;
     }
     this._video = this.playerNode.querySelector('video');
     this._soundButton = this.playerNode.querySelector('[data-type="sound"]');
     this._playButton = this.playerNode.querySelector('[data-type="play"]');
-    this._progressBar = this.playerNode.querySelector('[data-type="progress-bar"]');
-    this._progressLine = this.playerNode.querySelector('[data-type="progress-line"]');
-    this._timeCounter = this.playerNode.querySelector('[data-type="time-counter"]');
+    this._progressBar = this.playerNode.querySelector(
+      '[data-type="progress-bar"]'
+    );
+    this._progressLine = this.playerNode.querySelector(
+      '[data-type="progress-line"]'
+    );
+    this._timeCounter = this.playerNode.querySelector(
+      '[data-type="time-counter"]'
+    );
 
     this.duration = this._video.duration;
     this.handleMute();
@@ -839,9 +859,15 @@ class VideoPlayer {
   }
 
   formatTime(time) {
-    const minutes = Math.floor(time / 60) < 10 ? `0${Math.floor(time / 60)}` : `${Math.floor(time / 60)}`;
-    const seconds = Math.floor(time % 60) < 10 ? `0${Math.floor(time % 60)}` : `${Math.floor(time % 60)}`;
-    return `${minutes}:${seconds}`
+    const minutes =
+      Math.floor(time / 60) < 10
+        ? `0${Math.floor(time / 60)}`
+        : `${Math.floor(time / 60)}`;
+    const seconds =
+      Math.floor(time % 60) < 10
+        ? `0${Math.floor(time % 60)}`
+        : `${Math.floor(time % 60)}`;
+    return `${minutes}:${seconds}`;
   }
 
   play() {
@@ -865,7 +891,9 @@ class SkipVideoPlayer extends VideoPlayer {
   constructor(playerNode, skipCallback) {
     super(playerNode);
     this._callback = skipCallback;
-    this._skipButton = this.playerNode.querySelector('[data-type="skip-button"]');
+    this._skipButton = this.playerNode.querySelector(
+      '[data-type="skip-button"]'
+    );
 
     this.handleSkip = this.handleSkip.bind(this);
     this._skipButton.addEventListener('click', this.handleSkip);
@@ -889,12 +917,16 @@ class BechCarouser {
       duration: 5000,
       changingDuration: 600,
       ...options,
-    }
+    };
     this._currentIndex = 0;
-    this.slidesArray = Array.from(this.sliderNode.querySelectorAll('[data-type="slide"]'));
+    this.slidesArray = Array.from(
+      this.sliderNode.querySelectorAll('[data-type="slide"]')
+    );
     this.prevButton = this.sliderNode.querySelector('[data-type="prev"]');
     this.nextButton = this.sliderNode.querySelector('[data-type="next"]');
-    this.slidesCurrentNumberNode = this.sliderNode.querySelector('[data-type="current"]');
+    this.slidesCurrentNumberNode = this.sliderNode.querySelector(
+      '[data-type="current"]'
+    );
     this.slidesCountNode = this.sliderNode.querySelector('[data-type="count"]');
     this.cursor = this.sliderNode.querySelector('[data-type="cursor"]');
 
@@ -919,7 +951,7 @@ class BechCarouser {
 
     this.slidesCountNode.innerText = this.slidesArray.length;
 
-    this.setCurrentSlideNumber()
+    this.setCurrentSlideNumber();
     this.setSlidesStyles();
     this.initDuration();
   }
@@ -949,10 +981,10 @@ class BechCarouser {
     this.slidesArray.forEach((slide, index) => {
       if (index === this.currentIndex) {
         slide.classList.add('bech-slider__slide--active');
-        animate(slide, {opacity: 1}, this.options.changingDuration);
+        animate(slide, { opacity: 1 }, this.options.changingDuration);
       } else {
         slide.classList.remove('bech-slider__slide--active');
-        animate(slide, {opacity: 0}, this.options.changingDuration);
+        animate(slide, { opacity: 0 }, this.options.changingDuration);
       }
     });
   }
@@ -965,14 +997,24 @@ class BechCarouser {
     clearInterval(this.interval);
     cancelAnimationFrame(this.animation);
 
-    this.animation = animate(this.nextButton.querySelector('.arrow-button__progress'), {strokeDashoffset: Math.PI*(24*2)}, this.options.duration);
+    this.animation = animate(
+      this.nextButton.querySelector('.arrow-button__progress'),
+      { strokeDashoffset: Math.PI * (24 * 2) },
+      this.options.duration
+    );
 
-    console.log(this.animation)
+    console.log(this.animation);
 
     this.interval = setInterval(() => {
-      this.nextButton.querySelector('.arrow-button__progress').style.strokeDashoffset = 0;
+      this.nextButton.querySelector(
+        '.arrow-button__progress'
+      ).style.strokeDashoffset = 0;
       this.next();
-      this.animation = animate(this.nextButton.querySelector('.arrow-button__progress'), {strokeDashoffset: Math.PI*(24*2)}, this.options.duration);
+      this.animation = animate(
+        this.nextButton.querySelector('.arrow-button__progress'),
+        { strokeDashoffset: Math.PI * (24 * 2) },
+        this.options.duration
+      );
     }, this.options.duration);
   }
 
@@ -987,18 +1029,20 @@ class BechCarouser {
 
   mouseMoveCallback(event) {
     const targetCoords = this.sliderNode.getBoundingClientRect();
-    const xCoord = (event.clientX - targetCoords.left) + (this.cursor.clientWidth / 2);
-    const yCoord = (event.clientY - targetCoords.top) + (this.cursor.clientHeight / 2);
+    const xCoord =
+      event.clientX - targetCoords.left + this.cursor.clientWidth / 2;
+    const yCoord =
+      event.clientY - targetCoords.top + this.cursor.clientHeight / 2;
 
     this.cursor.style.transform = `translate3d(${xCoord}px, ${yCoord}px, 0)`;
   }
 
   buttonMouseLeave() {
-    this.cursor.classList.remove('hidden')
+    this.cursor.classList.remove('hidden');
   }
 
   buttonMouseOver() {
-    this.cursor.classList.add('hidden')
+    this.cursor.classList.add('hidden');
   }
 
   handleButtonClick(event) {
@@ -1006,7 +1050,7 @@ class BechCarouser {
     event.stopPropagation();
     const button = event.target.closest('button');
     if (!button) return;
-    const {type} = button.dataset;
+    const { type } = button.dataset;
 
     type === 'prev' ? this.prev() : this.next();
     this.initDuration();
@@ -1029,9 +1073,8 @@ class BechCarouser {
   }
 }
 
-
 new BechCarouser(document.querySelector('[data-type="slider"]'), {
-  duration: 5000
+  duration: 5000,
 });
 
 function initSplideCarousel() {
@@ -1055,7 +1098,6 @@ function initSplideCarousel() {
   //   customCursor.style.transform = `scale(1) translate3d(${xCoord}px, ${yCoord}px, 0)`;
   // }
 
-
   // splideCarouselContainer.addEventListener('mouseenter', mouseOverCallback)
   // splideCarouselContainer.addEventListener('mouseleave', mouseLeaveCallback)
   // splideCarouselContainer.addEventListener('mousemove', mouseMoveCallback)
@@ -1067,20 +1109,19 @@ function initSplideCarousel() {
     type: 'loop',
     gap: '20px',
     breakpoints: {
-
       991: {
         perPage: 1,
-        focus: 'left'
+        focus: 'left',
       },
       479: {
         perPage: 1,
-        focus: 'left'
-      }
-    }
+        focus: 'left',
+      },
+    },
   }).mount();
 
   new CustomCursor('splide-cursor', document.querySelector('.splide'));
-};
+}
 
 const initLoader = () => {
   const loaderNode = document.querySelector('.loader');
@@ -1091,14 +1132,19 @@ const initLoader = () => {
   const skipCallback = () => {
     const data = {
       skipped: true,
-      date: Date.now() + 1000 * 60 * 60 * 24
-    }
+      date: Date.now() + 1000 * 60 * 60 * 24,
+    };
     window.localStorage.setItem('loader', JSON.stringify(data));
     loaderNode.classList.remove('loader--active');
     document.body.classList.remove('body--freeze');
-  }
-  const openPlayerButton = document.querySelector('[data-button="open-player"]');
-  const player = new SkipVideoPlayer(loaderNode.querySelector('[data-type="video-player"]'), skipCallback);
+  };
+  const openPlayerButton = document.querySelector(
+    '[data-button="open-player"]'
+  );
+  const player = new SkipVideoPlayer(
+    loaderNode.querySelector('[data-type="video-player"]'),
+    skipCallback
+  );
   player.pause();
 
   if (!loaderData || loaderData.date <= Date.now()) {
@@ -1109,13 +1155,13 @@ const initLoader = () => {
     console.log('hide loader');
   }
 
-  openPlayerButton.addEventListener('click', event => {
+  openPlayerButton.addEventListener('click', (event) => {
     event.preventDefault();
     loaderNode.classList.add('loader--active');
     document.body.classList.add('body--freeze');
     player.play();
   });
-}
+};
 
 const initMainBookTicketsCursor = () => {
   const cursor = document.querySelector('[data-type="cursor"]');
@@ -1124,12 +1170,12 @@ const initMainBookTicketsCursor = () => {
 
   cursorContainer.addEventListener('mousemove', (event) => {
     const targetCoords = cursorContainer.getBoundingClientRect();
-    const xCoord = (event.clientX - targetCoords.left) + (cursor.clientWidth / 2);
-    const yCoord = (event.clientY - targetCoords.top) + (cursor.clientHeight / 2);
+    const xCoord = event.clientX - targetCoords.left + cursor.clientWidth / 2;
+    const yCoord = event.clientY - targetCoords.top + cursor.clientHeight / 2;
 
     cursor.style.transform = `translate3d(${xCoord}px, ${yCoord}px, 0)`;
-  })
-}
+  });
+};
 
 const initWhatsOnFilters = () => {
   const calendarWidget = new CalendarWidget(
@@ -1304,8 +1350,10 @@ const initTixSessions = () => {
 const initHomeFilterForm = () => {
   const formNode = document.getElementById('home-filter-form');
   if (!formNode) return;
-  const inputNodes = Array.from(formNode.querySelectorAll('input:not([type="submit"]):not([name="action"])'));
-  const getTickets = async event => {
+  const inputNodes = Array.from(
+    formNode.querySelectorAll('input:not([type="submit"]):not([name="action"])')
+  );
+  const getTickets = async (event) => {
     event?.preventDefault();
     const formData = new FormData(formNode);
 
@@ -1314,8 +1362,8 @@ const initHomeFilterForm = () => {
     try {
       const fetchOptions = {
         method: 'POST',
-        body: formData
-      }
+        body: formData,
+      };
 
       const response = await fetch(bech_var.url, fetchOptions);
       const data = await response.json();
@@ -1328,14 +1376,16 @@ const initHomeFilterForm = () => {
 
       document.querySelector('.wo-slider').innerHTML = data.html;
       console.log(window.whatsOnSlider);
-      window.whatsOnSlider.reset(Array.from(document.querySelectorAll('.wo-slide')));
+      window.whatsOnSlider.reset(
+        Array.from(document.querySelectorAll('.wo-slide'))
+      );
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
-  }
+  };
 
-  inputNodes.forEach(input => input.addEventListener('change', getTickets));
-}
+  inputNodes.forEach((input) => input.addEventListener('change', getTickets));
+};
 
 window.addEventListener('load', () => {
   $('#date-picker').datepicker();
@@ -1347,5 +1397,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTixSessions();
   initHomeFilterForm();
   initSplideCarousel();
-  window.whatsOnSlider = new WhatsOnSlider(Array.from(document.querySelectorAll('.wo-slide')));
+  window.whatsOnSlider = new WhatsOnSlider(
+    Array.from(document.querySelectorAll('.wo-slide'))
+  );
 });

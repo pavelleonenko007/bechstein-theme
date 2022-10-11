@@ -2,48 +2,52 @@
 require get_template_directory() . '/inc/widgets/class-bech-repeater-links-widget/class-bech-repeater-links-widget.php';
 require get_template_directory() . '/inc/widgets/class-bech-contact-widget/class-bech-contact-widget.php';
 
-add_theme_support( 'custom-logo' );
-add_theme_support( 'widgets' );
+add_theme_support('custom-logo');
+add_theme_support('widgets');
 
-add_action( 'wp_enqueue_scripts', 'bech_add_scripts' );
-function bech_add_scripts(): void {
-	wp_enqueue_style( 'custom', get_template_directory_uri() . '/css/custom.css', [ 'main' ], rand() );
-	wp_enqueue_style( 'style-css', '//thevogne.ru/bech/style-cus.css', [ 'custom' ], rand() );
-	wp_enqueue_script( 'jquery-ui-core' );
-	wp_enqueue_script( 'jquery-ui-datepicker' );
-	wp_enqueue_script( 'main', get_template_directory_uri() . '/js/main.js', [ 'jquery' ], time(), true );
-	wp_enqueue_script( 'front', get_template_directory_uri() . '/js/front.js', [ 'main' ], false, true );
-	wp_enqueue_script( 'splide', '//cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js', [ 'front' ], false, true );
-	wp_enqueue_script( 'tween-max', '//thevogne.ru/wp-content/themes/twentyfifteen/js/TweenMax.min.js', [ 'front' ], false, true );
-	wp_enqueue_script( 'custom', get_template_directory_uri() . '/js/custom.js', [ 'front' ], false, true );
-	wp_enqueue_script( 'script-cus', '//thevogne.ru/bech/script-cus.js', [ 'custom' ], false, true );
-	wp_localize_script( 'custom', 'bech_var', array(
-		'url'      => admin_url( 'admin-ajax.php' ),
-		'nonce'    => wp_create_nonce( 'ajax-nonce' ),
+add_action('wp_enqueue_scripts', 'bech_add_scripts');
+function bech_add_scripts(): void
+{
+	wp_enqueue_style('custom', get_template_directory_uri() . '/css/custom.css', ['main'], rand());
+	wp_enqueue_style('style-css', '//thevogne.ru/bech/style-cus.css', ['custom'], rand());
+	wp_enqueue_script('jquery-ui-core');
+	wp_enqueue_script('jquery-ui-datepicker');
+	wp_enqueue_script('main', get_template_directory_uri() . '/js/main.js', ['jquery'], time(), true);
+	wp_enqueue_script('front', get_template_directory_uri() . '/js/front.js', ['main'], false, true);
+	wp_enqueue_script('splide', '//cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js', ['front'], false, true);
+	wp_enqueue_script('tween-max', '//thevogne.ru/wp-content/themes/twentyfifteen/js/TweenMax.min.js', ['front'], false, true);
+	wp_enqueue_script('custom', get_template_directory_uri() . '/js/custom.js', ['front'], false, true);
+	wp_enqueue_script('script-cus', '//thevogne.ru/bech/script-cus.js', ['custom'], false, true);
+	wp_localize_script('custom', 'bech_var', array(
+		'url'      => admin_url('admin-ajax.php'),
+		'nonce'    => wp_create_nonce('ajax-nonce'),
 		'home_url' => get_home_url()
-	) );
+	));
 }
 
-add_action( 'widgets_init', 'bech_register_sidebar' );
-function bech_register_sidebar(): void {
-	register_sidebar( [
+add_action('widgets_init', 'bech_register_sidebar');
+function bech_register_sidebar(): void
+{
+	register_sidebar([
 		'name' => 'Bechstein Sidebar',
 		'id'   => 'custom_bechstein_sidebar',
-	] );
+	]);
 }
 
 /* Tix Utils Functions */
 
-function bech_format_date( $str = '', $format = 'Y-m-d H:i:s' ): string {
-	$date = new DateTime( $str );
+function bech_format_date($str = '', $format = 'Y-m-d H:i:s'): string
+{
+	$date = new DateTime($str);
 
-	return $date->format( $format );
+	return $date->format($format);
 }
 
-function bech_purchase_url_format_data( $arr ): array {
+function bech_purchase_url_format_data($arr): array
+{
 	$formatted_arr = [];
 
-	foreach ( $arr as $item ) {
+	foreach ($arr as $item) {
 		$formatted_item                       = [];
 		$formatted_item['two_letter_culture'] = $item['TwoLetterCulture'];
 		$formatted_item['link']               = $item['Link'];
@@ -54,10 +58,11 @@ function bech_purchase_url_format_data( $arr ): array {
 	return $formatted_arr;
 }
 
-add_action( 'init', 'bech_register_post_types' );
+// add_action('init', 'bech_register_post_types');
 
-function bech_register_post_types() {
-	register_post_type( 'team', [
+function bech_register_post_types()
+{
+	register_post_type('team', [
 		'label'         => null,
 		'labels'        => [
 			'name'               => 'Team', // основное название для типа записи
@@ -92,14 +97,13 @@ function bech_register_post_types() {
 		//'capabilities'      => 'post', // массив дополнительных прав для этого типа записи
 		//'map_meta_cap'      => null, // Ставим true чтобы включить дефолтный обработчик специальных прав
 		'hierarchical'  => false,
-		'supports'      => [ 'title', 'editor', 'thumbnail' ],
+		'supports'      => ['title', 'editor', 'thumbnail'],
 		// 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
 		'taxonomies'    => [],
 		'has_archive'   => false,
 		'rewrite'       => true,
 		'query_var'     => true,
-	] );
-
+	]);
 }
 
 /* Tix Utils Functions */
@@ -108,77 +112,78 @@ function bech_register_post_types() {
  * webhook endpoint
  */
 
-add_action( 'rest_api_init', function () {
-	register_rest_route( 'tix-webhook/v1', '/webhook', array(
-		'methods'             => 'GET',
-		'callback'            => 'bech_webhook_callback',
-		'permission_callback' => '__return_true'
-	) );
-} );
+// add_action('rest_api_init', function () {
+// 	register_rest_route('tix-webhook/v1', '/webhook', array(
+// 		'methods'             => 'GET',
+// 		'callback'            => 'bech_webhook_callback',
+// 		'permission_callback' => '__return_true'
+// 	));
+// });
 
-function bech_webhook_callback( WP_REST_Request $request ) {
+function bech_webhook_callback(WP_REST_Request $request)
+{
 	require_once ABSPATH . 'wp-admin/includes/file.php';
 	$url      = 'https://eventapi.tix.uk/v2/Events?key=39c4703fb4a64c7e';
-	$response = wp_remote_get( $url );
+	$response = wp_remote_get($url);
 
-	if ( is_wp_error( $response ) ) {
-		return new WP_Error( 'can_not_fetch_data', 'Can not fetch data from tix', [ 'status' => 400 ] );
+	if (is_wp_error($response)) {
+		return new WP_Error('can_not_fetch_data', 'Can not fetch data from tix', ['status' => 400]);
 	}
 
-	if ( is_dir( get_home_path() . 'tix-logs' ) === false ) {
-		mkdir( get_home_path() . 'tix-logs' );
+	if (is_dir(get_home_path() . 'tix-logs') === false) {
+		mkdir(get_home_path() . 'tix-logs');
 	}
 
-	$file = fopen( get_home_path() . 'tix-logs/logs.txt', "a" );
-	fwrite( $file, '=== Start: ' . date( 'l jS \of F Y h:i:s A' ) . '=== ||' );
-	fwrite( $file, json_encode( $request->get_body_params() ) );
+	$file = fopen(get_home_path() . 'tix-logs/logs.txt', "a");
+	fwrite($file, '=== Start: ' . date('l jS \of F Y h:i:s A') . '=== ||');
+	fwrite($file, json_encode($request->get_body_params()));
 
-	fwrite( $file, '==||==' );
+	fwrite($file, '==||==');
 
-	fwrite( $file, json_encode( $request->get_body() ) );
-	fwrite( $file, '|| === End ===' );
-	fclose( $file );
+	fwrite($file, json_encode($request->get_body()));
+	fwrite($file, '|| === End ===');
+	fclose($file);
 
-	$body  = json_decode( $response['body'], true );
+	$body  = json_decode($response['body'], true);
 	$error = '';
 
-	foreach ( $body as $event ) {
+	foreach ($body as $event) {
 		$category_res = '';
 
-		$existing_category = get_terms( [
+		$existing_category = get_terms([
 			'taxonomy'   => 'event_cat',
 			'get'        => 'all',
 			'meta_key'   => 'event_group_id',
 			'meta_value' => $event['EventGroupId']
-		] );
+		]);
 
-		if ( $existing_category[0] ) {
-			$category_res = wp_update_term( $existing_category[0]->term_id, 'event_cat', [
+		if ($existing_category[0]) {
+			$category_res = wp_update_term($existing_category[0]->term_id, 'event_cat', [
 				'description' => $event['Description'],
-			] );
+			]);
 		} else {
-			$category_res = wp_insert_term( $event['Name'], 'event_cat', [
+			$category_res = wp_insert_term($event['Name'], 'event_cat', [
 				'description' => $event['Description'],
-			] );
+			]);
 		}
 
-		if ( is_wp_error( $category_res ) ) {
+		if (is_wp_error($category_res)) {
 			$error = $category_res->get_error_message();
 			break;
 		}
 
-		update_field( 'field_62fa240659e1f', $event['EventGroupId'], 'event_cat_' . $category_res['term_id'] );
-		update_field( 'field_62e114041c431', $event['EventImagePath'], 'event_cat_' . $category_res['term_id'] );
-		update_field( 'field_62e116751c432', $event['FeaturedImagePath'], 'event_cat_' . $category_res['term_id'] );
-		update_field( 'field_62e116931c433', $event['PosterImagePath'], 'event_cat_' . $category_res['term_id'] );
-		update_field( 'field_62e112e21c42e', bech_purchase_url_format_data( $event['PurchaseUrls'] ), 'event_cat_' . $category_res['term_id'] );
+		update_field('field_62fa240659e1f', $event['EventGroupId'], 'event_cat_' . $category_res['term_id']);
+		update_field('field_62e114041c431', $event['EventImagePath'], 'event_cat_' . $category_res['term_id']);
+		update_field('field_62e116751c432', $event['FeaturedImagePath'], 'event_cat_' . $category_res['term_id']);
+		update_field('field_62e116931c433', $event['PosterImagePath'], 'event_cat_' . $category_res['term_id']);
+		update_field('field_62e112e21c42e', bech_purchase_url_format_data($event['PurchaseUrls']), 'event_cat_' . $category_res['term_id']);
 
-		foreach ( $event['Dates'] as $tiket ) {
-			$existing_tiket = get_posts( [
+		foreach ($event['Dates'] as $tiket) {
+			$existing_tiket = get_posts([
 				'post_type'  => 'event',
 				'meta_key'   => 'eventid',
 				'meta_value' => $tiket['EventId']
-			] );
+			]);
 
 			$tiket_args = [
 				'post_type'    => 'event',
@@ -188,20 +193,20 @@ function bech_webhook_callback( WP_REST_Request $request ) {
 				'post_content' => '<p></p>',
 			];
 
-			if ( $existing_tiket[0] ) {
+			if ($existing_tiket[0]) {
 				$tiket_args['ID'] = $existing_tiket[0]->ID;
 			}
 
-			$ticket_id = wp_insert_post( $tiket_args, true );
+			$ticket_id = wp_insert_post($tiket_args, true);
 
-			if ( is_wp_error( $ticket_id ) ) {
+			if (is_wp_error($ticket_id)) {
 				$error = $ticket_id->get_error_message();
 				break 2;
 			}
 
-			$cat_id = wp_set_object_terms( $ticket_id, $category_res['term_id'], 'event_cat', false );
+			$cat_id = wp_set_object_terms($ticket_id, $category_res['term_id'], 'event_cat', false);
 
-			if ( is_wp_error( $cat_id ) ) {
+			if (is_wp_error($cat_id)) {
 				$error = $cat_id->get_error_message();
 				break 2;
 			}
@@ -221,57 +226,59 @@ function bech_webhook_callback( WP_REST_Request $request ) {
 
 			/* Update Online Sale Start Field */
 
-			update_field( $event_id_field, $tiket['EventId'], $ticket_id );
-			update_field( $sale_status_field, $tiket['SaleStatus'], $ticket_id );
-			update_field( $duration_field, $tiket['Duration'], $ticket_id );
-			update_field( $sold_out_field, $tiket['SoldOut'], $ticket_id );
-			update_field( $waiting_list_field, $tiket['WaitingList'], $ticket_id );
-			update_field( $online_date_start_field, $tiket['StartDate'], $ticket_id );
-			update_field( $online_date_end_field, $tiket['EndDate'], $ticket_id );
-			update_field( $online_sale_start_field, $tiket['OnlineSaleStart'], $ticket_id );
-			update_field( $online_sale_end_field, $tiket['OnlineSaleEnd'], $ticket_id );
-			update_field( $min_price_field, $tiket['MinPrice'], $ticket_id );
-			update_field( $max_price_field, $tiket['MaxPrice'], $ticket_id );
-			update_field( $max_price_field, $tiket['MaxPrice'], $ticket_id );
-			update_field( $purchase_urls_field, bech_purchase_url_format_data( $tiket['PurchaseUrls'] ), $ticket_id );
+			update_field($event_id_field, $tiket['EventId'], $ticket_id);
+			update_field($sale_status_field, $tiket['SaleStatus'], $ticket_id);
+			update_field($duration_field, $tiket['Duration'], $ticket_id);
+			update_field($sold_out_field, $tiket['SoldOut'], $ticket_id);
+			update_field($waiting_list_field, $tiket['WaitingList'], $ticket_id);
+			update_field($online_date_start_field, $tiket['StartDate'], $ticket_id);
+			update_field($online_date_end_field, $tiket['EndDate'], $ticket_id);
+			update_field($online_sale_start_field, $tiket['OnlineSaleStart'], $ticket_id);
+			update_field($online_sale_end_field, $tiket['OnlineSaleEnd'], $ticket_id);
+			update_field($min_price_field, $tiket['MinPrice'], $ticket_id);
+			update_field($max_price_field, $tiket['MaxPrice'], $ticket_id);
+			update_field($max_price_field, $tiket['MaxPrice'], $ticket_id);
+			update_field($purchase_urls_field, bech_purchase_url_format_data($tiket['PurchaseUrls']), $ticket_id);
 		}
 	}
 
-	if ( $error ) {
-		return new WP_Error( 'error_post_update', $error, [ 'status' => 500 ] );
+	if ($error) {
+		return new WP_Error('error_post_update', $error, ['status' => 500]);
 	}
 
-	$rest_response = rest_ensure_response( [
+	$rest_response = rest_ensure_response([
 		'code'    => 'success',
 		'message' => 'Data succesfully updated',
 		'data'    => [
 			'status' => 201
 		]
-	] );
+	]);
 
-	$rest_response->set_status( 201 );
+	$rest_response->set_status(201);
 
 	return $rest_response;
 }
 
-function bech_sort_tickets( $tickets ) {
+function bech_sort_tickets($tickets)
+{
 	$sorted_tickets = [];
 
-	foreach ( $tickets as $ticket ) {
-		$date_time                        = new DateTime( get_field( 'start_date', $ticket->ID ) );
-		$ticket_date                      = $date_time->format( 'Y-m-d' );
-		$sorted_tickets[ $ticket_date ][] = $ticket;
+	foreach ($tickets as $ticket) {
+		$date_time                        = new DateTime(get_field('_bechtix_ticket_start_date', $ticket->ID));
+		$ticket_date                      = $date_time->format('Y-m-d');
+		$sorted_tickets[$ticket_date][] = $ticket;
 	}
 
 	return $sorted_tickets;
 }
 
-function bech_get_ticket_from_to_price( $post_id ) {
-	$from_price = get_field( 'min_price', $post_id );
-	$to_price   = get_field( 'max_price', $post_id );
+function bech_get_ticket_from_to_price($post_id)
+{
+	$from_price = get_field('_bechtix_min_price', $post_id);
+	$to_price   = get_field('_bechtix_max_price', $post_id);
 
-	if ( $from_price === '' || $to_price === '' ) {
-		switch ( true ) {
+	if ($from_price === '' || $to_price === '') {
+		switch (true) {
 			case $from_price === '' && $to_price === '':
 				return 'No price yet';
 			case $from_price === '':
@@ -284,13 +291,14 @@ function bech_get_ticket_from_to_price( $post_id ) {
 	}
 }
 
-function bech_get_ticket_times( $post_id ): string {
-	$start_date = new DateTime( get_field( 'start_date', $post_id ) );
-	$end_date   = new DateTime( get_field( 'end_date', $post_id ) );
-	$start_time = $start_date->format( 'H:i' );
-	$end_time   = $end_date->format( 'H:i' );
+function bech_get_ticket_times($post_id): string
+{
+	$start_date = new DateTime(get_field('_bechtix_ticket_start_date', $post_id));
+	$end_date   = new DateTime(get_field('_bechtix_ticket_end_date', $post_id));
+	$start_time = $start_date->format('H:i');
+	$end_time   = $end_date->format('H:i');
 
-	switch ( true ) {
+	switch (true) {
 		case $start_time !== '' && $end_time !== '':
 			return $start_time . '—' . $end_time;
 		case $end_time === '':
@@ -302,27 +310,29 @@ function bech_get_ticket_times( $post_id ): string {
 	}
 }
 
-function bech_get_custom_taxonomies( $taxonomy ) {
-	$terms = get_terms( [
+function bech_get_custom_taxonomies($taxonomy)
+{
+	$terms = get_terms([
 		'taxonomy'   => $taxonomy,
 		'hide_empty' => false,
 		'parent'     => 0,
-	] );
+	]);
 
 	return $terms;
 }
 
 /* What's on filters */
 
-add_action( 'rest_api_init', function () {
-	register_rest_route( 'tix-webhook/v1', '/whats-on-filter', array(
+add_action('rest_api_init', function () {
+	register_rest_route('tix-webhook/v1', '/whats-on-filter', array(
 		'methods'             => 'POST',
 		'callback'            => 'bech_filter_whats_on_tickets',
 		'permission_callback' => '__return_true'
-	) );
-} );
+	));
+});
 
-function bech_filter_whats_on_tickets( WP_REST_Request $request ) {
+function bech_filter_whats_on_tickets(WP_REST_Request $request)
+{
 	$params = $request->get_params();
 
 	// if (!wp_verify_nonce($params['bech_filter_nonce'], 'bech_filter_nonce_action')) {
@@ -341,92 +351,102 @@ function bech_filter_whats_on_tickets( WP_REST_Request $request ) {
 
 	$selected_string = '';
 
-	foreach ( $params as $prop => $param ) {
-		if ( $prop === 'genre' || $prop === 'instrument' || $prop === 'time' ) {
-			$selected_string .= is_array( $param ) ? implode( ', ', $param ) : $param;
-			$selected_string .= ', ';
+	foreach ($params as $prop => $param) {
+		if ($prop === 'genre' || $prop === 'instrument' || ($prop === 'time' && !empty($param)) || $prop === 'festival') {
+			if ($prop === 'festival') {
+				foreach ($param as $festival_id) {
+					$festival = get_post($festival_id);
+					$selected_string .= $festival->post_title;
+					$selected_string .= ', ';
+				}
+			} else {
+				$selected_string .= is_array($param) ? implode(', ', $param) : $param;
+				$selected_string .= ', ';
+			}
 		}
 	}
 
-	$selected_string = mb_substr( $selected_string, 0, - 2 );
+	$selected_string = mb_substr($selected_string, 0, -2);
 
 	$args = [
-		'post_type'   => 'event',
+		'post_type' => 'tickets',
 		'post_status' => 'publish',
 		'numberposts' => 10,
-		'orderby'     => 'meta_value',
-		'meta_key'    => 'start_date',
-		'order'       => 'ASC',
-		'meta_query'  => [
-			[
-				'key'     => 'start_date',
-				'value'   => date( 'Y.m.d H:i' ),
-				'compare' => '>=',
-				'type'    => 'DATETIME'
-			]
-		]
+		'orderby' => 'meta_value',
+		'meta_key' => '_bechtix_ticket_start_date',
+		'order' => 'ASC',
+		// 'meta_query'  => [
+		// 	[
+		// 		'key'     => 'start_date',
+		// 		'value'   => date('Y.m.d H:i'),
+		// 		'compare' => '>=',
+		// 		'type'    => 'DATETIME'
+		// 	]
+		// ]
 	];
 
-	if ( isset( $params['time'] ) ) {
-		if ( $params['time'] === 'today' ) {
-			$datetime  = new DateTime( 'today' );
-			$next_date = new DateTime( 'tomorrow' );
+	if (!empty($params['time'])) {
+		if ($params['time'] === 'today') {
+			$datetime  = new DateTime('today');
+			$next_date = new DateTime('tomorrow');
 
-			$args['meta_query'][0] = [
-				'key'     => 'start_date',
-				'value'   => [ $datetime->format( 'Y.m.d H:i' ), $next_date->format( 'Y.m.d H:i' ) ],
+			$args['meta_query'][] = [
+				'key'     => '_bechtix_ticket_start_date',
+				'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
 				'compare' => 'BETWEEN',
 				'type'    => 'DATETIME'
 			];
-		} elseif ( $params['time'] === 'tomorrow' ) {
-			$datetime  = new DateTime( 'tomorrow' );
-			$next_date = new DateTime( 'tomorrow' );
-			$next_date->modify( '+1 day' );
+		} elseif ($params['time'] === 'tomorrow') {
+			$datetime  = new DateTime('tomorrow');
+			$next_date = new DateTime('tomorrow');
+			$next_date->modify('+1 day');
 
-			$args['meta_query'][0] = [
-				'key'     => 'start_date',
-				'value'   => [ $datetime->format( 'Y.m.d H:i' ), $next_date->format( 'Y.m.d H:i' ) ],
+			$args['meta_query'][] = [
+				'key'     => '_bechtix_ticket_start_date',
+				'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
 				'compare' => 'BETWEEN',
 				'type'    => 'DATETIME'
 			];
-		} elseif ( $params['time'] === 'next-week' ) {
+		} elseif ($params['time'] === 'next-week') {
 			$dt = new DateTime();
-			$dt->setISODate( $dt->format( 'o' ), absint( $dt->format( 'W' ) ) + 1 );
-			$periods = new DatePeriod( $dt, new DateInterval( 'P1D' ), 7 );
-			$days    = array_map( function ( $datetime ) {
-				return $datetime->format( 'Y.m.d H:i' );
-			}, iterator_to_array( $periods ) );
+			$dt->setISODate($dt->format('o'), absint($dt->format('W')) + 1);
+			$periods = new DatePeriod($dt, new DateInterval('P1D'), 7);
+			$days    = array_map(function ($datetime) {
+				return $datetime->format('Y-m-d H:i:s');
+			}, iterator_to_array($periods));
 
-			$args['meta_query'][0] = [
-				'key'     => 'start_date',
-				'value'   => [ $days[0], $days[7] ],
+			$args['meta_query'][] = [
+				'key'     => '_bechtix_ticket_start_date',
+				'value'   => [$days[0], $days[7]],
 				'compare' => 'BETWEEN',
 				'type'    => 'DATETIME'
 			];
-		} elseif ( $params['time'] === 'weekend' ) {
-			$dt                    = new DateTime( 'next Saturday' );
-			$periods               = new DatePeriod( $dt, new DateInterval( 'P1D' ), 2 );
-			$days                  = array_map( function ( $datetime ) {
-				return $datetime->format( 'Y.m.d H:i' );
-			}, iterator_to_array( $periods ) );
-			$args['meta_query'][0] = [
-				'key'     => 'start_date',
-				'value'   => [ $days[0], $days[2] ],
+		} elseif ($params['time'] === 'weekend') {
+			$dt                    = new DateTime('next Saturday');
+			$periods               = new DatePeriod($dt, new DateInterval('P1D'), 2);
+			$days                  = array_map(function ($datetime) {
+				return $datetime->format('Y-m-d H:i:s');
+			}, iterator_to_array($periods));
+			$args['meta_query'][] = [
+				'key'     => '_bechtix_ticket_start_date',
+				'value'   => $days,
 				'compare' => 'BETWEEN',
 				'type'    => 'DATETIME'
 			];
 		} else {
-			$dt                    = new DateTime( str_replace( '.', '/', $params['time'] ) );
-			$args['meta_query'][0] = [
-				'key'     => 'start_date',
-				'value'   => $dt->format( 'Y.m.d H:i' ),
-				'compare' => '>=',
+			$dt                    = new DateTime(str_replace('.', '/', $params['time']));
+			$next_date = new DateTime(str_replace('.', '/', $params['time']));
+			$next_date->modify('+1 day');
+			$args['meta_query'][] = [
+				'key'     => '_bechtix_ticket_start_date',
+				'value'   => [$dt->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
+				'compare' => 'BETWEEN',
 				'type'    => 'DATETIME'
 			];
 		}
 	}
 
-	if ( isset( $params['genre'] ) ) {
+	if (isset($params['genre'])) {
 		$args['tax_query'][] = [
 			'taxonomy' => 'genres',
 			'field'    => 'slug',
@@ -434,7 +454,7 @@ function bech_filter_whats_on_tickets( WP_REST_Request $request ) {
 		];
 	}
 
-	if ( isset( $params['instrument'] ) ) {
+	if (isset($params['instrument'])) {
 		$args['tax_query'][] = [
 			'taxonomy' => 'instruments',
 			'field'    => 'slug',
@@ -442,89 +462,107 @@ function bech_filter_whats_on_tickets( WP_REST_Request $request ) {
 		];
 	}
 
-	if ( ! empty( $params['s'] ) ) {
+	if (isset($params['festival'])) {
+		$args['meta_query'][] = [
+			'key' => '_bechtix_festival_relation',
+			'value'    => $params['festival'],
+			'compare' => 'IN'
+		];
+	}
+
+	if (!empty($params['s'])) {
 		$args['s'] = $params['s'];
 	}
 
-	$tickets        = get_posts( $args );
-	$sorted_tickets = bech_sort_tickets( $tickets );
+	$tickets = get_posts($args);
+	$sorted_tickets = bech_sort_tickets($tickets);
 	$data           = "<p class='no-event-message'>There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>";
 	ob_start();
-	if ( ! empty( $sorted_tickets ) ) :
-		foreach ( $sorted_tickets as $date => $tickets ) :
-			?>
-            <div class="cms-ul">
-                <div class="cms-heading">
-                    <h2 class="h2-cms"><?php echo date( 'd F', strtotime( $date ) ); ?></h2>
-                    <h2 class="h2-cms day"><?php echo date( 'l', strtotime( $date ) ); ?></h2>
-                </div>
-                <div class="cms-ul-events">
-					<?php foreach ( $tickets as $ticket ) :
-						$category = get_the_terms( $ticket->ID, 'event_cat' )[0]; ?>
-                        <div class="cms-li">
-                            <div class="cms-li_mom-img">
-                                <img src="<?php echo get_field( 'feature_image', $category ); ?>"
-                                     alt="<?php echo get_the_title( $ticket ); ?>" class="cms-li_img"/>
-								<?php $sale_status = get_field( 'sale_status', $ticket->ID );
-								if ( $sale_status['value'] !== '0' ) :
-									?>
-                                    <div class="cms-li_sold-out-banner"><?php echo $sale_status['label']; ?></div>
+	if (!empty($sorted_tickets)) :
+		foreach ($sorted_tickets as $date => $tickets) :
+?>
+			<div class="cms-ul">
+				<div class="cms-heading">
+					<h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
+					<h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
+				</div>
+				<div class="cms-ul-events">
+					<?php foreach ($tickets as $ticket) :
+						$event = get_post(get_post_meta($ticket->ID, '_bechtix_event_relation', true));
+						$purchase_urls = get_post_meta($ticket->ID, '_bechtix_purchase_urls', true);
+						$purchase_urls_normal = json_decode($purchase_urls, true);
+					?>
+						<div class="cms-li">
+							<div class="cms-li_mom-img">
+								<?php echo wp_get_attachment_image(
+									get_post_meta($event->ID, '_bechtix_event_image', true),
+									'medium',
+									false,
+									[
+										'class' => 'cms-li_img',
+										'style' => 'max-height: 270rem'
+									]
+								); ?>
+								<?php $sale_status = get_post_meta($ticket->ID, '_bechtix_sale_status', true);
+								$sale_statuses = [
+									'No Status',
+									'Few tickets',
+									'Sold out',
+									'Cancelled',
+									'Not scheduled'
+								];
+								if ($sale_status !== '0') :
+								?>
+									<div class="cms-li_sold-out-banner"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
 								<?php endif; ?>
-                            </div>
-                            <div class="cms-li_content">
-                                <div class="cms-li_time-div">
-                                    <div class="p-30-45"><?php echo bech_get_ticket_times( $ticket->ID ); ?></div>
-                                    <div class="p-17-25 italic"><?php echo get_field( 'duration', $ticket->ID ); ?></div>
-                                </div>
-                                <div class="p-20-30 title-event"><?php echo get_the_title( $ticket ); ?></div>
-                                <p class="p-17-25"><?php echo get_field( 'event_subheader', $ticket->ID ); ?></p>
-                                <div class="cms-li_tags-div">
-									<?php $tags = wp_get_object_terms( $ticket->ID, [
-										'event_tag',
-										'genres',
-										'instruments'
-									] );
-									foreach ( $tags as $tag ) : ?>
-                                        <a href="#" class="cms-li_tag-link"><?php echo $tag->name; ?></a>
+							</div>
+							<div class="cms-li_content">
+								<div class="cms-li_time-div">
+									<div class="p-30-45"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
+									<div class="p-17-25 italic"><?php echo get_post_meta($ticket->ID, '_bechtix_duration', true); ?></div>
+								</div>
+								<div class="p-20-30 title-event"><?php echo get_the_title($ticket); ?></div>
+								<p class="p-17-25"><?php echo get_field('event_subheader', $ticket->ID); ?></p>
+								<div class="cms-li_tags-div">
+									<?php $tags = wp_get_object_terms($ticket->ID, ['event_tag', 'genres', 'instruments']);
+									foreach ($tags as $tag) : ?>
+										<a href="#" class="cms-li_tag-link"><?php echo $tag->name; ?></a>
 									<?php endforeach; ?>
-                                </div>
-                                <div class="cms-li_actions-div">
-									<?php if ( $sale_status['value'] === '0' || $sale_status['value'] === '1' ) : ?>
-                                        <a bgline="1"
-                                           href="<?php echo get_field( 'purchase_urls', $category )[0]['link']; ?>"
-                                           class="booktickets-btn">
-                                            <strong>Book tickets</strong>
-                                        </a>
+								</div>
+								<div class="cms-li_actions-div">
+									<?php
+									if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') : ?>
+										<a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
+											<strong>Book tickets</strong>
+										</a>
 									<?php else : ?>
-                                        <a bgline="2" href="#" class="booktickets-btn sold-out">
-                                            <strong><?php echo $sale_status['label']; ?></strong>
-                                        </a>
+										<a bgline="2" href="#" class="booktickets-btn sold-out">
+											<strong><?php echo $sale_statuses[intval($sale_status)]; ?></strong>
+										</a>
 									<?php endif; ?>
-                                    <a href="<?php echo get_term_link( $category ); ?>"
-                                       class="readmore-btn w-inline-block">
-                                        <div>read more</div>
-                                        <div> →</div>
-                                    </a>
-                                </div>
-                                <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price( $ticket->ID ); ?></div>
-                            </div>
-                            <div class="cms-li_actions-div biger">
-                                <a bgline="1" href="<?php echo get_field( 'purchase_urls', $category )[0]['link']; ?>"
-                                   class="booktickets-btn">
-                                    <strong>Book tickets</strong>
-                                </a>
-                                <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price( $ticket->ID ); ?></div>
-                            </div>
-                        </div>
+									<a href="<?php echo get_the_permalink($event->ID); ?>" class="readmore-btn w-inline-block">
+										<div>read more</div>
+										<div> →</div>
+									</a>
+								</div>
+								<div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+							</div>
+							<div class="cms-li_actions-div biger">
+								<a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
+									<strong>Book tickets</strong>
+								</a>
+								<div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+							</div>
+						</div>
 					<?php endforeach; ?>
-                </div>
-            </div>
-		<?php
+				</div>
+			</div>
+	<?php
 		endforeach;
 		$data = ob_get_clean();
 	endif;
 
-	$rest_response = rest_ensure_response( [
+	$rest_response = rest_ensure_response([
 		'code'    => 'success',
 		'message' => 'Data succesfully updated',
 		'data'    => [
@@ -532,31 +570,33 @@ function bech_filter_whats_on_tickets( WP_REST_Request $request ) {
 			'html'            => $data,
 			'selected_string' => $selected_string,
 		]
-	] );
+	]);
 
-	$rest_response->set_status( 200 );
+	$rest_response->set_status(200);
 
 	return $rest_response;
 }
 
 /* What's on filters */
 
-function bech_get_youtube_video_id_from_link( $link = '' ) {
-	preg_match( '/watch\?v=(.+)/', $link, $matches );
+function bech_get_youtube_video_id_from_link($link = '')
+{
+	preg_match('/watch\?v=(.+)/', $link, $matches);
 
 	return $matches[1];
 }
 
-function bech_custom_logo( $return = false ) {
+function bech_custom_logo($return = false)
+{
 	$logo_img = '';
-	if ( $custom_logo_id = get_theme_mod( 'custom_logo' ) ) {
-		$logo_img = wp_get_attachment_image( $custom_logo_id, 'full', false, array(
+	if ($custom_logo_id = get_theme_mod('custom_logo')) {
+		$logo_img = wp_get_attachment_image($custom_logo_id, 'full', false, array(
 			'class'    => 'logo custom-logo',
 			'itemprop' => 'logo',
-		) );
+		));
 	}
 
-	if ( $return ) {
+	if ($return) {
 		return $logo_img;
 	} else {
 		echo $logo_img;
@@ -564,81 +604,83 @@ function bech_custom_logo( $return = false ) {
 }
 
 
-add_action( 'wp_ajax_get_press_release_posts', 'bech_get_press_release_posts' );
-add_action( 'wp_ajax_nopriv_get_press_release_posts', 'bech_get_press_release_posts' );
+add_action('wp_ajax_get_press_release_posts', 'bech_get_press_release_posts');
+add_action('wp_ajax_nopriv_get_press_release_posts', 'bech_get_press_release_posts');
 
-function bech_get_press_release_posts(): void {
+function bech_get_press_release_posts(): void
+{
 	$args = [
 		'post_type'      => 'post',
 		'posts_per_page' => 10,
 		'post_status'    => 'publish'
 	];
 
-	if ( ! empty( $_POST['tag'] ) ) {
+	if (!empty($_POST['tag'])) {
 		$args['tax_query'][] = [
 			'taxonomy' => 'post_tag',
 			'field'    => 'slug',
-			'terms'    => trim( $_POST['tag'] )
+			'terms'    => trim($_POST['tag'])
 		];
 	}
 
-	if ( ! empty( $_POST['page'] ) ) {
-		$args['paged'] = intval( $_POST['page'] );
+	if (!empty($_POST['page'])) {
+		$args['paged'] = intval($_POST['page']);
 	}
 
-	$press_query = new WP_Query( $args );
+	$press_query = new WP_Query($args);
 
 	ob_start();
 	?>
-    <div class="cms-press-ajax">
+	<div class="cms-press-ajax">
 		<?php
-		if ( $press_query->have_posts() ) {
-			while ( $press_query->have_posts() ) {
+		if ($press_query->have_posts()) {
+			while ($press_query->have_posts()) {
 				$press_query->the_post(); ?>
-                <a href="<?php echo get_the_permalink(); ?>" class="ui-pressrelease-a w-inline-block">
-                    <div class="p-20-30 w20"><?php echo get_the_date( 'j F Y' ); ?></div>
-                    <div class="p-25-40 mar13"><?php echo get_the_title(); ?></div>
-                </a>
+				<a href="<?php echo get_the_permalink(); ?>" class="ui-pressrelease-a w-inline-block">
+					<div class="p-20-30 w20"><?php echo get_the_date('j F Y'); ?></div>
+					<div class="p-25-40 mar13"><?php echo get_the_title(); ?></div>
+				</a>
 			<?php }
 			wp_reset_postdata();
 
-			if ( $press_query->max_num_pages > 1 && intval( $_POST['page'] ) < $press_query->max_num_pages ) { ?>
-                <a href="#" class="showmore-btn w-inline-block">
-                    <div>SHOW MORE</div>
-                </a>
+			if ($press_query->max_num_pages > 1 && intval($_POST['page']) < $press_query->max_num_pages) { ?>
+				<a href="#" class="showmore-btn w-inline-block">
+					<div>SHOW MORE</div>
+				</a>
 			<?php }
 		} else { ?>
-            <p>NO POSTS</p>
+			<p>NO POSTS</p>
 		<?php } ?>
-    </div>
+	</div>
 	<?php
 	$html     = ob_get_clean();
 	$response = [
 		'status' => 'success',
 		'html'   => $html
 	];
-	wp_send_json( $response, 200 );
+	wp_send_json($response, 200);
 	wp_die();
 }
 
-add_action( 'wp_ajax_get_homepage_slider_items', 'bech_get_homepage_slider_items' );
-add_action( 'wp_ajax_nopriv_get_homepage_slider_items', 'bech_get_homepage_slider_items' );
+add_action('wp_ajax_get_homepage_slider_items', 'bech_get_homepage_slider_items');
+add_action('wp_ajax_nopriv_get_homepage_slider_items', 'bech_get_homepage_slider_items');
 
-function bech_get_homepage_slider_items() {
-	if ( ! wp_verify_nonce( $_POST['home_filter_action'], 'home_filter_action_nonce' ) ) {
-		return wp_send_json( [
+function bech_get_homepage_slider_items()
+{
+	if (!wp_verify_nonce($_POST['home_filter_action'], 'home_filter_action_nonce')) {
+		return wp_send_json([
 			'status'  => 'bad',
 			'message' => 'Something went wrong. Please try again later'
-		], 400 );
+		], 400);
 	}
 
 	$args = [
 		'post_type'      => 'event',
-		'posts_per_page' => - 1,
+		'posts_per_page' => -1,
 		'post_status'    => 'publish'
 	];
 
-	if ( ! empty( $_POST['instruments'] ) ) {
+	if (!empty($_POST['instruments'])) {
 		$args['tax_query'][] = [
 			'taxonomy' => 'instruments',
 			'field'    => 'slug',
@@ -646,7 +688,7 @@ function bech_get_homepage_slider_items() {
 		];
 	}
 
-	if ( ! empty( $_POST['genres'] ) ) {
+	if (!empty($_POST['genres'])) {
 		$args['tax_query'][] = [
 			'taxonomy' => 'genres',
 			'field'    => 'slug',
@@ -654,7 +696,7 @@ function bech_get_homepage_slider_items() {
 		];
 	}
 
-	if ( ! empty( $_POST['event_tag'] ) ) {
+	if (!empty($_POST['event_tag'])) {
 		$args['tax_query'][] = [
 			'taxonomy' => 'event_tag',
 			'field'    => 'slug',
@@ -662,7 +704,7 @@ function bech_get_homepage_slider_items() {
 		];
 	}
 
-	if ( ! empty( $_POST['start_date'] ) ) {
+	if (!empty($_POST['start_date'])) {
 		$args['meta_query'][] = [
 			'key'     => 'start_date',
 			'value'   => $_POST['start_date'],
@@ -671,52 +713,49 @@ function bech_get_homepage_slider_items() {
 		];
 	}
 
-	$tickets_query = new WP_Query( $args );
+	$tickets_query = new WP_Query($args);
 	ob_start();
-	if ( $tickets_query->have_posts() ) {
-		while ( $tickets_query->have_posts() ) {
+	if ($tickets_query->have_posts()) {
+		while ($tickets_query->have_posts()) {
 			$tickets_query->the_post(); ?>
-            <div class="slider-wvwnts_slide wo-slider_item wo-slide">
-                <div class="link-block">
-                    <div class="slider-wvwnts_top">
+			<div class="slider-wvwnts_slide wo-slider_item wo-slide">
+				<div class="link-block">
+					<div class="slider-wvwnts_top">
 						<?php
 						global $post;
-						$event_cat = get_the_terms( $post, 'event_cat' ); ?>
-                        <img src="<?php echo get_field( 'event_image', $event_cat[0] ); ?>"
-                             loading="eager" alt class="img-cover">
-						<?php $term_query = wp_get_object_terms( $post->ID, [
+						$event_cat = get_the_terms($post, 'event_cat'); ?>
+						<img src="<?php echo get_field('event_image', $event_cat[0]); ?>" loading="eager" alt class="img-cover">
+						<?php $term_query = wp_get_object_terms($post->ID, [
 							'event_tag',
 							'genres',
 							'instruments'
-						] ); ?>
-                        <div class="slider-wvwnts_top-cats">
-							<?php foreach ( $term_query as $term ) : ?>
-                                <a href="#"
-                                   class="slider-wvwnts_top-cats_a"><?php echo $term->name; ?></a>
+						]); ?>
+						<div class="slider-wvwnts_top-cats">
+							<?php foreach ($term_query as $term) : ?>
+								<a href="#" class="slider-wvwnts_top-cats_a"><?php echo $term->name; ?></a>
 							<?php endforeach; ?>
-                        </div>
-                    </div>
-                    <div class="slider-wvwnts_bottom">
-                        <div class="p-20-30 w20"><?php echo date( 'd F', strtotime( get_field( 'start_date' ) ) ); ?></div>
-                        <div class="p-30-45 bold"><?php the_title(); ?></div>
-                        <div class="p-17-25 home-card">Couperin, Mesian, Brahms</div>
-						<?php $purchase_urls = get_field( 'purchase_urls' ); ?>
-                        <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>"
-                           class="booktickets-btn home-page">
-                            <strong>Book tickets</strong>
-                        </a>
-                    </div>
-                </div>
-            </div>
+						</div>
+					</div>
+					<div class="slider-wvwnts_bottom">
+						<div class="p-20-30 w20"><?php echo date('d F', strtotime(get_field('start_date'))); ?></div>
+						<div class="p-30-45 bold"><?php the_title(); ?></div>
+						<div class="p-17-25 home-card">Couperin, Mesian, Brahms</div>
+						<?php $purchase_urls = get_field('purchase_urls'); ?>
+						<a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" class="booktickets-btn home-page">
+							<strong>Book tickets</strong>
+						</a>
+					</div>
+				</div>
+			</div>
 		<?php }
 	} else { ?>
-        <p>There is no tickets with this filter parameters</p>
-	<?php }
+		<p>There is no tickets with this filter parameters</p>
+<?php }
 	$html = ob_get_clean();
 
-	wp_send_json( [
+	wp_send_json([
 		'status' => 'success',
 		'html'   => $html
-	] );
+	]);
 	wp_die();
 }

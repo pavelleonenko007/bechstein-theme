@@ -71,14 +71,22 @@ Template name: What's on
                           <div class="p-20-30">Genre</div>
                         </div>
                         <div class="filters-bottom-div">
-                          <?php foreach ($genres as $genre) : ?>
-                            <label class="w-checkbox cbx-mom">
-                              <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                              <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="genre[]" data-name="<?php echo $genre->slug; ?>" value="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
-                              <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $genre->term_id; ?>"><?php echo $genre->name; ?></span>
-                            </label>
-                          <?php endforeach; ?>
-                          <a href="#" class="show-all-btn">show all</a>
+                          <?php
+                          $counter = 0;
+                          foreach ($genres as $index => $genre) :
+                            if ($counter <= 4) : ?>
+                              <label class="w-checkbox cbx-mom">
+                                <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                                <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="genre[]" data-name="<?php echo $genre->slug; ?>" value="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                                <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $genre->term_id; ?>"><?php echo $genre->name; ?></span>
+                              </label>
+                          <?php
+                              $counter++;
+                            endif;
+                          endforeach; ?>
+                          <?php if (count($genres) > 5) : ?>
+                            <a href="#" class="show-all-btn">show all</a>
+                          <?php endif; ?>
                         </div>
                       </div>
                     <?php endif; ?>
@@ -99,16 +107,28 @@ Template name: What's on
                         </div>
                       </div>
                     <?php endif; ?>
-                    <div class="filters-div">
-                      <div class="filters-top-div">
-                        <div class="p-20-30">Specials and Festivals</div>
+                    <?php $festivals = get_posts([
+                      'post_type' => 'festivals',
+                      'post_status' => 'publish',
+                      'numberposts' => -1
+                    ]);
+
+                    if (!empty($festivals)) : ?>
+                      <div class="filters-div">
+                        <div class="filters-top-div">
+                          <div class="p-20-30">Specials and Festivals</div>
+                        </div>
+                        <div class="filters-bottom-div">
+                          <?php foreach ($festivals as $festival) : ?>
+                            <label class="w-checkbox cbx-mom">
+                              <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                              <input type="checkbox" id="festival-<?php echo $festival->ID; ?>" name="festival[]" style="opacity:0;position:absolute;z-index:-1" value="<?php echo $festival->ID; ?>" />
+                              <span class="filter-cbx ischbx w-form-label" for="festival-<?php echo $festival->ID; ?>"><?php echo $festival->post_title; ?></span>
+                            </label>
+                          <?php endforeach; ?>
+                        </div>
                       </div>
-                      <div class="filters-bottom-div"><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">autumn festival ‘22</span>
-                        </label><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">winter piano festival</span>
-                        </label></div>
-                    </div>
+                    <?php endif; ?>
                     <div class="filters-div">
                       <div class="filters-top-div">
                         <div class="p-20-30">Event</div>
@@ -122,12 +142,6 @@ Template name: What's on
                     <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
                     <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
                   </div>
-                  <div class="w-form-done">
-                    <div>Thank you! Your submission has been received!</div>
-                  </div>
-                  <div class="w-form-fail">
-                    <div>Oops! Something went wrong while submitting the form.</div>
-                  </div>
                 </div>
               </form>
             </div>
@@ -137,21 +151,14 @@ Template name: What's on
                 <div>you choose &#x27;<span data-filter="choosen">25 nov 2022—26 nov 2022.</span>’ in filters.</div><a id="clear" href="#" class="clearfilter-btn"> clear filters</a>
               </div>
               <div id="tickets-container" class="cms-tems">
-                <?php $tickets = get_posts([
-                  'post_type' => 'event',
+                <?php
+                $tickets = get_posts([
+                  'post_type' => 'tickets',
                   'post_status' => 'publish',
                   'numberposts' => 10,
                   'orderby' => 'meta_value',
-                  'meta_key' => 'start_date',
+                  'meta_key' => '_bechtix_ticket_start_date',
                   'order' => 'ASC',
-                  'meta_query' => [
-                    [
-                      'key' => 'start_date',
-                      'value' => date('Y.m.d H:i'),
-                      'compare' => '>=',
-                      'type' => 'DATETIME'
-                    ]
-                  ]
                 ]);
 
                 $sorted_tickets = bech_sort_tickets($tickets);
@@ -165,20 +172,38 @@ Template name: What's on
                       </div>
                       <div class="cms-ul-events">
                         <?php foreach ($tickets as $ticket) :
-                          $category = get_the_terms($ticket->ID, 'event_cat')[0]; ?>
+                          $event = get_post(get_post_meta($ticket->ID, '_bechtix_event_relation', true));
+                          $purchase_urls = get_post_meta($ticket->ID, '_bechtix_purchase_urls', true);
+                          $purchase_urls_normal = json_decode($purchase_urls, true);
+                        ?>
                           <div class="cms-li">
                             <div class="cms-li_mom-img">
-                              <img src="<?php echo get_field('feature_image', $category); ?>" alt="<?php echo get_the_title($ticket); ?>" class="cms-li_img" />
-                              <?php $sale_status = get_field('sale_status', $ticket->ID);
-                              if ($sale_status['value'] !== '0') :
+                              <?php echo wp_get_attachment_image(
+                                get_post_meta($event->ID, '_bechtix_event_image', true),
+                                'medium',
+                                false,
+                                [
+                                  'class' => 'cms-li_img',
+                                  'style' => 'max-height: 270rem'
+                                ]
+                              ); ?>
+                              <?php $sale_status = get_post_meta($ticket->ID, '_bechtix_sale_status', true);
+                              $sale_statuses = [
+                                'No Status',
+                                'Few tickets',
+                                'Sold out',
+                                'Cancelled',
+                                'Not scheduled'
+                              ];
+                              if ($sale_status !== '0' && $sale_status !== '') :
                               ?>
-                                <div class="cms-li_sold-out-banner"><?php echo $sale_status['label']; ?></div>
+                                <div class="cms-li_sold-out-banner"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
                               <?php endif; ?>
                             </div>
                             <div class="cms-li_content">
                               <div class="cms-li_time-div">
                                 <div class="p-30-45"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
-                                <div class="p-17-25 italic"><?php echo get_field('duration', $ticket->ID); ?></div>
+                                <div class="p-17-25 italic"><?php echo get_post_meta($ticket->ID, '_bechtix_duration', true); ?></div>
                               </div>
                               <div class="p-20-30 title-event"><?php echo get_the_title($ticket); ?></div>
                               <p class="p-17-25"><?php echo get_field('event_subheader', $ticket->ID); ?></p>
@@ -189,16 +214,17 @@ Template name: What's on
                                 <?php endforeach; ?>
                               </div>
                               <div class="cms-li_actions-div">
-                                <?php if ($sale_status['value'] === '0' || $sale_status['value'] === '1') : ?>
-                                  <a bgline="1" href="<?php echo get_field('purchase_urls', $category)[0]['link']; ?>" class="booktickets-btn">
+                                <?php
+                                if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') : ?>
+                                  <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
                                     <strong>Book tickets</strong>
                                   </a>
                                 <?php else : ?>
                                   <a bgline="2" href="#" class="booktickets-btn sold-out">
-                                    <strong><?php echo $sale_status['label']; ?></strong>
+                                    <strong><?php echo $sale_statuses[intval($sale_status)]; ?></strong>
                                   </a>
                                 <?php endif; ?>
-                                <a href="<?php echo get_term_link($category); ?>" class="readmore-btn w-inline-block">
+                                <a href="<?php echo get_the_permalink($event->ID); ?>" class="readmore-btn w-inline-block">
                                   <div>read more</div>
                                   <div> →</div>
                                 </a>
@@ -206,7 +232,7 @@ Template name: What's on
                               <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
                             </div>
                             <div class="cms-li_actions-div biger">
-                              <a bgline="1" href="<?php echo get_field('purchase_urls', $category)[0]['link']; ?>" class="booktickets-btn">
+                              <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
                                 <strong>Book tickets</strong>
                               </a>
                               <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
