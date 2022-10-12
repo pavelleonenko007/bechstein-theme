@@ -80,18 +80,22 @@ Template name: Festival
 								]
 							]);
 
-							$tickets = get_posts([
-								'post_type' => 'tickets',
-								'post_status' => 'publish',
-								'numberposts' => -1,
-								'meta_query' => [
-									[
-										'key' => '_bechtix_event_relation',
-										'value' => $events,
-										'compare' => 'IN'
+							$tickets = [];
+
+							if (!empty($events)) {
+								$tickets = get_posts([
+									'post_type' => 'tickets',
+									'post_status' => 'publish',
+									'numberposts' => -1,
+									'meta_query' => [
+										[
+											'key' => '_bechtix_event_relation',
+											'value' => $events,
+											'compare' => 'IN'
+										]
 									]
-								]
-							]);
+								]);
+							}
 
 							$sorted_tickets = bech_sort_tickets($tickets);
 
