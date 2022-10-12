@@ -58,6 +58,36 @@ function bech_purchase_url_format_data($arr): array
 	return $formatted_arr;
 }
 
+function bech_get_events_number($array, $word)
+{
+	switch (true) {
+		case count($array) < 1:
+			return 'there is no ' . $word . 's';
+		case count($array) % 10 > 1:
+			return count($array) . ' ' . $word . 's';
+		case count($array) % 10 === 1:
+			return count($array) . ' ' . $word;
+	}
+}
+
+function bech_get_current_url()
+{
+	global $wp;
+	return home_url($wp->request);
+}
+
+function bech_is_current_url($url)
+{
+	$formatted_url = '';
+	if (substr($url, -1) !== '/') {
+		$formatted_url = $url;
+	} else {
+		$formatted_url = substr($url, 0, -1);
+	}
+
+	return bech_get_current_url() === $formatted_url;
+}
+
 // add_action('init', 'bech_register_post_types');
 
 function bech_register_post_types()

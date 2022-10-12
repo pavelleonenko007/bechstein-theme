@@ -1,3 +1,11 @@
+.map-embe iframe {
+  width: 100%;
+}
+
+.p-20-30.w20 {
+  text-decoration: none;
+}
+
 .splide {
   cursor: none;
   position: relative;
@@ -13,7 +21,7 @@
   left: 0;
   width: 80rem;
   height: 80rem;
-  background-image: url("../images/swipe-control.svg");
+  background-image: url('../images/swipe-control.svg');
   background-repeat: no-repeat;
   background-size: contain;
   pointer-events: none;
@@ -23,17 +31,17 @@
 }
 
 .splide__cursor--active {
-  opacity: 1
+  opacity: 1;
 }
 
-[data-type="cursor"] {
+[data-type='cursor'] {
   pointer-events: none;
 }
 
 .bech-slider {
   width: 100%;
   position: relative;
-  cursor: url("../images/book-tickets-cursor.svg"), auto;
+  cursor: url('../images/book-tickets-cursor.svg'), auto;
 }
 
 .bech-slider__slides {
@@ -67,7 +75,7 @@
   position: absolute;
   right: 40rem;
   bottom: 40rem;
-  color: #FFFFFF;
+  color: #ffffff;
   z-index: 9;
 }
 
@@ -91,8 +99,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #FFFFFF;
-  color: #FFFFFF;
+  border: 1px solid #ffffff;
+  color: #ffffff;
   font-size: 20rem;
   background: transparent;
   cursor: pointer;
@@ -111,7 +119,7 @@
 }
 
 .arrow-button svg .arrow-button__progress {
-  stroke: #FFFFFF;
+  stroke: #ffffff;
   transform: rotate(-90deg);
   transform-origin: center;
 }
@@ -130,7 +138,7 @@
   flex-direction: column;
 }
 
-[data-type="cursor-area"] {
+[data-type='cursor-area'] {
   cursor: none;
 }
 
