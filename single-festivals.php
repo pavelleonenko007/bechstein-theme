@@ -67,20 +67,30 @@ Template name: Festival
 					<div class="cms-ul-events">
 						<div class="cms-tems">
 							<?php
-							$tickets = get_posts([
-								'post_type' => 'tickets',
+							$events = get_posts([
+								'post_type' => 'events',
 								'post_status' => 'publish',
-								'numberposts' => 10,
-								'orderby' => 'meta_value',
-								'meta_key' => '_bechtix_ticket_start_date',
-								'order' => 'ASC',
+								'numberposts' => -1,
+								'fields' => 'ids',
 								'meta_query' => [
 									[
 										'key' => '_bechtix_festival_relation',
-										'value' => $post->ID,
-										'compare' => '='
+										'value' => $post->ID
 									]
-								],
+								]
+							]);
+
+							$tickets = get_posts([
+								'post_type' => 'tickets',
+								'post_status' => 'publish',
+								'numberposts' => -1,
+								'meta_query' => [
+									[
+										'key' => '_bechtix_event_relation',
+										'value' => $events,
+										'compare' => 'IN'
+									]
+								]
 							]);
 
 							$sorted_tickets = bech_sort_tickets($tickets);

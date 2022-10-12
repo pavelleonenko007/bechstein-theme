@@ -493,9 +493,23 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 	}
 
 	if (isset($params['festival'])) {
+		$events = get_posts([
+			'post_type' => 'events',
+			'post_status' => 'publish',
+			'numberposts' => -1,
+			'fields' => 'ids',
+			'meta_query' => [
+				[
+					'key' => '_bechtix_festival_relation',
+					'value'    => $params['festival'],
+					'compare' => 'IN'
+				]
+			]
+		]);
+
 		$args['meta_query'][] = [
-			'key' => '_bechtix_festival_relation',
-			'value'    => $params['festival'],
+			'key' => '_bechtix_event_relation',
+			'value'    => $events,
 			'compare' => 'IN'
 		];
 	}
