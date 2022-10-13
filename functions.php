@@ -56,13 +56,13 @@ add_action('wp_head', 'admin_custom_styles');
 function admin_custom_styles()
 {
     if (is_user_logged_in()) {
-        ?>
-<style>
-    #wp-admin-bar-wp-admin-bar-options>.ab-item:before {
-        content: "\f100";
-        top: 2px;
-    }
-</style>
+?>
+        <style>
+            #wp-admin-bar-wp-admin-bar-options>.ab-item:before {
+                content: "\f100";
+                top: 2px;
+            }
+        </style>
 <?php
     }
 }
@@ -402,7 +402,7 @@ function wp_admin_bar_options()
     global $wp_admin_bar;
     $wp_admin_bar->add_menu([
         'id' => 'wp-admin-bar-options',
-        'title' => __('Опции сайта'),
+        'title' => __('Site options'),
         'href' => get_site_url() . '/wp-admin/themes.php?page=options'
     ]);
 }
@@ -410,8 +410,8 @@ add_action('wp_before_admin_bar_render', 'wp_admin_bar_options');
 
 if (function_exists('acf_add_options_page') && current_user_can('manage_options')) {
     acf_add_options_page([
-        'page_title' => 'Опции',
-        'menu_title' => 'Опции',
+        'page_title' => 'Site options',
+        'menu_title' => 'Site options',
         'menu_slug' => 'options',
         'parent_slug' => 'themes.php',
         'update_button' => __('Update'),
@@ -422,8 +422,8 @@ if (function_exists('acf_add_options_page') && current_user_can('manage_options'
 
 if (function_exists('acf_add_options_page') && current_user_can('manage_options')) {
     acf_add_options_page([
-        'page_title' => 'Конфигуратор сайта',
-        'menu_title' => 'Конфигуратор',
+        'page_title' => 'Site configurator',
+        'menu_title' => 'Configurator',
         'menu_slug' => 'config',
         'icon_url' => 'dashicons-screenoptions',
         'parent_slug' => 'tools.php',
@@ -479,17 +479,17 @@ function select_query_by_name($query_name)
     if (function_exists('have_rows')) {
         if (have_rows('custom_query', 'option')) :
             while (have_rows('custom_query', 'option')) : the_row();
-        if (get_sub_field('name') === $query_name) {
-            $args['post_type'] = get_sub_field('post_type_select');
-            $args['posts_per_page'] = get_sub_field('posts_per_page') === '' ? -1 : get_sub_field('posts_per_page');
-            if (get_sub_field('paged')) {
-                $args['paged'] = get_query_var('paged');
-            }
-            while (have_rows('taxonomy')) : the_row();
-            $args[get_sub_field('taxonomy_for_query')] = get_sub_field('terms');
+                if (get_sub_field('name') === $query_name) {
+                    $args['post_type'] = get_sub_field('post_type_select');
+                    $args['posts_per_page'] = get_sub_field('posts_per_page') === '' ? -1 : get_sub_field('posts_per_page');
+                    if (get_sub_field('paged')) {
+                        $args['paged'] = get_query_var('paged');
+                    }
+                    while (have_rows('taxonomy')) : the_row();
+                        $args[get_sub_field('taxonomy_for_query')] = get_sub_field('terms');
+                    endwhile;
+                }
             endwhile;
-        }
-        endwhile;
         endif;
     }
     return $args;
@@ -501,13 +501,13 @@ function select_term_query_by_name($query_name)
     if (function_exists('have_rows')) {
         if (have_rows('custom_term_query', 'option')) :
             while (have_rows('custom_term_query', 'option')) : the_row();
-        if (get_sub_field('name') === $query_name) {
-            $args['taxonomy'] = get_sub_field('taxonomy_select');
-            $args['hide_empty'] = get_sub_field('hide_empty');
-            $args['orderby'] = get_sub_field('orderby');
-            $args['order'] = get_sub_field('order');
-        }
-        endwhile;
+                if (get_sub_field('name') === $query_name) {
+                    $args['taxonomy'] = get_sub_field('taxonomy_select');
+                    $args['hide_empty'] = get_sub_field('hide_empty');
+                    $args['orderby'] = get_sub_field('orderby');
+                    $args['order'] = get_sub_field('order');
+                }
+            endwhile;
         endif;
     }
     return $args;
@@ -518,37 +518,37 @@ function register_cpts()
 {
     if (function_exists('have_rows')) :
         while (have_rows('custom_post_types', 'option')) : the_row();
-    register_post_type(
-        get_sub_field('name'),
-        [
-            'labels' => [
-                'name' => get_sub_field('many_name'),
-                'menu_name' => get_sub_field('menu_name') != '' ? get_sub_field('menu_name') : get_sub_field('many_name'),
-                'singular_name' => get_sub_field('single_name'),
-                'add_new' => 'Добавить',
-                'add_new_item' => get_sub_field('single_name'),
-                'edit_item' => 'Редактировать',
-                'new_item' => get_sub_field('single_name'),
-                'all_items' => 'Все ' . mb_strtolower(get_sub_field('many_name')),
-                'view_item' => 'Просмотреть',
-                'search_items' => 'Найти',
-                'not_found' => 'Ничего не найдено.',
-                'not_found_in_trash' => 'В корзине пусто.'
-            ],
-            'public' => true,
-            'menu_icon' => get_sub_field('icon'),
-            'menu_position' => 20,
-            'has_archive' => true,
-            'supports' => get_sub_field('support'),
-            'taxonomies' => [''],
-            'show_in_rest' => get_sub_field('show_in_rest'),
-            'publicly_queryable' => get_sub_field('publicly_queryable') !== '' ? get_sub_field('publicly_queryable') : true,
-            'rewrite' => [
-                'slug' => get_sub_field('slug')
-            ]
-        ]
-    );
-    endwhile;
+            register_post_type(
+                get_sub_field('name'),
+                [
+                    'labels' => [
+                        'name' => get_sub_field('many_name'),
+                        'menu_name' => get_sub_field('menu_name') != '' ? get_sub_field('menu_name') : get_sub_field('many_name'),
+                        'singular_name' => get_sub_field('single_name'),
+                        'add_new' => 'Добавить',
+                        'add_new_item' => get_sub_field('single_name'),
+                        'edit_item' => 'Редактировать',
+                        'new_item' => get_sub_field('single_name'),
+                        'all_items' => 'Все ' . mb_strtolower(get_sub_field('many_name')),
+                        'view_item' => 'Просмотреть',
+                        'search_items' => 'Найти',
+                        'not_found' => 'Ничего не найдено.',
+                        'not_found_in_trash' => 'В корзине пусто.'
+                    ],
+                    'public' => true,
+                    'menu_icon' => get_sub_field('icon'),
+                    'menu_position' => 20,
+                    'has_archive' => true,
+                    'supports' => get_sub_field('support'),
+                    'taxonomies' => [''],
+                    'show_in_rest' => get_sub_field('show_in_rest'),
+                    'publicly_queryable' => get_sub_field('publicly_queryable') !== '' ? get_sub_field('publicly_queryable') : true,
+                    'rewrite' => [
+                        'slug' => get_sub_field('slug')
+                    ]
+                ]
+            );
+        endwhile;
     endif;
 }
 
@@ -557,45 +557,45 @@ function register_taxs()
 {
     if (function_exists('have_rows')) :
         while (have_rows('custom_taxonomies', 'option')) : the_row();
-    register_taxonomy(
-        get_sub_field('name'),
-        get_sub_field('post_type_select'),
-        [
-            'labels' => [
-                'name' => get_sub_field('many_name'),
-                'singular_name' => get_sub_field('single_name'),
-                'search_items' => 'Найти',
-                'popular_items' => 'Популярные ' . mb_strtolower(get_sub_field('many_name')),
-                'all_items' => 'Все ' . mb_strtolower(get_sub_field('many_name')),
-                'parent_item' => null,
-                'parent_item_colon' => null,
-                'edit_item' => 'Редактировать',
-                'update_item' => 'Обновить',
-                'add_new_item' => 'Добавить новый элемент',
-                'new_item_name' => 'Введите название записи',
-                'separate_items_with_commas' => 'Разделяйте ' . mb_strtolower(get_sub_field('many_name')) . ' запятыми',
-                'add_or_remove_items' => 'Добавить или удалить ' . mb_strtolower(get_sub_field('many_name')),
-                'choose_from_most_used' => 'Выбрать из наиболее часто используемых',
-                'menu_name' => get_sub_field('menu_name') != '' ? get_sub_field('menu_name') : get_sub_field('many_name')
-            ],
-            'hierarchical' => get_sub_field('type') === 'true' ? true : false,
-            'public' => true,
-            'publicly_queryable' => get_sub_field('publicly_queryable') !== '' ? get_sub_field('publicly_queryable') : true,
-            'show_in_nav_menus' => true,
-            'show_admin_column' => true,
-            'show_in_quick_edit' => true,
-            'show_in_rest' => false,
-            'show_ui' => true,
-            'show_tagcloud' => true,
-            'update_count_callback' => '_update_post_term_count',
-            'query_var' => true,
-            'rewrite' => [
-                'slug' => get_sub_field('slug'),
-                'hierarchical' => false
-            ],
-        ]
-    );
-    endwhile;
+            register_taxonomy(
+                get_sub_field('name'),
+                get_sub_field('post_type_select'),
+                [
+                    'labels' => [
+                        'name' => get_sub_field('many_name'),
+                        'singular_name' => get_sub_field('single_name'),
+                        'search_items' => 'Найти',
+                        'popular_items' => 'Популярные ' . mb_strtolower(get_sub_field('many_name')),
+                        'all_items' => 'Все ' . mb_strtolower(get_sub_field('many_name')),
+                        'parent_item' => null,
+                        'parent_item_colon' => null,
+                        'edit_item' => 'Редактировать',
+                        'update_item' => 'Обновить',
+                        'add_new_item' => 'Добавить новый элемент',
+                        'new_item_name' => 'Введите название записи',
+                        'separate_items_with_commas' => 'Разделяйте ' . mb_strtolower(get_sub_field('many_name')) . ' запятыми',
+                        'add_or_remove_items' => 'Добавить или удалить ' . mb_strtolower(get_sub_field('many_name')),
+                        'choose_from_most_used' => 'Выбрать из наиболее часто используемых',
+                        'menu_name' => get_sub_field('menu_name') != '' ? get_sub_field('menu_name') : get_sub_field('many_name')
+                    ],
+                    'hierarchical' => get_sub_field('type') === 'true' ? true : false,
+                    'public' => true,
+                    'publicly_queryable' => get_sub_field('publicly_queryable') !== '' ? get_sub_field('publicly_queryable') : true,
+                    'show_in_nav_menus' => true,
+                    'show_admin_column' => true,
+                    'show_in_quick_edit' => true,
+                    'show_in_rest' => false,
+                    'show_ui' => true,
+                    'show_tagcloud' => true,
+                    'update_count_callback' => '_update_post_term_count',
+                    'query_var' => true,
+                    'rewrite' => [
+                        'slug' => get_sub_field('slug'),
+                        'hierarchical' => false
+                    ],
+                ]
+            );
+        endwhile;
     endif;
 }
 
@@ -781,7 +781,7 @@ function dc()
 
     echo "<!--\n";
     foreach (func_get_args() as $var) {
-        print_r($var)."\n";
+        print_r($var) . "\n";
     }
     echo "\n-->";
 }
@@ -908,17 +908,17 @@ function ajaxs_filter($jx)
                 }
                 if (trim(implode('', $value)) !== '') {
                     $args['tax_query'][] = [
-                    'taxonomy' => $key,
-                    'field'    => $field,
-                    'operator' => $operator,
-                    'terms'    => $value,
+                        'taxonomy' => $key,
+                        'field'    => $field,
+                        'operator' => $operator,
+                        'terms'    => $value,
                     ];
                 } else {
                     if ($value !== '' && !is_array($value)) {
                         $args['tax_query'][] = [
-                        'taxonomy' => $key,
-                        'field'    => $field,
-                        'terms'    => [$value],
+                            'taxonomy' => $key,
+                            'field'    => $field,
+                            'terms'    => [$value],
                         ];
                     }
                 }

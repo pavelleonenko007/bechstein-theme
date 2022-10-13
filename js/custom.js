@@ -833,12 +833,21 @@ class VideoPlayer {
     this.handleMute = this.handleMute.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
+    this.handlePointerDown = this.handlePointerDown.bind(this);
+    this.handleProgressHover = this.handleProgressHover.bind(this);
+    this.handleProgressUnHover = this.handleProgressUnHover.bind(this);
 
     this.handleMute();
 
     this._soundButton.addEventListener('click', this.handleMute);
     this._playButton?.addEventListener('click', this.handlePlay);
     this._video.addEventListener('timeupdate', this.handleProgress);
+    this._progressBar.addEventListener('pointerover', this.handleProgressHover);
+    this._progressBar.addEventListener(
+      'pointerout',
+      this.handleProgressUnHover
+    );
+    this._progressBar.addEventListener('pointerdown', this.handlePointerDown);
   }
 
   handleMute(event) {
@@ -856,6 +865,23 @@ class VideoPlayer {
 
     this._progressLine.style.width = `${percent}%`;
     this._timeCounter.textContent = this.formatTime(timeLeft);
+  }
+
+  handleProgressHover(event) {
+    this._progressBar.classList.add('progress--hover');
+  }
+
+  handleProgressUnHover(event) {
+    this._progressBar.classList.remove('progress--hover');
+  }
+
+  handlePointerDown(event) {
+    const progressBarRect = this._progressBar.getBoundingClientRect();
+    const xCoord = event.clientX - progressBarRect.left;
+    const progressBarWidth = progressBarRect.width;
+    const progressBersent = (xCoord / progressBarWidth) * 100;
+
+    this._video.currentTime = (this.duration * progressBersent) / 100;
   }
 
   formatTime(time) {
