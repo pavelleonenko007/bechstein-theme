@@ -147,9 +147,11 @@ Template name: Event
         </div>
         <div class="event-row_right-col">
           <?php $content_blocks = get_field('content_blocks');
-
           foreach ($content_blocks as $content_block) : ?>
-            <?php if ($content_block['acf_fc_layout'] === 'alert_block') :
+            <?php
+            if ($content_block['acf_fc_layout'] === 'dropdowns_block') :
+              continue;
+            elseif ($content_block['acf_fc_layout'] === 'alert_block') :
               $link = $content_block['link'];
               $link_html = $link['url'] ? '<a href="' . $link['url'] . '">' . $link['link_text'] . '</a>' : ''; ?>
               <div class="ui_alert-block w-richtext">
@@ -226,7 +228,26 @@ Template name: Event
                   </script>
                 </a>
               <?php endforeach; ?>
-            <?php elseif ($content_block['acf_fc_layout'] === 'dropdowns_block') : ?>
+            <?php endif; ?>
+          <?php endforeach;
+          ?>
+          <?php $festival = get_post_meta($post->ID, '_bechtix_festival_relation', true);
+          if (!empty($festival)) : ?>
+            <h2 class="h2-35-45"><?php echo get_the_title($festival); ?></h2>
+            <a href="<?php echo get_the_permalink($festival); ?>" class="ui-festival-link w-inline-block">
+              <?php echo get_the_post_thumbnail($festival, 'large', [
+                'class' => 'ui-festival-link_img'
+              ]); ?>
+              <div class="ui-festival-link_content">
+                <div><?php echo get_the_title($festival); ?></div>
+                <div><?php echo get_post_meta($festival, '_bechtix_festival_dates', true); ?></div>
+              </div>
+            </a>
+          <?php endif; ?>
+          <?php foreach ($content_blocks as $content_block) : ?>
+            <?php if ($content_block['acf_fc_layout'] !== 'dropdowns_block') :
+              continue;
+            else : ?>
               <h2 class="h2-35-45">
                 <?php echo $content_block['heading']; ?>
               </h2>
@@ -250,8 +271,7 @@ Template name: Event
                 </div>
               <?php endforeach; ?>
             <?php endif; ?>
-          <?php endforeach;
-          ?>
+          <?php endforeach; ?>
           <?php if (get_field('show_alert_box')) { ?>
             <div>
               <div class="ui_alert-block w-richtext">
