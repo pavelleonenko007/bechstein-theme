@@ -565,6 +565,7 @@ class UserCart {
       : '';
 
     this.cartContainerNode.innerHTML = userNameHTML + userCartHTML + links;
+    this.setExpiresTime = this.setExpiresTime.bind(this);
     this.timerInterval = setInterval(this.setExpiresTime, 1000);
   }
 
