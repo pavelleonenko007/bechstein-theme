@@ -500,18 +500,20 @@ class UserCart {
     }
   }
 
-  formatTime(ms) {
-    const minutes = Number((ms / 60).toFixed());
-    const seconds = Number((ms % 60).toFixed());
-    const normalizeMinutes = minutes < 0 ? `0${minutes}` : `${minutes}`;
-    const normalizeSeconds = seconds < 0 ? `0${seconds}` : `${seconds}`;
-
-    console.log(minutes, seconds, normalizeMinutes, normalizeSeconds);
-    return `${normalizeMinutes}:${normalizeSeconds}`;
+  formatTime(time) {
+    const minutes =
+      Math.floor(time / 60) < 10
+        ? `0${Math.floor(time / 60)}`
+        : `${Math.floor(time / 60)}`;
+    const seconds =
+      Math.floor(time % 60) < 10
+        ? `0${Math.floor(time % 60)}`
+        : `${Math.floor(time % 60)}`;
+    return `${minutes}:${seconds}`;
   }
 
   setExpiresTime() {
-    this.expiresTime -= 1000;
+    this.expiresTime -= 1;
     const timerNode = this.cartContainerNode.querySelector(
       '[data-cart="timer"]'
     );
