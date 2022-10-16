@@ -483,6 +483,7 @@ class UserCart {
     this._checkoutUrl =
       'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
     this.expiresTime = userData.order?.expires;
+    console.log(this.expiresTime);
     this.timerInterval = null;
 
     this._init();
