@@ -525,7 +525,7 @@ class UserCart {
     this._profileUrl = data?.profile || '#';
     clearInterval(this.timerInterval);
     this.timerInterval = null;
-    this.expiresTime = userData.order?.expires;
+    this.expiresTime = data.order?.expires;
     this._setMarkup();
   }
 
