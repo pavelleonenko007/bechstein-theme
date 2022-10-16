@@ -175,8 +175,10 @@ Template name: What's on
                           $event = get_post(get_post_meta($ticket->ID, '_bechtix_event_relation', true));
                           $purchase_urls = get_post_meta($ticket->ID, '_bechtix_purchase_urls', true);
                           $purchase_urls_normal = json_decode($purchase_urls, true);
+                          $benefits_json = get_post_meta($ticket->ID, '_bechtix_ticket_benefits', true);
+                          $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
                         ?>
-                          <div class="cms-li">
+                          <div class="cms-li" data-ticket_benefits="<?php echo $benefits; ?>">
                             <div class="cms-li_mom-img">
                               <?php echo wp_get_attachment_image(
                                 get_post_meta($event->ID, '_bechtix_event_image', true),
