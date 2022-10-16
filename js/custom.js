@@ -500,8 +500,8 @@ class UserCart {
   }
 
   formatTime(ms) {
-    const minutes = ms / 60;
-    const seconds = ms % 60;
+    const minutes = parseInt(ms) / 60;
+    const seconds = parseInt(ms) % 60;
     const normalizeMinutes = minutes < 0 ? `0${minutes}` : `${minutes}`;
     const normalizeSeconds = seconds < 0 ? `0${seconds}` : `${seconds}`;
 
