@@ -482,13 +482,15 @@ class UserCart {
     this._loginUrl = 'https://tix.bechsteinhall.func.agency/en/login/';
     this._checkoutUrl =
       'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
+    this.expiresTime = userData.order?.expires;
+    this.timerInterval = null;
 
     this._init();
   }
 
   handleClick(event) {
     console.log(event);
-    if (this._user?.name) {
+    if (this._orders.length > 0) {
       event.preventDefault();
       document.body.classList.toggle(
         'opencart',
@@ -497,10 +499,30 @@ class UserCart {
     }
   }
 
+  formatTime(ms) {
+    const minutes = ms / 60;
+    const seconds = ms % 60;
+    const normalizeMinutes = minutes < 0 ? `0${minutes}` : `${minutes}`;
+    const normalizeSeconds = seconds < 0 ? `0${seconds}` : `${seconds}`;
+
+    return `${normalizeMinutes}:${normalizeSeconds}`;
+  }
+
+  setExpiresTime() {
+    this.expiresTime -= 1000;
+    const timerNode = this.cartContainerNode.querySelector(
+      '[data-cart="timer"]'
+    );
+
+    timerNode.textContent = this.formatTime(this.expiresTime);
+  }
+
   setData(data = {}) {
     this._orders = data?.order?.items || [];
     this._user = data?.user || null;
     this._profileUrl = data?.profile || '#';
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
     this._setMarkup();
   }
 
@@ -522,18 +544,28 @@ class UserCart {
     const userCartHTML = this._user?.name
       ? `<div id="user-basket">
               <div class="p-17-25 card-block-txt">Your basket contains</div>
-              <div class="p-20-30 cart-block-text">${this._orders.length} tickets</div>
+              <div class="p-20-30 cart-block-text">${
+                this._orders.length
+              } tickets</div>
               <div class="p-17-25 card-block-txt">for a total amount of</div>
-              <div class="p-20-30">£ 340</div>
-              <a bgline="1" href="${this._checkoutUrl}" class="header-book-head-btn-chk w-inline-block">
+              <div class="p-20-30">£ ${this._orders.reduce(
+                (partialSum, item) => partialSum + item.price,
+                0
+              )}</div>
+              <a bgline="1" href="${
+                this._checkoutUrl
+              }" class="header-book-head-btn-chk w-inline-block">
                   <div>checkout</div>
               </a>
-              <div class="p-17-25 card-block-txt" data-cart="timer">10:28&nbsp;left to purchase</div>
+              <div class="p-17-25 card-block-txt"><span data-cart="timer">${this.formatTime(
+                this.expiresTime
+              )}</span>&nbsp;left to purchase</div>
               <div class="cart-block_divider"></div>
           </div>`
       : '';
 
     this.cartContainerNode.innerHTML = userNameHTML + userCartHTML + links;
+    this.timerInterval = setInterval(this.setExpiresTime, 1000);
   }
 
   _init() {
