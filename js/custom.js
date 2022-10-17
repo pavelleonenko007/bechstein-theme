@@ -1,3 +1,5 @@
+console.log(location.origin);
+
 function animate(element, styles = {}, duration, callback = () => {}) {
   let startAnimation;
   const currentStyles = {};
