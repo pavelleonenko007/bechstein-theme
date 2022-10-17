@@ -1411,21 +1411,20 @@ const initTixSessions = () => {
   const getUserData = (event) => {
     console.log(event);
     isTixConnected = true;
-    // window.tixCart.setData(event.data);
-    // if (event.data.user !== null) {
-    //   initBenefitsForUser(event.data.user);
-    // }
-    // console.log('initBenefits');
+    window.tixCart.setData(event.data);
+    if (event.data.user !== null) {
+      initBenefitsForUser(event.data.user);
+    }
   };
 
   window.addEventListener('message', getUserData, false);
 
   tixConntectedInterval = setInterval(() => {
-    console.log('Connecting to tix...');
     if (isTixConnected || counter >= 9) {
       clearInterval(tixConntectedInterval);
       return;
     }
+    console.log('Connecting to tix...');
     tixIframe.contentWindow.postMessage('GetSession', TIX_URL);
     counter++;
   }, 1000);
