@@ -1404,18 +1404,31 @@ const initTixSessions = () => {
   const tixIframe = document.getElementById('tix');
   if (!tixIframe) return;
 
-  tixIframe.contentWindow.postMessage(
-    'GetSession',
-    'https://tix.bechsteinhall.func.agency/en/itix'
-  );
+  const TIX_URL = 'https://tix.bechsteinhall.func.agency/en/itix';
+  let isTixConnected = false;
+  let tixConntectedInterval = null;
+  let counter = 0;
+  const getUserData = (event) => {
+    console.log(event);
+    isTixConnected = true;
+    // window.tixCart.setData(event.data);
+    // if (event.data.user !== null) {
+    //   initBenefitsForUser(event.data.user);
+    // }
+    // console.log('initBenefits');
+  };
 
-  window.addEventListener('message', (event) => {
-    window.tixCart.setData(event.data);
-    if (event.data.user !== null) {
-      initBenefitsForUser(event.data.user);
+  window.addEventListener('message', getUserData, false);
+
+  tixConntectedInterval = setInterval(() => {
+    console.log('Connecting to tix...');
+    if (isTixConnected || counter >= 9) {
+      clearInterval(tixConntectedInterval);
+      return;
     }
-    console.log('initBenefits');
-  });
+    tixIframe.contentWindow.postMessage('GetSession', TIX_URL);
+    counter++;
+  }, 1000);
 
   // const user = {
   //   id: 5119,
