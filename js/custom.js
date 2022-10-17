@@ -1,5 +1,3 @@
-console.log(1);
-
 function animate(element, styles = {}, duration, callback = () => {}) {
   let startAnimation;
   const currentStyles = {};
@@ -483,7 +481,6 @@ class UserCart {
     this._checkoutUrl =
       'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
     this.expiresTime = userData.order?.expires;
-    console.log(this.expiresTime);
     this.timerInterval = null;
 
     this._init();
@@ -513,6 +510,10 @@ class UserCart {
   }
 
   setExpiresTime() {
+    if (!this.expiresTime) {
+      clearInterval(this.timerInterval);
+      return;
+    }
     this.expiresTime -= 1;
     const timerNode = this.cartContainerNode.querySelector(
       '[data-cart="timer"]'
@@ -1408,7 +1409,37 @@ const initTixSessions = () => {
 
   window.addEventListener('message', (event) => {
     window.tixCart.setData(event.data);
+    if (event.data.user !== null) {
+      initBenefitsForUser(event.data.user);
+    }
+    console.log('initBenefits');
   });
+
+  // const user = {
+  //   id: 5119,
+  //   name: 'Pavel Leonenko',
+  //   email: 'pavel.leonenko374@gmail.com',
+  //   hash: '77c53fd8faa9cd5a5b83136dbeba99155f5b9c5ef7098bf700d20cfe18e20219',
+  //   tags: [
+  //     {
+  //       id: 37,
+  //       name: 'Friends',
+  //       abbr: 'FR',
+  //     },
+  //     {
+  //       id: 42,
+  //       name: 'Unlimited',
+  //       abbr: 'UL',
+  //     },
+  //     {
+  //       id: 42,
+  //       name: 'Unlimited',
+  //       abbr: 'UL',
+  //     },
+  //   ],
+  // };
+
+  // initBenefitsForUser(user);
 };
 
 const initHomeFilterForm = () => {
@@ -1455,6 +1486,72 @@ window.addEventListener('load', () => {
   $('#date-picker').datepicker();
   // initMainBookTicketsCursor();
 });
+
+function quickSort(array = []) {
+  if (array.length <= 1) {
+    return array;
+  }
+
+  let pivotIndex = Math.floor(array.length / 2);
+  let pivot = array[pivotIndex];
+  let less = [];
+  let greater = [];
+  for (let i = 0; i < array.length; i++) {
+    if (i === pivotIndex) {
+      continue;
+    }
+
+    if (array[i] < pivot) {
+      less.push(array[i]);
+    } else {
+      greater.push(array[i]);
+    }
+  }
+
+  return [...quickSort(less), pivot, ...quickSort(greater)];
+}
+
+const initBenefitsForUser = (user = {}) => {
+  if (!user && user.tags.length === 0) return;
+
+  const userTags = user.tags;
+  const ticketWithBenefitsNodes = Array.from(
+    document.querySelectorAll('[data-ticket_benefits]')
+  );
+
+  ticketWithBenefitsNodes.forEach((ticketNode) => {
+    if (!ticketNode.dataset.ticket_benefits) return;
+    const benefitsArray = JSON.parse(ticketNode.dataset.ticket_benefits);
+    const userBenefits = benefitsArray.filter((benefit) =>
+      userTags.find((tag) => tag.id === benefit.CustomerTag.CustomerTagId)
+    );
+    let prices = [];
+
+    userBenefits.forEach((benefit) => {
+      benefit.Prices.forEach((priceObj) => {
+        priceObj.Prices.forEach((innerPriceObj) => {
+          prices.push(innerPriceObj.Price);
+        });
+      });
+    });
+
+    prices = quickSort([...new Set(prices)]);
+    // console.log(prices);
+
+    if (prices.length === 0) return;
+
+    const priceNode = ticketNode.querySelector('.cms-li_price');
+    let priceString = '';
+
+    if (prices.length > 1) {
+      priceString = `from £${prices[0]} to £${prices[prices.length - 1]}`;
+    } else {
+      priceString = `from £${prices[0]}`;
+    }
+
+    priceNode.textContent = priceString;
+  });
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
