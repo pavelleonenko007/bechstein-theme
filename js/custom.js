@@ -1,5 +1,3 @@
-console.log(location.origin);
-
 function animate(element, styles = {}, duration, callback = () => {}) {
   let startAnimation;
   const currentStyles = {};
@@ -73,7 +71,6 @@ class CustomCursor {
   }
 
   handleMouseMove(event) {
-    console.log(this.cursor);
     this.mouseCoordinates.x = event.clientX;
     this.mouseCoordinates.y = event.clientY;
   }
@@ -651,7 +648,9 @@ class WhatsOnSlider {
 
   handleScroll(event) {
     const dragX = event.clientX;
-    const x = (dragX - this.x) / this._slideSize.width;
+    const dragShift = dragX - this.x;
+    const x = dragShift / this._slideSize.width;
+    if (Math.abs(dragShift) < 15) return;
     this.dragging(x);
   }
 
@@ -675,7 +674,6 @@ class WhatsOnSlider {
 
   dragging(x) {
     this.currentIndex = this.startIndex - x;
-    console.log(this.currentIndex);
     this.setSlidesPosition();
   }
 
@@ -1068,8 +1066,6 @@ class BechCarouser {
       this.options.duration
     );
 
-    console.log(this.animation);
-
     this.interval = setInterval(() => {
       this.nextButton.querySelector(
         '.arrow-button__progress'
@@ -1265,7 +1261,6 @@ const initWhatsOnFilters = () => {
     selectedTextBlock.textContent = selectedString;
   };
   const getTickets = async (event) => {
-    console.log(event);
     event?.preventDefault();
 
     const formData = new FormData(filterFormNode);
@@ -1273,8 +1268,6 @@ const initWhatsOnFilters = () => {
       method: 'POST',
       body: formData,
     };
-
-    console.log('formData: ', Object.fromEntries(formData.entries()));
 
     try {
       const data = await (
@@ -1407,7 +1400,6 @@ const initTixSessions = () => {
   let tixConntectedInterval = null;
   let counter = 0;
   const getUserData = (event) => {
-    console.log(event);
     isTixConnected = true;
     window.tixCart.setData(event.data);
     if (event.data.user !== null) {

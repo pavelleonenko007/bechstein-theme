@@ -687,6 +687,7 @@ p strong {
 
 .wo-slider--dragging .wo-slide {
   transition: none;
+  touch-action: none;
 }
 
 .account {
@@ -971,10 +972,6 @@ p strong {
 
   .cms-li_time-div .p-30-45 {
     min-width: 190rem;
-  }
-
-  .slider-wvwnts {
-    touch-action: none;
   }
 }
 
