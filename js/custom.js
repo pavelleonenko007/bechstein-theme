@@ -867,8 +867,6 @@ class VideoPlayer {
     this._timeCounter = this.playerNode.querySelector(
       '[data-type="time-counter"]'
     );
-
-    this.duration = this._video.duration;
     this.handleMute();
 
     this.handleMute = this.handleMute.bind(this);
@@ -901,8 +899,10 @@ class VideoPlayer {
   }
 
   handleProgress(event) {
-    const percent = (this._video.currentTime / this.duration) * 100;
-    const timeLeft = this.duration - this._video.currentTime;
+    const percent = (this._video.currentTime / this._video.duration) * 100;
+    const timeLeft = this._video.duration - this._video.currentTime;
+
+    console.log(timeLeft, this._video.duration, this._video.currentTime);
 
     this._progressLine.style.width = `${percent}%`;
     this._timeCounter.textContent = this.formatTime(timeLeft);
@@ -922,7 +922,7 @@ class VideoPlayer {
     const progressBarWidth = progressBarRect.width;
     const progressBersent = (xCoord / progressBarWidth) * 100;
 
-    this._video.currentTime = (this.duration * progressBersent) / 100;
+    this._video.currentTime = (this._video.duration * progressBersent) / 100;
   }
 
   formatTime(time) {
@@ -1555,13 +1555,7 @@ const initBenefitsForUser = (user = {}) => {
     if (prices.length === 0) return;
 
     const priceNode = ticketNode.querySelector('.cms-li_price');
-    let priceString = '';
-
-    if (prices.length > 1) {
-      priceString = `from £${prices[0]} to £${prices[prices.length - 1]}`;
-    } else {
-      priceString = `from £${prices[0]}`;
-    }
+    const priceString = `from £${prices[0]}`;
 
     priceNode.textContent = priceString;
   });
