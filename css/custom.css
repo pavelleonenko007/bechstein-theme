@@ -972,6 +972,10 @@ p strong {
   .cms-li_time-div .p-30-45 {
     min-width: 190rem;
   }
+
+  .slider-wvwnts {
+    touch-action: none;
+  }
 }
 
 @media screen and (max-width: 765px) {

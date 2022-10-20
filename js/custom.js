@@ -902,8 +902,6 @@ class VideoPlayer {
     const percent = (this._video.currentTime / this._video.duration) * 100;
     const timeLeft = this._video.duration - this._video.currentTime;
 
-    console.log(timeLeft, this._video.duration, this._video.currentTime);
-
     this._progressLine.style.width = `${percent}%`;
     this._timeCounter.textContent = this.formatTime(timeLeft);
   }
