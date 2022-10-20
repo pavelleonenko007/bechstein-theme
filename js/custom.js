@@ -652,7 +652,7 @@ class WhatsOnSlider {
     const dragX = event.clientX;
     const dragShift = dragX - this.x;
     const x = dragShift / this._slideSize.width;
-    if (Math.abs(dragShift) < 10) return;
+    // if (Math.abs(dragShift) < 10) return;
     this.dragging(x);
   }
 
