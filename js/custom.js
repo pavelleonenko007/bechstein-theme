@@ -604,13 +604,15 @@ class WhatsOnSlider {
     this.sliderContainerNode.classList.add('wo-slider--ready');
 
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleUp = this.handleUp.bind(this);
 
     this.sliderContainerNode.addEventListener(
       'pointerdown',
       this.handleDown.bind(this)
     );
 
-    document.addEventListener('pointerup', this.handleUp.bind(this));
+    document.addEventListener('pointerup', this.handleUp);
+    document.addEventListener('pointercancel', this.handleUp);
 
     this.nextButtonNode?.addEventListener('click', this.next.bind(this));
     this.prevButtonNode?.addEventListener('click', this.prev.bind(this));
@@ -650,7 +652,7 @@ class WhatsOnSlider {
     const dragX = event.clientX;
     const dragShift = dragX - this.x;
     const x = dragShift / this._slideSize.width;
-    if (Math.abs(dragShift) < 15) return;
+    if (Math.abs(dragShift) < 10) return;
     this.dragging(x);
   }
 

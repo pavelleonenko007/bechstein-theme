@@ -673,6 +673,7 @@ p strong {
   left: 0;
   bottom: 0;
   user-select: none;
+  transform: translateZ(0);
 }
 
 .wo-slide img {
