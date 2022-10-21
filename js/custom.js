@@ -509,6 +509,7 @@ class UserCart {
   }
 
   setExpiresTime() {
+    console.log(this.expiresTime);
     if (!!this.expiresTime) {
       clearInterval(this.timerInterval);
       this.setData({
