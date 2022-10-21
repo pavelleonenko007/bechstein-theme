@@ -197,7 +197,7 @@ Template name: What's on
                                 'Cancelled',
                                 'Not scheduled'
                               ];
-                              if ($sale_status !== '0' && $sale_status !== '') :
+                              if ($sale_status === '2' || $sale_status === '3') :
                               ?>
                                 <div class="cms-li_sold-out-banner"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
                               <?php endif; ?>
@@ -231,13 +231,21 @@ Template name: What's on
                                   <div> →</div>
                                 </a>
                               </div>
-                              <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+                              <?php if ($sale_status === '' || $sale_status === '0') : ?>
+                                <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+                              <?php elseif ($sale_status === '1') : ?>
+                                <div class="cms-li_price" style="color: #B47171;"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
+                              <?php endif; ?>
                             </div>
                             <div class="cms-li_actions-div biger">
                               <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
                                 <strong>Book tickets</strong>
                               </a>
-                              <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+                              <?php if ($sale_status === '' || $sale_status === '0') : ?>
+                                <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
+                              <?php elseif ($sale_status === '1') : ?>
+                                <div class="cms-li_price" style="color: #B47171;"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
+                              <?php endif; ?>
                             </div>
                           </div>
                         <?php endforeach; ?>
