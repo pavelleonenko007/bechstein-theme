@@ -1,20 +1,17 @@
 <?php
-$loader      = get_field( 'loader', 'option' );
+$loader      = get_field('loader', 'option');
 $video_files = $loader['video_files'];
 
-if ( ! empty( $video_files ) ): ?>
+if (!empty($video_files) && $loader['show_loader']) : ?>
     <div class="loader">
         <div class="loader-in" data-type="video-player">
-            <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc61c15b2615e4_load-logo.svg"
-                 loading="lazy" alt class="image-3">
+            <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc61c15b2615e4_load-logo.svg" loading="lazy" alt class="image-3">
             <div class="html-embed w-embed">
                 <div class="video_player_box" style="width:100%; height:100%">
-                    <video class="my_video" autoplay loop muted playsinline
-                           style="width:100%; height:100%; object-fit: cover" data-type="video">
-						<?php foreach ( $video_files as $video_file ): ?>
-                            <source src="<?php echo $video_file['video_file']['url']; ?>"
-                                    type="<?php echo $video_file['video_file']['mime_type']; ?>">
-						<?php endforeach; ?>
+                    <video class="my_video" autoplay loop muted playsinline style="width:100%; height:100%; object-fit: cover" data-type="video">
+                        <?php foreach ($video_files as $video_file) : ?>
+                            <source src="<?php echo $video_file['video_file']['url']; ?>" type="<?php echo $video_file['video_file']['mime_type']; ?>">
+                        <?php endforeach; ?>
                     </video>
                 </div>
             </div>

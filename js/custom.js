@@ -1225,7 +1225,10 @@ function initSplideCarousel() {
 const initLoader = () => {
   const loaderNode = document.querySelector('.loader');
 
-  if (!loaderNode) return;
+  if (!loaderNode) {
+    window.localStorage.removeItem('loader');
+    return;
+  }
 
   const loaderData = JSON.parse(window.localStorage.getItem('loader'));
   const skipCallback = () => {
