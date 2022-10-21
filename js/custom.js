@@ -529,6 +529,7 @@ class UserCart {
     this.timerInterval = null;
     this.expiresTime = data.order?.expires;
     this._setMarkup();
+    this._setTicketsCount();
   }
 
   _setTicketsCount() {
