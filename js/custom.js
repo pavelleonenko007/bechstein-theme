@@ -479,7 +479,7 @@ class UserCart {
     this._loginUrl = 'https://tix.bechsteinhall.func.agency/en/login/';
     this._checkoutUrl =
       'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
-    this.expiresTime = userData.order?.expires;
+    this.expiresTime = Math.floor(userData.order?.expires);
     this.timerInterval = null;
 
     this._init();
@@ -532,7 +532,7 @@ class UserCart {
     this._profileUrl = data?.profile || '#';
     clearInterval(this.timerInterval);
     this.timerInterval = null;
-    this.expiresTime = data?.order?.expires;
+    this.expiresTime = Math.floor(data?.order?.expires);
     this._setMarkup();
     this._setTicketsCount();
   }
@@ -556,7 +556,7 @@ class UserCart {
 
     const userNameHTML = this._user?.name
       ? `<div id="user-name">
-              <div class="p-20-30 cart-block_top">Sir ${this._user.name}</div>
+              <div class="p-20-30 cart-block_top">${this._user.name}</div>
               <div class="cart-block_divider"></div>
           </div>`
       : '';
