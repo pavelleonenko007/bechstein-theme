@@ -513,6 +513,7 @@ class UserCart {
     console.log(this.timerInterval);
     if (this.expiresTime === 0) {
       console.log('inside if');
+      document.body.classList.remove('opencart');
       clearInterval(this.timerInterval);
       this.setData({
         user: this._user,
@@ -523,6 +524,7 @@ class UserCart {
 
     if (!this.expiresTime) {
       console.log('inside !if');
+      document.body.classList.remove('opencart');
       clearInterval(this.timerInterval);
       this.setData({
         user: this._user,
