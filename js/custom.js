@@ -509,8 +509,12 @@ class UserCart {
   }
 
   setExpiresTime() {
-    if (!this.expiresTime) {
+    if (!!this.expiresTime) {
       clearInterval(this.timerInterval);
+      this.setData({
+        user: this._user,
+        profile: this._profileUrl,
+      });
       return;
     }
     this.expiresTime -= 1;
