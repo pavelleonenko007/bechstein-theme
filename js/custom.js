@@ -540,9 +540,10 @@ class UserCart {
   _setTicketsCount() {
     if (this._orders.length > 0) {
       const ticketSting = this._orders.length % 10 !== 1 ? 'tickets' : 'ticket';
-      this.cartButton.textContent = this._orders.length + ' ' + ticketSting;
+      this.cartButton.querySelector('div').textContent =
+        this._orders.length + ' ' + ticketSting;
     } else {
-      this.cartButton.textContent = 'Book tickets';
+      this.cartButton.querySelector('div').textContent = 'Book tickets';
     }
   }
 
