@@ -1557,10 +1557,12 @@ const initBenefitsForUser = (user = {}) => {
 
     if (prices.length === 0) return;
 
-    const priceNode = ticketNode.querySelector('.cms-li_price');
+    const priceNodes = ticketNode.querySelectorAll('.cms-li_price');
     const priceString = `from £${prices[0]}`;
 
-    priceNode.textContent = priceString;
+    priceNodes.forEach((priceNode) => {
+      priceNode.textContent = priceString;
+    });
   });
 };
 
