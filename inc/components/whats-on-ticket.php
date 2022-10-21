@@ -2,7 +2,7 @@
 global $post;
 $post = !empty($args['ticket']) ? get_post($args['ticket']) : $post;
 $event = get_post(get_post_meta($post->ID, '_bechtix_event_relation', true));
-$purchase_urls = get_post_meta($post, '_bechtix_purchase_urls', true);
+$purchase_urls = get_post_meta($post->ID, '_bechtix_purchase_urls', true);
 $purchase_urls_normal = json_decode($purchase_urls, true);
 $benefits_json = get_post_meta($post->ID, '_bechtix_ticket_benefits', true);
 $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
