@@ -112,7 +112,10 @@ Template name: Festival
 												$purchase_urls = get_post_meta($ticket->ID, '_bechtix_purchase_urls', true);
 												$purchase_urls_normal = json_decode($purchase_urls, true);
 											?>
-												<div class="cms-li">
+												<?php get_template_part('inc/components/whats-on-ticket', '', [
+													'ticket' => $ticket->ID
+												])  ?>
+												<!-- <div class="cms-li">
 													<div class="cms-li_mom-img">
 														<?php echo wp_get_attachment_image(
 															get_post_meta($event->ID, '_bechtix_event_image', true),
@@ -173,7 +176,7 @@ Template name: Festival
 														</a>
 														<div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
 													</div>
-												</div>
+												</div> -->
 											<?php endforeach; ?>
 										</div>
 									</div>
