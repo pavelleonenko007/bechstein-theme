@@ -123,6 +123,7 @@
 }
 
 .arrow-button svg .arrow-button__progress {
+  stroke-dashoffset: 150.796447372;
   stroke: #ffffff;
   transform: rotate(-90deg);
   transform-origin: center;
@@ -966,6 +967,10 @@ p strong {
 @media screen and (min-width: 1280px) {
   .head-event-content {
     min-height: calc(100vh - 146rem);
+  }
+
+  .bech-slider__slides {
+    height: 900rem;
   }
 }
 

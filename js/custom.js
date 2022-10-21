@@ -1100,18 +1100,18 @@ class BechCarouser {
 
     this.animation = animate(
       this.nextButton.querySelector('.arrow-button__progress'),
-      { strokeDashoffset: Math.PI * (24 * 2) },
+      { strokeDashoffset: 0 },
       this.options.duration
     );
 
     this.interval = setInterval(() => {
       this.nextButton.querySelector(
         '.arrow-button__progress'
-      ).style.strokeDashoffset = 0;
+      ).style.strokeDashoffset = Math.PI * (24 * 2);
       this.next();
       this.animation = animate(
         this.nextButton.querySelector('.arrow-button__progress'),
-        { strokeDashoffset: Math.PI * (24 * 2) },
+        { strokeDashoffset: 0 },
         this.options.duration
       );
     }, this.options.duration);
