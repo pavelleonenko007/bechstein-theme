@@ -531,6 +531,14 @@ class UserCart {
     this._setMarkup();
   }
 
+  _setTicketsCount() {
+    if (this._orders) {
+      this.cartButton.textContent = this._orders.length + 'tickets';
+    } else {
+      this.cartButton = 'Book tickets';
+    }
+  }
+
   _setMarkup() {
     const links = this._user?.email
       ? `<div id="user-actions">
@@ -576,6 +584,7 @@ class UserCart {
 
   _init() {
     this._setMarkup();
+    this._setTicketsCount();
 
     this.handleClick = this.handleClick.bind(this);
     this.cartButton.addEventListener('click', this.handleClick);
