@@ -532,8 +532,8 @@ class UserCart {
   }
 
   _setTicketsCount() {
-    if (this._orders) {
-      this.cartButton.textContent = this._orders.length + 'tickets';
+    if (this._orders.length > 0) {
+      this.cartButton.textContent = this._orders.length + ' tickets';
     } else {
       this.cartButton = 'Book tickets';
     }
