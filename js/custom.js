@@ -535,7 +535,7 @@ class UserCart {
     if (this._orders.length > 0) {
       this.cartButton.textContent = this._orders.length + ' tickets';
     } else {
-      this.cartButton = 'Book tickets';
+      this.cartButton.textContent = 'Book tickets';
     }
   }
 
