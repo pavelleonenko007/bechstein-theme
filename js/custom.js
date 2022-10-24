@@ -635,21 +635,22 @@ class WhatsOnSlider {
     this.prevButtonNode = document.querySelector('[data-button="prev"]');
     this.nextButtonNode = document.querySelector('[data-button="next"]');
     this._currentIndex = 0;
+    this.wasDragging = false;
 
     this.setSlidesPosition();
     this.sliderContainerNode.classList.add('wo-slider--ready');
 
     this.handleScroll = this.handleScroll.bind(this);
     this.handleUp = this.handleUp.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
     this.sliderContainerNode.addEventListener(
       'pointerdown',
       this.handleDown.bind(this)
     );
-
+    this.sliderContainerNode.addEventListener('click', this.handleClick);
     document.addEventListener('pointerup', this.handleUp);
     document.addEventListener('pointercancel', this.handleUp);
-
     this.nextButtonNode?.addEventListener('click', this.next.bind(this));
     this.prevButtonNode?.addEventListener('click', this.prev.bind(this));
   }
@@ -684,10 +685,19 @@ class WhatsOnSlider {
       .join('');
   }
 
+  handleClick(event) {
+    if (this.wasDragging) {
+      event.preventDefault();
+      this.wasDragging = false;
+    }
+  }
+
   handleScroll(event) {
     const dragX = event.clientX;
     const dragShift = dragX - this.x;
     const x = dragShift / this._slideSize.width;
+    this.wasDragging = true;
+    this.sliderContainerNode.removeEventListener('click', this.handleClick);
     // if (Math.abs(dragShift) < 10) return;
     this.dragging(x);
   }
@@ -708,6 +718,7 @@ class WhatsOnSlider {
 
     this.currentIndex = Math.round(this.currentIndex);
     this.setSlidesPosition();
+    this.sliderContainerNode.addEventListener('click', this.handleClick);
   }
 
   dragging(x) {
