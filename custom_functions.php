@@ -803,3 +803,14 @@ function bech_get_homepage_slider_items()
 	]);
 	wp_die();
 }
+
+
+function bech_get_format_date_for_whats_on_slide($post_id)
+{
+	$start_date = strtotime(get_post_meta($post_id, '_bechtix_ticket_start_date', true));
+	$end_date = strtotime(get_post_meta($post_id, '_bechtix_ticket_end_date', true));
+	$long_date = date('j F', $start_date);
+	$time = ', ' . date('H:i', $start_date) . '—' . date('H:i', $end_date);
+
+	return $long_date . $time;
+}

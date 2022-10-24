@@ -1,3 +1,5 @@
+<?php
+global $post; ?>
 <div class="slider-wvwnts_slide wo-slider_item wo-slide">
   <div class="link-block">
     <div class="slider-wvwnts_top">
@@ -26,7 +28,7 @@
       </div>
     </div>
     <div class="slider-wvwnts_bottom">
-      <div class="p-20-30 w20"><?php echo date('d F', strtotime(get_post_meta($post->ID, '_bechtix_ticket_start_date', true))); ?></div>
+      <div class="p-20-30 w20"><?php echo bech_get_format_date_for_whats_on_slide($post->ID); ?></div>
       <a href="<?php echo $event_url; ?>" class="p-30-45 bold"><?php the_title(); ?></a>
       <div class="p-17-25 home-card"><?php the_content(); ?></div>
       <?php $purchase_urls = json_decode(get_post_meta($post->ID, '_bechtix_purchase_urls', true), true); ?>
