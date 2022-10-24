@@ -1247,14 +1247,17 @@ const initLoader = () => {
   }
 
   const loaderData = JSON.parse(window.localStorage.getItem('loader'));
-  const skipCallback = () => {
+  const skipCallback = async () => {
     const data = {
       skipped: true,
       date: Date.now() + 1000 * 60 * 60 * 24,
     };
     window.localStorage.setItem('loader', JSON.stringify(data));
-    loaderNode.classList.remove('loader--active');
-    document.body.classList.remove('body--freeze');
+    await $(loaderNode).animate({ opacity: 0 }, 500).promise();
+    setTimeout(() => {
+      loaderNode.classList.remove('loader--active');
+      document.body.classList.remove('body--freeze');
+    }, 200);
   };
   const openPlayerButton = document.querySelector(
     '[data-button="open-player"]'
@@ -1264,11 +1267,11 @@ const initLoader = () => {
     skipCallback
   );
   player.pause();
-  const openVideoPlayer = (event) => {
+  const openVideoPlayer = async (event) => {
     event?.preventDefault();
     loaderNode.classList.add('loader--active');
-    loaderNode.style.display = '';
     document.body.classList.add('body--freeze');
+    await $(loaderNode).animate({ opacity: 1 }, 400).promise();
     player.replay();
   };
 

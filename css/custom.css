@@ -10,6 +10,10 @@
   text-decoration: none;
 }
 
+.progress {
+  cursor: pointer;
+}
+
 .progress--hover {
   height: 6rem;
 }
@@ -143,6 +147,11 @@
 
 .body--freeze {
   overflow: hidden;
+}
+
+.loader {
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
 }
 
 .loader--active {
