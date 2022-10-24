@@ -10,6 +10,7 @@ Template name: Copy of Bechstein Hall
 <?php get_template_part("header_block", ""); ?>
 
 <body <?php body_class("body"); ?>>
+    <?php wp_body_open(); ?>
     <?php get_template_part('inc/components/loader'); ?>
     <div class="page-wrapper">
         <?php get_header(); ?>
@@ -338,5 +339,4 @@ Template name: Copy of Bechstein Hall
             display: none;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
     <?php get_template_part("footer_block", ""); ?>

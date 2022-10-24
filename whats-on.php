@@ -13,181 +13,184 @@ Template name: What's on
 <?php get_template_part("header_block", ""); ?>
 
 <body <?php body_class("body"); ?>>
-  <?php get_header(); ?>
-  <main class="wrapper">
-    <section class="section wf-section">
-      <div class="breadcrumbs-line">
-        <?php if (function_exists('bcn_display')) bcn_display(); ?>
-      </div>
-      <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-          <div class="catalog-row">
-            <div class="filter-column">
-              <form data-filter="form" class="filter-styk">
-                <div class="search-filter">
-                  <input type="search" value="<?php echo get_search_query() ?>" class="search-line-input w-input" maxlength="256" name="s" placeholder="search by keyword…" id="s" required="" />
-                  <input type="submit" value="Search" class="search-line-btn w-button" />
-                </div>
-                <div class="filters-form">
-                  <div>
-                    <div class="filters-div">
-                      <div class="filters-top-div">
-                        <div class="p-20-30">Time to go</div>
-                        <input type="text" id="filter-date" class="calendar-btn__input" placeholder="Calendar" name="time">
-                        <!-- <a href="#" class="calendar-btn w-inline-block">
+  <?php get_template_part('inc/components/loader'); ?>
+  <div class="page-wrapper">
+    <?php get_header(); ?>
+    <main class="wrapper">
+      <section class="section wf-section">
+        <div class="breadcrumbs-line">
+          <?php if (function_exists('bcn_display')) bcn_display(); ?>
+        </div>
+        <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+            <div class="catalog-row">
+              <div class="filter-column">
+                <form data-filter="form" class="filter-styk">
+                  <div class="search-filter">
+                    <input type="search" value="<?php echo get_search_query() ?>" class="search-line-input w-input" maxlength="256" name="s" placeholder="search by keyword…" id="s" required="" />
+                    <input type="submit" value="Search" class="search-line-btn w-button" />
+                  </div>
+                  <div class="filters-form">
+                    <div>
+                      <div class="filters-div">
+                        <div class="filters-top-div">
+                          <div class="p-20-30">Time to go</div>
+                          <input type="text" id="filter-date" class="calendar-btn__input" placeholder="Calendar" name="time">
+                          <!-- <a href="#" class="calendar-btn w-inline-block">
                           <img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
                           
                           <button class="calendar-btn__reset" data-type="reset">✕</button>
                           <div class="calendar-btn__close">Close</div>
                           <div id="filter-calendar" class="filter-calendar"></div>
                         </a> -->
-                      </div>
-                      <div class="filters-bottom-div">
-                        <label class="w-radio cbx-mom">
-                          <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
-                          <input type="radio" id="today" name="time" value="today" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx w-form-label" for="today">today</span>
-                        </label>
-                        <label class="w-radio cbx-mom">
-                          <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
-                          <input type="radio" id="tomorrow" name="time" value="tomorrow" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx w-form-label" for="tomorrow">tomorrow</span>
-                        </label>
-                        <label class="w-radio cbx-mom">
-                          <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
-                          <input type="radio" id="weekend" name="time" value="weekend" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx w-form-label" for="weekend">this weekend</span>
-                        </label>
-                        <label class="w-radio cbx-mom">
-                          <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
-                          <input type="radio" id="next-week" name="time" value="next-week" style="opacity:0;position:absolute;z-index:-1" />
-                          <span class="filter-cbx w-form-label" for="next-week">next week</span>
-                        </label>
-                      </div>
-                    </div>
-                    <?php $genres = bech_get_custom_taxonomies('genres');
-                    if (!empty($genres)) : ?>
-                      <div class="filters-div">
-                        <div class="filters-top-div">
-                          <div class="p-20-30">Genre</div>
                         </div>
                         <div class="filters-bottom-div">
-                          <?php
-                          $counter = 0;
-                          foreach ($genres as $index => $genre) :
-                            if ($counter <= 4) : ?>
+                          <label class="w-radio cbx-mom">
+                            <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
+                            <input type="radio" id="today" name="time" value="today" style="opacity:0;position:absolute;z-index:-1" />
+                            <span class="filter-cbx w-form-label" for="today">today</span>
+                          </label>
+                          <label class="w-radio cbx-mom">
+                            <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
+                            <input type="radio" id="tomorrow" name="time" value="tomorrow" style="opacity:0;position:absolute;z-index:-1" />
+                            <span class="filter-cbx w-form-label" for="tomorrow">tomorrow</span>
+                          </label>
+                          <label class="w-radio cbx-mom">
+                            <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
+                            <input type="radio" id="weekend" name="time" value="weekend" style="opacity:0;position:absolute;z-index:-1" />
+                            <span class="filter-cbx w-form-label" for="weekend">this weekend</span>
+                          </label>
+                          <label class="w-radio cbx-mom">
+                            <div class="w-radio-input w-radio-input--inputType-custom cbx"></div>
+                            <input type="radio" id="next-week" name="time" value="next-week" style="opacity:0;position:absolute;z-index:-1" />
+                            <span class="filter-cbx w-form-label" for="next-week">next week</span>
+                          </label>
+                        </div>
+                      </div>
+                      <?php $genres = bech_get_custom_taxonomies('genres');
+                      if (!empty($genres)) : ?>
+                        <div class="filters-div">
+                          <div class="filters-top-div">
+                            <div class="p-20-30">Genre</div>
+                          </div>
+                          <div class="filters-bottom-div">
+                            <?php
+                            $counter = 0;
+                            foreach ($genres as $index => $genre) :
+                              if ($counter <= 4) : ?>
+                                <label class="w-checkbox cbx-mom">
+                                  <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                                  <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="genre[]" data-name="<?php echo $genre->slug; ?>" value="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                                  <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $genre->term_id; ?>"><?php echo $genre->name; ?></span>
+                                </label>
+                            <?php
+                                $counter++;
+                              endif;
+                            endforeach; ?>
+                            <?php if (count($genres) > 5) : ?>
+                              <a href="#" class="show-all-btn">show all</a>
+                            <?php endif; ?>
+                          </div>
+                        </div>
+                      <?php endif; ?>
+                      <?php $instruments = bech_get_custom_taxonomies('instruments');
+                      if (!empty($instruments)) : ?>
+                        <div class="filters-div">
+                          <div class="filters-top-div">
+                            <div class="p-20-30">Instruments</div>
+                          </div>
+                          <div class="filters-bottom-div">
+                            <?php foreach ($instruments as $instrument) : ?>
                               <label class="w-checkbox cbx-mom">
                                 <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                                <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="genre[]" data-name="<?php echo $genre->slug; ?>" value="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
-                                <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $genre->term_id; ?>"><?php echo $genre->name; ?></span>
+                                <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="instrument[]" data-name="<?php echo $instrument->slug; ?>" value="<?php echo $instrument->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                                <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
                               </label>
-                          <?php
-                              $counter++;
-                            endif;
-                          endforeach; ?>
-                          <?php if (count($genres) > 5) : ?>
-                            <a href="#" class="show-all-btn">show all</a>
-                          <?php endif; ?>
+                            <?php endforeach; ?>
+                          </div>
                         </div>
-                      </div>
-                    <?php endif; ?>
-                    <?php $instruments = bech_get_custom_taxonomies('instruments');
-                    if (!empty($instruments)) : ?>
-                      <div class="filters-div">
-                        <div class="filters-top-div">
-                          <div class="p-20-30">Instruments</div>
-                        </div>
-                        <div class="filters-bottom-div">
-                          <?php foreach ($instruments as $instrument) : ?>
-                            <label class="w-checkbox cbx-mom">
-                              <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                              <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="instrument[]" data-name="<?php echo $instrument->slug; ?>" value="<?php echo $instrument->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
-                              <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
-                            </label>
-                          <?php endforeach; ?>
-                        </div>
-                      </div>
-                    <?php endif; ?>
-                    <?php $festivals = get_posts([
-                      'post_type' => 'festivals',
-                      'post_status' => 'publish',
-                      'numberposts' => -1
-                    ]);
+                      <?php endif; ?>
+                      <?php $festivals = get_posts([
+                        'post_type' => 'festivals',
+                        'post_status' => 'publish',
+                        'numberposts' => -1
+                      ]);
 
-                    if (!empty($festivals)) : ?>
+                      if (!empty($festivals)) : ?>
+                        <div class="filters-div">
+                          <div class="filters-top-div">
+                            <div class="p-20-30">Specials and Festivals</div>
+                          </div>
+                          <div class="filters-bottom-div">
+                            <?php foreach ($festivals as $festival) : ?>
+                              <label class="w-checkbox cbx-mom">
+                                <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                                <input type="checkbox" id="festival-<?php echo $festival->ID; ?>" name="festival[]" style="opacity:0;position:absolute;z-index:-1" value="<?php echo $festival->ID; ?>" />
+                                <span class="filter-cbx ischbx w-form-label" for="festival-<?php echo $festival->ID; ?>"><?php echo $festival->post_title; ?></span>
+                              </label>
+                            <?php endforeach; ?>
+                          </div>
+                        </div>
+                      <?php endif; ?>
                       <div class="filters-div">
                         <div class="filters-top-div">
-                          <div class="p-20-30">Specials and Festivals</div>
+                          <div class="p-20-30">Event</div>
                         </div>
-                        <div class="filters-bottom-div">
-                          <?php foreach ($festivals as $festival) : ?>
-                            <label class="w-checkbox cbx-mom">
-                              <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                              <input type="checkbox" id="festival-<?php echo $festival->ID; ?>" name="festival[]" style="opacity:0;position:absolute;z-index:-1" value="<?php echo $festival->ID; ?>" />
-                              <span class="filter-cbx ischbx w-form-label" for="festival-<?php echo $festival->ID; ?>"><?php echo $festival->post_title; ?></span>
-                            </label>
-                          <?php endforeach; ?>
-                        </div>
+                        <div class="filters-bottom-div"><label class="w-checkbox cbx-mom">
+                            <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">contemporary</span>
+                          </label><label class="w-checkbox cbx-mom">
+                            <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">minimalism</span>
+                          </label></div>
                       </div>
-                    <?php endif; ?>
-                    <div class="filters-div">
-                      <div class="filters-top-div">
-                        <div class="p-20-30">Event</div>
-                      </div>
-                      <div class="filters-bottom-div"><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">contemporary</span>
-                        </label><label class="w-checkbox cbx-mom">
-                          <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">minimalism</span>
-                        </label></div>
+                      <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
+                      <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
                     </div>
-                    <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
-                    <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
                   </div>
+                </form>
+              </div>
+              <div class="catalog-column">
+                <h1 class="h1-75-90"><?php the_title(); ?></h1>
+                <div id="selected-filters" class="filters-line-text">
+                  <div>you choose &#x27;<span data-filter="choosen">25 nov 2022—26 nov 2022.</span>’ in filters.</div><a id="clear" href="#" class="clearfilter-btn"> clear filters</a>
                 </div>
-              </form>
-            </div>
-            <div class="catalog-column">
-              <h1 class="h1-75-90"><?php the_title(); ?></h1>
-              <div id="selected-filters" class="filters-line-text">
-                <div>you choose &#x27;<span data-filter="choosen">25 nov 2022—26 nov 2022.</span>’ in filters.</div><a id="clear" href="#" class="clearfilter-btn"> clear filters</a>
-              </div>
-              <div id="tickets-container" class="cms-tems">
-                <?php
-                $tickets = get_posts([
-                  'post_type' => 'tickets',
-                  'post_status' => 'publish',
-                  'numberposts' => 10,
-                  'orderby' => 'meta_value',
-                  'meta_key' => '_bechtix_ticket_start_date',
-                  'order' => 'ASC',
-                ]);
+                <div id="tickets-container" class="cms-tems">
+                  <?php
+                  $tickets = get_posts([
+                    'post_type' => 'tickets',
+                    'post_status' => 'publish',
+                    'numberposts' => 10,
+                    'orderby' => 'meta_value',
+                    'meta_key' => '_bechtix_ticket_start_date',
+                    'order' => 'ASC',
+                  ]);
 
-                $sorted_tickets = bech_sort_tickets($tickets);
+                  $sorted_tickets = bech_sort_tickets($tickets);
 
-                if (!empty($sorted_tickets)) :
-                  foreach ($sorted_tickets as $date => $tickets) : ?>
-                    <div class="cms-ul">
-                      <div class="cms-heading">
-                        <h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
-                        <h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
+                  if (!empty($sorted_tickets)) :
+                    foreach ($sorted_tickets as $date => $tickets) : ?>
+                      <div class="cms-ul">
+                        <div class="cms-heading">
+                          <h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
+                          <h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
+                        </div>
+                        <div class="cms-ul-events">
+                          <?php foreach ($tickets as $ticket) : ?>
+                            <?php get_template_part('inc/components/whats-on-ticket', '', [
+                              'ticket' => $ticket->ID
+                            ]); ?>
+                          <?php endforeach; ?>
+                        </div>
                       </div>
-                      <div class="cms-ul-events">
-                        <?php foreach ($tickets as $ticket) : ?>
-                          <?php get_template_part('inc/components/whats-on-ticket', '', [
-                            'ticket' => $ticket->ID
-                          ]); ?>
-                        <?php endforeach; ?>
-                      </div>
-                    </div>
-                <?php endforeach;
-                endif; ?>
+                  <?php endforeach;
+                  endif; ?>
+                </div>
               </div>
             </div>
-          </div>
-      <?php endwhile;
-      endif; ?>
-    </section>
-  </main>
-  <?php get_footer(); ?>
+        <?php endwhile;
+        endif; ?>
+      </section>
+    </main>
+    <?php get_footer(); ?>
+  </div>
   <!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
   <script>
     let headwidth;

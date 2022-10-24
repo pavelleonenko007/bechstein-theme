@@ -1,9 +1,10 @@
 <?php
 $loader      = get_field('loader', 'option');
 $video_files = $loader['video_files'];
+$show_loader = $loader['show_loader'];
 
-if (!empty($video_files) && $loader['show_loader']) : ?>
-    <div class="loader">
+if (!empty($video_files)) : ?>
+    <div class="loader" data-show="<?php echo $show_loader ? 'true' : 'false'; ?>" <?php echo $loader['show_loader'] === false ? 'style="display: none;"' : ''; ?>>
         <div class="loader-in" data-type="video-player">
             <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc61c15b2615e4_load-logo.svg" loading="lazy" alt class="image-3">
             <div class="html-embed w-embed">

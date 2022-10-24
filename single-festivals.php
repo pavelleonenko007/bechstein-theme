@@ -11,111 +11,113 @@ Template name: Festival
 
 <body <?php body_class("body"); ?>>
 	<?php wp_body_open(); ?>
-	<?php get_header();
-	the_post(); ?>
-	<main class="wrapper">
-		<section class="section wf-section">
-			<div class="breadcrumbs-line">
-				<?php if (function_exists('bcn_display')) bcn_display(); ?>
-			</div>
-		</section>
-		<section class="section wf-section">
-			<div class="head-fest">
-				<h1 class="h1-75-90">
-					<?php the_title(); ?>
-				</h1>
-				<div class="p-35-45 date-text">
-					<?php echo get_post_meta($post->ID, '_bechtix_festival_dates', true); ?>
+	<?php get_template_part('inc/components/loader'); ?>
+	<div class="page-wrapper">
+		<?php get_header();
+		the_post(); ?>
+		<main class="wrapper">
+			<section class="section wf-section">
+				<div class="breadcrumbs-line">
+					<?php if (function_exists('bcn_display')) bcn_display(); ?>
 				</div>
-			</div>
-		</section>
-		<section class="section wf-section">
-			<div class="mom-fest-img">
-				<?php the_post_thumbnail('large', [
-					'class' => 'img-fest'
-				]); ?>
-		</section>
-		<section class="section wf-section">
-			<div class="desc-fest">
-				<p class="p-25-40 fest-desc">
-					<?php echo get_the_content(); ?>
-				</p>
-			</div>
-		</section>
-		<section class="section wf-section">
-			<div class="catalog-row">
-				<div class="festival-column no-mob">
-					<div class="festival-styk">
-						<div class="fest-img-mom">
-							<?php the_post_thumbnail('medium', [
-								'class' => 'img-cover'
-							]); ?>
-						</div>
-						<div class="p-30-40 f40">
-							<?php the_title(); ?>
-						</div>
-						<div class="p-20-30 fest">
-							<?php echo get_post_meta($post->ID, '_bechtix_festival_dates', true); ?>
-						</div>
-						<div class="p-15-25"><strong>Tickets information</strong></div>
-						<div class="p-17-25 italic">
-							<?php echo get_post_meta($post->ID, '_bechtix_festival_note', true); ?>
-						</div>
+			</section>
+			<section class="section wf-section">
+				<div class="head-fest">
+					<h1 class="h1-75-90">
+						<?php the_title(); ?>
+					</h1>
+					<div class="p-35-45 date-text">
+						<?php echo get_post_meta($post->ID, '_bechtix_festival_dates', true); ?>
 					</div>
 				</div>
-				<div class="catalog-column fest-col">
-					<div class="cms-ul-events">
-						<div class="cms-tems">
-							<?php
-							$events = get_posts([
-								'post_type' => 'events',
-								'post_status' => 'publish',
-								'numberposts' => -1,
-								'fields' => 'ids',
-								'meta_query' => [
-									[
-										'key' => '_bechtix_festival_relation',
-										'value' => $post->ID
-									]
-								]
-							]);
-
-							$tickets = [];
-
-							if (!empty($events)) {
-								$tickets = get_posts([
-									'post_type' => 'tickets',
+			</section>
+			<section class="section wf-section">
+				<div class="mom-fest-img">
+					<?php the_post_thumbnail('large', [
+						'class' => 'img-fest'
+					]); ?>
+			</section>
+			<section class="section wf-section">
+				<div class="desc-fest">
+					<p class="p-25-40 fest-desc">
+						<?php echo get_the_content(); ?>
+					</p>
+				</div>
+			</section>
+			<section class="section wf-section">
+				<div class="catalog-row">
+					<div class="festival-column no-mob">
+						<div class="festival-styk">
+							<div class="fest-img-mom">
+								<?php the_post_thumbnail('medium', [
+									'class' => 'img-cover'
+								]); ?>
+							</div>
+							<div class="p-30-40 f40">
+								<?php the_title(); ?>
+							</div>
+							<div class="p-20-30 fest">
+								<?php echo get_post_meta($post->ID, '_bechtix_festival_dates', true); ?>
+							</div>
+							<div class="p-15-25"><strong>Tickets information</strong></div>
+							<div class="p-17-25 italic">
+								<?php echo get_post_meta($post->ID, '_bechtix_festival_note', true); ?>
+							</div>
+						</div>
+					</div>
+					<div class="catalog-column fest-col">
+						<div class="cms-ul-events">
+							<div class="cms-tems">
+								<?php
+								$events = get_posts([
+									'post_type' => 'events',
 									'post_status' => 'publish',
 									'numberposts' => -1,
+									'fields' => 'ids',
 									'meta_query' => [
 										[
-											'key' => '_bechtix_event_relation',
-											'value' => $events,
-											'compare' => 'IN'
+											'key' => '_bechtix_festival_relation',
+											'value' => $post->ID
 										]
 									]
 								]);
-							}
 
-							$sorted_tickets = bech_sort_tickets($tickets);
+								$tickets = [];
 
-							if (!empty($sorted_tickets)) :
-								foreach ($sorted_tickets as $date => $tickets) : ?>
-									<div class="cms-ul">
-										<div class="cms-heading">
-											<h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
-											<h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
-										</div>
-										<div class="cms-ul-events">
-											<?php foreach ($tickets as $ticket) :
-												$event = get_post(get_post_meta($ticket->ID, '_bechtix_event_relation', true));
-												$purchase_urls = get_post_meta($ticket->ID, '_bechtix_purchase_urls', true);
-												$purchase_urls_normal = json_decode($purchase_urls, true);
-											?>
-												<?php get_template_part('inc/components/whats-on-ticket', '', [
-													'ticket' => $ticket->ID
-												])  ?>
-												<!-- <div class="cms-li">
+								if (!empty($events)) {
+									$tickets = get_posts([
+										'post_type' => 'tickets',
+										'post_status' => 'publish',
+										'numberposts' => -1,
+										'meta_query' => [
+											[
+												'key' => '_bechtix_event_relation',
+												'value' => $events,
+												'compare' => 'IN'
+											]
+										]
+									]);
+								}
+
+								$sorted_tickets = bech_sort_tickets($tickets);
+
+								if (!empty($sorted_tickets)) :
+									foreach ($sorted_tickets as $date => $tickets) : ?>
+										<div class="cms-ul">
+											<div class="cms-heading">
+												<h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
+												<h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
+											</div>
+											<div class="cms-ul-events">
+												<?php foreach ($tickets as $ticket) :
+													$event = get_post(get_post_meta($ticket->ID, '_bechtix_event_relation', true));
+													$purchase_urls = get_post_meta($ticket->ID, '_bechtix_purchase_urls', true);
+													$purchase_urls_normal = json_decode($purchase_urls, true);
+												?>
+													<?php get_template_part('inc/components/whats-on-ticket', '', [
+														'ticket' => $ticket->ID
+													])  ?>
+													<!-- <div class="cms-li">
 													<div class="cms-li_mom-img">
 														<?php echo wp_get_attachment_image(
 															get_post_meta($event->ID, '_bechtix_event_image', true),
@@ -177,18 +179,19 @@ Template name: Festival
 														<div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
 													</div>
 												</div> -->
-											<?php endforeach; ?>
+												<?php endforeach; ?>
+											</div>
 										</div>
-									</div>
-							<?php endforeach;
-							endif; ?>
+								<?php endforeach;
+								endif; ?>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</section>
-	</main>
-	<?php get_footer(); ?>
+			</section>
+		</main>
+		<?php get_footer(); ?>
+	</div>
 	<!--[if lte IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
 	<script>
 		let headwidth;
