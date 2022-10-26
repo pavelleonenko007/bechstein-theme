@@ -109,12 +109,8 @@ Template name: What's on
                           </div>
                         </div>
                       <?php endif; ?>
-                      <?php $festivals = get_posts([
-                        'post_type' => 'festivals',
-                        'post_status' => 'publish',
-                        'numberposts' => -1
-                      ]);
-
+                      <?php
+                      $festivals = bech_get_specials_filters();
                       if (!empty($festivals)) : ?>
                         <div class="filters-div">
                           <div class="filters-top-div">

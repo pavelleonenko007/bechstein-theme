@@ -367,6 +367,24 @@ function bech_get_custom_taxonomies($taxonomy)
 	return $terms;
 }
 
+function bech_get_specials_filters()
+{
+	$events = get_posts([
+		'post_type' => 'events',
+		'post_status' => 'publish',
+		'meta_key' => '_bechtix_festival_relation',
+		'meta_value' => '',
+		'meta_compare' => '!=',
+		'fields' => 'ids'
+	]);
+
+	$festivals = array_map(function ($event) {
+		return get_post(get_post_meta($event, '_bechtix_festival_relation', true));
+	}, $events);
+
+	return array_unique($festivals, SORT_REGULAR);
+}
+
 /* What's on filters */
 
 add_action('rest_api_init', function () {
@@ -552,68 +570,9 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 						$purchase_urls = get_post_meta($ticket->ID, '_bechtix_purchase_urls', true);
 						$purchase_urls_normal = json_decode($purchase_urls, true);
 					?>
-						<div class="cms-li">
-							<div class="cms-li_mom-img">
-								<?php echo wp_get_attachment_image(
-									get_post_meta($event->ID, '_bechtix_event_image', true),
-									'medium',
-									false,
-									[
-										'class' => 'cms-li_img',
-										'style' => 'max-height: 270rem'
-									]
-								); ?>
-								<?php $sale_status = get_post_meta($ticket->ID, '_bechtix_sale_status', true);
-								$sale_statuses = [
-									'No Status',
-									'Few tickets',
-									'Sold out',
-									'Cancelled',
-									'Not scheduled'
-								];
-								if ($sale_status !== '0') :
-								?>
-									<div class="cms-li_sold-out-banner"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
-								<?php endif; ?>
-							</div>
-							<div class="cms-li_content">
-								<div class="cms-li_time-div">
-									<div class="p-30-45"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
-									<div class="p-17-25 italic"><?php echo get_post_meta($ticket->ID, '_bechtix_duration', true); ?></div>
-								</div>
-								<div class="p-20-30 title-event"><?php echo get_the_title($ticket); ?></div>
-								<p class="p-17-25"><?php echo get_field('event_subheader', $ticket->ID); ?></p>
-								<div class="cms-li_tags-div">
-									<?php $tags = wp_get_object_terms($ticket->ID, ['event_tag', 'genres', 'instruments']);
-									foreach ($tags as $tag) : ?>
-										<a href="#" class="cms-li_tag-link"><?php echo $tag->name; ?></a>
-									<?php endforeach; ?>
-								</div>
-								<div class="cms-li_actions-div">
-									<?php
-									if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') : ?>
-										<a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
-											<strong>Book tickets</strong>
-										</a>
-									<?php else : ?>
-										<a bgline="2" href="#" class="booktickets-btn sold-out">
-											<strong><?php echo $sale_statuses[intval($sale_status)]; ?></strong>
-										</a>
-									<?php endif; ?>
-									<a href="<?php echo get_the_permalink($event->ID); ?>" class="readmore-btn w-inline-block">
-										<div>read more</div>
-										<div> →</div>
-									</a>
-								</div>
-								<div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
-							</div>
-							<div class="cms-li_actions-div biger">
-								<a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
-									<strong>Book tickets</strong>
-								</a>
-								<div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($ticket->ID); ?></div>
-							</div>
-						</div>
+						<?php get_template_part('inc/components/whats-on-ticket', '', [
+							'ticket' => $ticket->ID
+						]); ?>
 					<?php endforeach; ?>
 				</div>
 			</div>
