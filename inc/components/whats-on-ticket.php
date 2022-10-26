@@ -8,7 +8,7 @@ $benefits_json = get_post_meta($post->ID, '_bechtix_ticket_benefits', true);
 $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
 ?>
 <div class="cms-li" data-ticket_benefits="<?php echo $benefits; ?>">
-  <div class="cms-li_mom-img">
+  <a href="<?php echo get_the_permalink($event->ID); ?>" class="cms-li_mom-img">
     <?php echo wp_get_attachment_image(
       get_post_meta($event->ID, '_bechtix_event_image', true),
       'medium',
@@ -30,13 +30,13 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
     ?>
       <div class="cms-li_sold-out-banner"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
     <?php endif; ?>
-  </div>
+  </a>
   <div class="cms-li_content">
     <div class="cms-li_time-div">
       <div class="p-30-45"><?php echo bech_get_ticket_times($post->ID); ?></div>
       <div class="p-17-25 italic"><?php echo get_post_meta($post->ID, '_bechtix_duration', true); ?></div>
     </div>
-    <div class="p-20-30 title-event"><?php echo get_the_title($post); ?></div>
+    <a href="<?php echo get_the_permalink($event->ID); ?>" class="p-20-30 title-event"><?php echo get_the_title($post); ?></a>
     <p class="p-17-25"><?php echo get_field('event_subheader', $post->ID); ?></p>
     <div class="cms-li_tags-div">
       <?php $tags = wp_get_object_terms($post->ID, ['event_tag', 'genres', 'instruments']);
