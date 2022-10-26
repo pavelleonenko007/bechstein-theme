@@ -342,11 +342,27 @@ function bech_get_ticket_times($post_id): string
 
 function bech_get_custom_taxonomies($taxonomy)
 {
-	$terms = get_terms([
+	$terms = array_filter(get_terms([
 		'taxonomy'   => $taxonomy,
-		'hide_empty' => false,
+		'hide_empty' => true,
 		'parent'     => 0,
-	]);
+	]), function ($term) {
+		$tickets = get_posts([
+			'post_type' => 'tickets',
+			'post_status' => 'publish',
+			'tax_query' => [
+				[
+					'taxonomy' => $term->taxonomy,
+					'field' => 'slug',
+					'terms' => $term->slug
+				]
+			]
+		]);
+
+		// var_dump([$term->slug => count($tickets)]);
+
+		return !empty($tickets);
+	});
 
 	return $terms;
 }
