@@ -33,6 +33,18 @@ function animate(element, styles = {}, duration, callback = () => {}) {
   return window.requestAnimationFrame(step);
 }
 
+function formatDate(date) {
+  var d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 class CustomCursor {
   constructor(cursorId, parentElement) {
     this.cursor = document.getElementById(cursorId);
@@ -93,6 +105,234 @@ new CustomCursor(
     'w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'
   )
 );
+
+class WOCalendar {
+  constructor(selector, options = {}) {
+    this.calendarNode = document.querySelector(selector);
+    if (!this.calendarNode) return;
+    this.options = {
+      theme: 'dark',
+      selectDayCallback: () => {},
+      ...options,
+    };
+    this.months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    this.today = new Date();
+    this.fromInput = document.querySelector('input[name="from"]');
+    this.toInput = document.querySelector('input[name="to"]');
+    this.selectedDates = [];
+    if (this.fromInput && this.fromInput.value) {
+      this.selectedDates.push(formatDate(this.fromInput.value));
+    }
+
+    if (this.toInput && this.toInput.value) {
+      this.selectedDates.push(formatDate(this.toInput.value));
+    }
+
+    this.setCalendarHTML();
+    this.setDate();
+    this.setEvents();
+  }
+
+  static create(selector, options) {
+    return new WOCalendar(selector, options);
+  }
+
+  setDate(date) {
+    this.selectedDate = date ? new Date(date) : new Date();
+    this.date = this.selectedDate.getDate();
+    this.weekDay = this.selectedDate.getDay();
+    this.month = this.selectedDate.getMonth();
+    this.year = this.selectedDate.getFullYear();
+    this.firstDayInMonth = new Date(this.year, this.month, 1);
+    this.lastDayInMonth = new Date(this.year, this.month + 1, 0);
+
+    this.setCurrentMonth();
+    this.setDaysMarkup();
+  }
+
+  selectDates(dates = {}) {
+    this.selectedDates = [];
+    if (!dates.from) {
+      throw new Error('Add date from');
+    }
+
+    this.selectedDates[0] = dates.from;
+
+    if (dates.to) {
+      this.selectedDates[1] = dates.to;
+    }
+
+    this.setDatesInInputs();
+    this.setDate(dates.from);
+  }
+
+  setEvents() {
+    this.handleNext = this.handleNext.bind(this);
+    this.handlePrev = this.handlePrev.bind(this);
+    this.handleSelectDay = this.handleSelectDay.bind(this);
+
+    this.nextMonthButton =
+      this.calendarNode.querySelector('[data-type="next"]');
+    this.prevMonthButton =
+      this.calendarNode.querySelector('[data-type="prev"]');
+    this.calendarBodyNode =
+      this.calendarNode.querySelector('[data-type="body"]');
+
+    this.nextMonthButton.addEventListener('click', this.handleNext);
+    this.prevMonthButton.addEventListener('click', this.handlePrev);
+    this.calendarBodyNode.addEventListener('click', this.handleSelectDay);
+  }
+
+  setCurrentMonth() {
+    const monthNode = this.calendarNode.querySelector('[data-type="month"]');
+    monthNode.textContent = this.months[this.month];
+  }
+
+  setCalendarHTML() {
+    this.calendarNode.innerHTML = `
+      <div class="wo-calendar ${
+        this.options.theme !== 'dark' ? 'wo-calendar--light' : ''
+      }" data-type="calendar">
+        <div class="wo-calendar__header">
+          <button class="wo-calendar__button" data-type="prev">←</button>
+          <div class="wo-calendar__month" data-type="month"></div>
+          <button class="wo-calendar__button wo-calendar__button--right" data-type="next">→</button>
+        </div>
+        <div class="wo-calendar__body" data-type="body"></div>
+      </div>
+    `;
+  }
+
+  setDaysMarkup() {
+    const dates = [];
+    let dayNumber = 1;
+    let paddingDays =
+      this.firstDayInMonth.getDay() - 1 < 0
+        ? 6
+        : this.firstDayInMonth.getDay() - 1;
+
+    for (let i = 0; i < this.lastDayInMonth.getDate() + paddingDays; i++) {
+      if (i < paddingDays) {
+        dates.push('');
+      } else {
+        dates.push(new Date(this.year, this.month, dayNumber));
+        dayNumber++;
+      }
+    }
+
+    this.calendarNode.querySelector('[data-type="body"]').innerHTML = dates
+      .map((date) => {
+        if (date === '') {
+          return '<div class="wo-day"></div>';
+        } else {
+          let dateString = formatDate(date);
+          let classes = ['wo-day', 'day'];
+
+          if (dateString === formatDate(this.today)) {
+            classes.push('wo-day--today');
+          }
+
+          if (this.selectedDates.includes(dateString)) {
+            classes.push('wo-day--selected');
+          }
+          return `<button type="button" class="${classes.join(
+            ' '
+          )}" data-date="${dateString}">
+            <div class="wo-day__label">${date.getDate()}</div>
+          </button>`;
+        }
+      })
+      .join('');
+    this.options.selectDayCallback(this.selectedDates);
+  }
+
+  handleNext(event) {
+    event.preventDefault();
+    this.nextMonth();
+  }
+
+  handlePrev(event) {
+    event.preventDefault();
+    this.prevMonth();
+  }
+
+  handleSelectDay(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!this.fromInput) {
+      return;
+    }
+    const day = event.target.closest('.wo-day');
+
+    if (!day || !day.dataset?.date) {
+      return;
+    }
+
+    const maxSelectedDates = this.toInput ? 2 : 1;
+
+    if (this.selectedDates.length >= maxSelectedDates) {
+      this.selectedDates = [];
+    }
+    this.selectedDates.push(day.dataset.date);
+    this.setDatesInInputs();
+    this.setDaysMarkup();
+  }
+
+  formatSelectedDates() {
+    const formattedSelectedDates = this.selectedDates.map(
+      (dateString) => new Date(dateString)
+    );
+    const sortedFormattedDates = quickSort(formattedSelectedDates);
+    if (sortedFormattedDates.length > 2) {
+      sortedFormattedDates = [];
+    }
+
+    this.selectedDates = sortedFormattedDates.map((date) => formatDate(date));
+  }
+
+  setDatesInInputs() {
+    this.formatSelectedDates();
+    if (this.fromInput) {
+      this.fromInput.value = this.selectedDates[0] || '';
+    }
+
+    if (this.toInput) {
+      this.toInput.value = this.selectedDates[1] || '';
+      // this.toInput.dispatchEvent(new Event('change'));
+    }
+
+    if (this.fromInput) {
+      this.fromInput.dispatchEvent(new Event('change'));
+    }
+  }
+
+  nextMonth() {
+    this.setDate(new Date(this.year, this.month + 1, 1));
+  }
+
+  prevMonth() {
+    this.setDate(new Date(this.year, this.month - 1, 1));
+  }
+
+  reset() {
+    this.selectedDates = [];
+    this.setDatesInInputs();
+    this.setDaysMarkup();
+  }
+}
 
 class Calendar {
   constructor(container, options = {}) {
@@ -463,10 +703,12 @@ class BechCalendar {
   }
 }
 
-new BechCalendar('calendar', {
-  parentElement: 'div',
-  onlyCurrentMonth: true,
-});
+const calendarOnMainPage = WOCalendar.create('#calendar');
+
+// new BechCalendar('calendar', {
+//   parentElement: 'div',
+//   onlyCurrentMonth: true,
+// });
 
 class UserCart {
   constructor(userData = {}) {
@@ -809,89 +1051,120 @@ function debounce(callback, delay) {
   };
 }
 
-class CalendarWidget {
-  constructor(input) {
-    this.input = input;
-    if (!this.input) return;
-    this._setHTML();
+/**
+ * <svg width="24" height="25" viewBox="0 0 24 25" fill="none">
+        <rect x="0.5" y="1" width="23" height="23" rx="1.5" stroke="#030E14"></rect><rect x="1" y="1.5" width="22" height="6" fill="#030E14"></rect>
+        <path d="M9.24651 19.2793C10.9841 19.2793 12.1501 18.2619 12.1501 16.8215C12.1501 15.4726 11.087 14.5467 9.50943 14.5467C9.18935 14.5467 8.89213 14.5924 8.64064 14.661C10.0238 13.9294 11.4871 13.255 11.4871 12.0775C11.4871 11.1859 10.7554 10.5 9.6809 10.5C8.80068 10.5 6.45725 11.4602 6.45725 12.4776C6.45725 12.832 6.69731 13.0721 7.02882 13.0721C7.90904 13.0721 7.47464 11.7117 8.10337 11.1973C8.332 11.003 8.58349 10.9458 8.84641 10.9458C9.52086 10.9458 10.0353 11.5174 10.0353 12.2604C10.0353 13.2778 9.31509 14.1237 7.77186 15.004C8.18339 14.9125 8.49204 14.8668 8.78925 14.8668C9.90952 14.8668 10.664 15.667 10.664 16.7987C10.664 18.079 9.88666 18.9135 8.75496 18.9135C8.37772 18.9135 8.00049 18.8335 7.77186 18.6963C7.12027 18.319 7.50894 16.7301 6.583 16.7301C6.24006 16.7301 6 16.9816 6 17.3474C6 18.2276 8.08051 19.2793 9.24651 19.2793Z" fill="#030E14"></path>
+        <path d="M13.3763 19.1421H17L15.9255 18.5134V10.5L13.0676 11.4831L14.4965 11.9289V18.5134L13.3763 19.1421Z" fill="#030E14"></path>
+      </svg>
+ */
 
-    this.toggleCalendar = this.toggleCalendar.bind(this);
-    this.reset = this.reset.bind(this);
+const getTickets = async (filters) => {
+  const formData = filters instanceof FormData ? filters : new FormData();
 
-    this._setEvents();
+  if (!filters instanceof FormData) {
+    for (const property in filters) {
+      if (Object.hasOwnProperty.call(filters, property)) {
+        const value = filters[property];
+        formData.set(property, value);
+      }
+    }
   }
 
-  _setHTML() {
-    this.widgetContainerNode = document.createElement('div');
-    this.widgetContainerNode.className = 'calendar-btn w-inline-block';
-    this.input.insertAdjacentElement('beforebegin', this.widgetContainerNode);
-    this.widgetContainerNode.append(this.input);
+  try {
+    const response = await (
+      await fetch(
+        `${bech_var.home_url}/wp-json/tix-webhook/v1/whats-on-filter`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      )
+    ).json();
 
-    this.widgetResetButton = document.createElement('button');
-    this.widgetResetButton.className = 'calendar-btn__reset';
-    this.widgetResetButton.setAttribute('data-type', 'reset');
-    this.widgetResetButton.textContent = '✕';
-    this.input.insertAdjacentElement('afterend', this.widgetResetButton);
+    console.log(response);
 
-    this.widgetCloseNode = document.createElement('div');
-    this.widgetCloseNode.className = 'calendar-btn__close';
-    this.widgetCloseNode.textContent = 'Close';
-    this.widgetResetButton.insertAdjacentElement(
-      'afterend',
-      this.widgetCloseNode
+    if (response.code !== 'success') {
+      throw new Error(data.message);
+    }
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    alert('Error: ' + error.message);
+  }
+};
+
+class CalendarWidget {
+  constructor(containerId = '') {
+    this.containerNode = document.getElementById(containerId);
+    if (!this.containerNode) return;
+    this.setHTML();
+    this.widget = this.containerNode.querySelector(
+      '[data-type="calendar_widget"]'
     );
-
-    this.calendarContainerNode = document.createElement('div');
-    this.calendarContainerNode.className = 'filter-calendar';
-    this.calendarContainerNode.setAttribute('id', 'filter-calendar');
-    this.widgetCloseNode.insertAdjacentElement(
-      'afterend',
-      this.calendarContainerNode
+    this.selectedDatesNode = this.widget.querySelector(
+      '[data-type="selected_dates"]'
     );
-
-    this.calendar = new BechCalendar(this.calendarContainerNode.id, {
-      parentElement: 'div',
-      onlyCurrentMonth: true,
+    this.calendarContainerNode = this.widget.querySelector(
+      '[data-type="calendar"]'
+    );
+    this.calendar = WOCalendar.create('[data-type="calendar"]', {
       theme: 'light',
-      inputSelector: `#${this.input.id}`,
-      callback: () => {
-        const value = this.input.value;
-        const timeFilterButtons = document.querySelectorAll(
-          '[name="time"]:not([type="text"])'
-        );
-        timeFilterButtons?.forEach((timeFilterButton) => {
-          timeFilterButton.removeAttribute('checked');
-          timeFilterButton.checked = false;
-        });
-        this.widgetContainerNode.classList.toggle(
-          'calendar-btn--selected',
-          !!value
-        );
+      selectDayCallback: (dates = []) => {
+        let datesString;
+        if (dates.length !== 0) {
+          datesString = dates.join('–');
+          this.widget.classList.add('calendar-btn--selected');
+        } else {
+          datesString = 'Calendar';
+        }
+        this.selectedDatesNode.textContent = datesString;
       },
     });
+
+    this.setEvents();
   }
 
-  _setEvents() {
-    this.widgetContainerNode.addEventListener('click', this.toggleCalendar);
-    this.widgetResetButton.addEventListener('click', this.reset);
+  setHTML() {
+    this.containerNode.innerHTML = `
+    <div class="calendar-btn w-inline-block playicosvg" data-type="calendar_widget">
+      <img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar">
+      <span data-type="selected_dates">Calendar</span>
+      <button type="button" class="calendar-btn__reset" data-type="reset">✕</button>
+      <div class="calendar-btn__close">Close</div>
+      <div class="filter-calendar" data-type="calendar"></div>
+    </div>`;
   }
 
-  reset(event) {
-    event?.preventDefault();
-    event?.stopPropagation();
-    this.input.value = '';
-    this.input.dispatchEvent(new Event('change'));
-    this.widgetContainerNode.classList.remove('calendar-btn--selected');
-    this.calendar.reset();
-  }
+  handleToggle(event) {
+    if (!event.target.closest('[data-type="calendar_widget"]')) {
+      return this.widget.classList.remove('calendar-btn--active');
+    }
 
-  toggleCalendar(event) {
-    event.preventDefault();
+    if (event.target.closest('[data-type="calendar"]')) {
+      return event.stopPropagation();
+    }
 
-    this.widgetContainerNode.classList.toggle(
+    if (event.target.closest('[data-type="reset"]')) {
+      return this.reset();
+    }
+
+    this.widget.classList.toggle(
       'calendar-btn--active',
-      !this.widgetContainerNode.classList.contains('calendar-btn--active')
+      !this.widget.classList.contains('calendar-btn--active')
     );
+  }
+
+  setEvents() {
+    this.handleToggle = this.handleToggle.bind(this);
+    document.addEventListener('click', this.handleToggle);
+  }
+
+  reset() {
+    this.widget.classList.remove('calendar-btn--selected');
+    this.selectedDatesNode.textContent = 'Calendar';
+    this.calendar.reset();
   }
 }
 
@@ -1302,9 +1575,7 @@ const initMainBookTicketsCursor = () => {
 };
 
 const initWhatsOnFilters = () => {
-  const calendarWidget = new CalendarWidget(
-    document.getElementById('filter-date')
-  );
+  const calendarWidget = new CalendarWidget('calendar-widget');
   const filterFormNode = document.querySelector('[data-filter="form"]');
   const ticketsContainer = document.getElementById('tickets-container');
   if (!filterFormNode && !ticketsContainer) return;
@@ -1323,42 +1594,62 @@ const initWhatsOnFilters = () => {
     );
     selectedTextBlock.textContent = selectedString;
   };
-  const getTickets = async (event) => {
-    event?.preventDefault();
+  // const getTickets = async (event) => {
+  //   event?.preventDefault();
 
+  //   const formData = new FormData(filterFormNode);
+  //   const fetchOptions = {
+  //     method: 'POST',
+  //     body: formData,
+  //   };
+
+  //   try {
+  //     const data = await (
+  //       await fetch(
+  //         `${bech_var.home_url}/wp-json/tix-webhook/v1/whats-on-filter`,
+  //         fetchOptions
+  //       )
+  //     ).text();
+
+  //     console.log(data);
+
+  //     if (data.code !== 'success') {
+  //       throw new Error(data.message);
+  //     }
+
+  //     showSelectedFilters(data?.data?.selected_string);
+  //     ticketsContainer.innerHTML = data?.data?.html;
+  //   } catch (e) {
+  //     console.error(e);
+  //     alert('Something goes wrong, please try again later!');
+  //   }
+  // };
+  const changeInputHandler = async (event) => {
     const formData = new FormData(filterFormNode);
-    const fetchOptions = {
-      method: 'POST',
-      body: formData,
-    };
+    console.log(Object.fromEntries(formData));
+    const response = await getTickets(formData);
+    const ticketsHTML = response.html;
+    const selectedString = response?.selected_string;
 
-    try {
-      const data = await (
-        await fetch(
-          `${bech_var.home_url}/wp-json/tix-webhook/v1/whats-on-filter`,
-          fetchOptions
-        )
-      ).json();
-
-      console.log(data);
-
-      if (data.code !== 'success') {
-        throw new Error(data.message);
-      }
-
-      showSelectedFilters(data?.data?.selected_string);
-      ticketsContainer.innerHTML = data?.data?.html;
-    } catch (e) {
-      console.error(e);
-      alert('Something goes wrong, please try again later!');
-    }
+    showSelectedFilters(selectedString);
+    ticketsContainer.innerHTML = ticketsHTML;
   };
+
   const clearFilters = (event) => {
     event?.preventDefault();
     filterFormNode.reset();
     calendarWidget.reset();
-    getTickets();
+    filterInputs.forEach((filterInput) => {
+      if (filterInput.type === 'checkbox' || filterInput.type === 'radio') {
+        filterInput.removeAttribute('checked');
+        filterInput.checked = false;
+      } else {
+        filterInput.value = '';
+      }
+    });
+    changeInputHandler();
   };
+
   const searchInputMiddleware = (callback) => {
     let inputValue = '';
     return function (...args) {
@@ -1373,9 +1664,12 @@ const initWhatsOnFilters = () => {
 
   filterInputs.forEach((filterInput) => {
     if (filterInput.type === 'search') {
-      filterInput.addEventListener('change', searchInputMiddleware(getTickets));
+      filterInput.addEventListener(
+        'change',
+        searchInputMiddleware(changeInputHandler)
+      );
     } else {
-      filterInput.addEventListener('change', getTickets);
+      filterInput.addEventListener('change', changeInputHandler);
     }
   });
 
@@ -1509,46 +1803,6 @@ const initTixSessions = () => {
   // initBenefitsForUser(user);
 };
 
-const initHomeFilterForm = () => {
-  const formNode = document.getElementById('home-filter-form');
-  if (!formNode) return;
-  const inputNodes = Array.from(
-    formNode.querySelectorAll('input:not([type="submit"]):not([name="action"])')
-  );
-  const getTickets = async (event) => {
-    event?.preventDefault();
-    const formData = new FormData(formNode);
-
-    console.log(Object.fromEntries(formData.entries()));
-
-    try {
-      const fetchOptions = {
-        method: 'POST',
-        body: formData,
-      };
-
-      const response = await fetch(bech_var.url, fetchOptions);
-      const data = await response.json();
-
-      console.log(data);
-
-      if (data.status === 'bad') {
-        throw new Error('wrong request');
-      }
-
-      document.querySelector('.wo-slider').innerHTML = data.html;
-      console.log(window.whatsOnSlider);
-      window.whatsOnSlider.reset(
-        Array.from(document.querySelectorAll('.wo-slide'))
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  inputNodes.forEach((input) => input.addEventListener('change', getTickets));
-};
-
 window.addEventListener('load', () => {
   $('#date-picker').datepicker();
   // initMainBookTicketsCursor();
@@ -1590,7 +1844,7 @@ const initBenefitsForUser = (user = {}) => {
     if (!ticketNode.dataset.ticket_benefits) return;
     const benefitsArray = JSON.parse(ticketNode.dataset.ticket_benefits);
     const userBenefits = benefitsArray.filter((benefit) =>
-      userTags.find((tag) => tag.id === benefit.CustomerTag.CustomerTagId)
+      userTags?.find((tag) => tag.id === benefit.CustomerTag.CustomerTagId)
     );
     let prices = [];
 
@@ -1619,7 +1873,6 @@ const initBenefitsForUser = (user = {}) => {
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initTixSessions();
-  initHomeFilterForm();
   initSplideCarousel();
   window.whatsOnSlider = new WhatsOnSlider(
     Array.from(document.querySelectorAll('.wo-slide'))

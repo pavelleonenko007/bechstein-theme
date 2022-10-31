@@ -74,7 +74,7 @@ Template name: Copy of Bechstein Hall
                     <h2 class="h2-50-65 white"><?php echo $calendar_events_block['heading']; ?></h2>
                     <div class="calendar-container">
                         <div class="calendar-wiget">
-                            <form id="home-filter-form" class="form">
+                            <form method="get" action="<?php echo get_the_permalink(255); ?>" id="home-filter-form" class="form">
                                 <div class="p-20-30 white">What do you like?</div>
                                 <?php
                                 // TODO: hide_empty => true
@@ -95,12 +95,11 @@ Template name: Copy of Bechstein Hall
                                     </div>
                                 <?php endif; ?>
                                 <div class="calendar-devider"></div>
+                                <input class="visually-hidden" name="from" value="<?php echo date('Y-m-d'); ?>" />
+                                <input class="visually-hidden" name="to" value="" />
                                 <div class="p-20-30 white">When would you like to visit?</div>
-                                <input id="date" type="hidden" name="start_date" value="<?php echo date('Y.m.d H:i'); ?>" />
-                                <input type="hidden" name="action" value="get_homepage_slider_items" />
-                                <?php echo wp_nonce_field('home_filter_action_nonce', 'home_filter_action'); ?>
                                 <div id="calendar" class="cal-slider"></div>
-                                <input type="submit" value="Submit" data-wait="Please wait..." class="hidden w-button">
+                                <input type="submit" value="Find Events" class="w-button">
                             </form>
                         </div>
                         <?php $args = [

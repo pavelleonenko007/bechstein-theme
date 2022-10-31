@@ -385,6 +385,43 @@ function bech_get_specials_filters()
 	return array_unique($festivals, SORT_REGULAR);
 }
 
+function bech_get_selected_filters_string($params)
+{
+	$selected_string = '';
+
+	if (!empty($params['from'])) {
+		$dates_values = array_values(array_filter($params, function ($value, $param) {
+			return $param === 'from' || ($param === 'to' && $value !== '');
+		}, ARRAY_FILTER_USE_BOTH));
+
+		$formatted_dates = array_map(function ($date) {
+			$date_time = new DateTime($date);
+			return $date_time->format('j M Y');
+		}, $dates_values);
+
+		$selected_string .= implode('–', $formatted_dates) . ', ';
+	}
+
+	foreach ($params as $prop => $param) {
+		if ($prop === 'genres' || $prop === 'instruments' || $prop === 'time' || $prop === 'festival') {
+			if ($prop === 'festival') {
+				foreach ($param as $festival_id) {
+					$festival = get_post($festival_id);
+					$selected_string .= $festival->post_title;
+					$selected_string .= ', ';
+				}
+			} else {
+				$selected_string .= is_array($param) ? implode(', ', $param) : $param;
+				$selected_string .= ', ';
+			}
+		}
+	}
+
+	$selected_string = mb_substr($selected_string, 0, -2);
+
+	return $selected_string;
+}
+
 /* What's on filters */
 
 add_action('rest_api_init', function () {
@@ -413,24 +450,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 	//   return $rest_response;
 	// }
 
-	$selected_string = '';
-
-	foreach ($params as $prop => $param) {
-		if ($prop === 'genre' || $prop === 'instrument' || ($prop === 'time' && !empty($param)) || $prop === 'festival') {
-			if ($prop === 'festival') {
-				foreach ($param as $festival_id) {
-					$festival = get_post($festival_id);
-					$selected_string .= $festival->post_title;
-					$selected_string .= ', ';
-				}
-			} else {
-				$selected_string .= is_array($param) ? implode(', ', $param) : $param;
-				$selected_string .= ', ';
-			}
-		}
-	}
-
-	$selected_string = mb_substr($selected_string, 0, -2);
+	$selected_string = bech_get_selected_filters_string($params);
 
 	$args = [
 		'post_type' => 'tickets',
@@ -449,80 +469,100 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 		// ]
 	];
 
-	if (!empty($params['time'])) {
-		if ($params['time'] === 'today') {
-			$datetime  = new DateTime('today');
-			$next_date = new DateTime('tomorrow');
+	if (!empty($params['from'])) {
+		$dt = new DateTime($params['from']);
+		$args['meta_query'][] = [
+			'key'     => '_bechtix_ticket_start_date',
+			'value'   => $dt->format('Y-m-d H:i:s'),
+			'compare' => '>=',
+			'type'    => 'DATETIME'
+		];
 
+		if (!empty($params['to'])) {
+			$dt = new DateTime($params['to']);
 			$args['meta_query'][] = [
 				'key'     => '_bechtix_ticket_start_date',
-				'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
-				'compare' => 'BETWEEN',
-				'type'    => 'DATETIME'
-			];
-		} elseif ($params['time'] === 'tomorrow') {
-			$datetime  = new DateTime('tomorrow');
-			$next_date = new DateTime('tomorrow');
-			$next_date->modify('+1 day');
-
-			$args['meta_query'][] = [
-				'key'     => '_bechtix_ticket_start_date',
-				'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
-				'compare' => 'BETWEEN',
-				'type'    => 'DATETIME'
-			];
-		} elseif ($params['time'] === 'next-week') {
-			$dt = new DateTime();
-			$dt->setISODate($dt->format('o'), absint($dt->format('W')) + 1);
-			$periods = new DatePeriod($dt, new DateInterval('P1D'), 7);
-			$days    = array_map(function ($datetime) {
-				return $datetime->format('Y-m-d H:i:s');
-			}, iterator_to_array($periods));
-
-			$args['meta_query'][] = [
-				'key'     => '_bechtix_ticket_start_date',
-				'value'   => [$days[0], $days[7]],
-				'compare' => 'BETWEEN',
-				'type'    => 'DATETIME'
-			];
-		} elseif ($params['time'] === 'weekend') {
-			$dt                    = new DateTime('next Saturday');
-			$periods               = new DatePeriod($dt, new DateInterval('P1D'), 2);
-			$days                  = array_map(function ($datetime) {
-				return $datetime->format('Y-m-d H:i:s');
-			}, iterator_to_array($periods));
-			$args['meta_query'][] = [
-				'key'     => '_bechtix_ticket_start_date',
-				'value'   => $days,
-				'compare' => 'BETWEEN',
-				'type'    => 'DATETIME'
-			];
-		} else {
-			$dt                    = new DateTime(str_replace('.', '/', $params['time']));
-			$next_date = new DateTime(str_replace('.', '/', $params['time']));
-			$next_date->modify('+1 day');
-			$args['meta_query'][] = [
-				'key'     => '_bechtix_ticket_start_date',
-				'value'   => [$dt->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
-				'compare' => 'BETWEEN',
+				'value'   => $dt->format('Y-m-d H:i:s'),
+				'compare' => '<=',
 				'type'    => 'DATETIME'
 			];
 		}
+	} else {
+		if (!empty($params['time'])) {
+			if ($params['time'] === 'today') {
+				$datetime  = new DateTime('today');
+				$next_date = new DateTime('tomorrow');
+
+				$args['meta_query'][] = [
+					'key'     => '_bechtix_ticket_start_date',
+					'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
+					'compare' => 'BETWEEN',
+					'type'    => 'DATETIME'
+				];
+			} elseif ($params['time'] === 'tomorrow') {
+				$datetime  = new DateTime('tomorrow');
+				$next_date = new DateTime('tomorrow');
+				$next_date->modify('+1 day');
+
+				$args['meta_query'][] = [
+					'key'     => '_bechtix_ticket_start_date',
+					'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
+					'compare' => 'BETWEEN',
+					'type'    => 'DATETIME'
+				];
+			} elseif ($params['time'] === 'next-week') {
+				$dt = new DateTime();
+				$dt->setISODate($dt->format('o'), absint($dt->format('W')) + 1);
+				$periods = new DatePeriod($dt, new DateInterval('P1D'), 7);
+				$days    = array_map(function ($datetime) {
+					return $datetime->format('Y-m-d H:i:s');
+				}, iterator_to_array($periods));
+
+				$args['meta_query'][] = [
+					'key'     => '_bechtix_ticket_start_date',
+					'value'   => [$days[0], $days[7]],
+					'compare' => 'BETWEEN',
+					'type'    => 'DATETIME'
+				];
+			} elseif ($params['time'] === 'weekend') {
+				$dt                    = new DateTime('next Saturday');
+				$periods               = new DatePeriod($dt, new DateInterval('P1D'), 2);
+				$days                  = array_map(function ($datetime) {
+					return $datetime->format('Y-m-d H:i:s');
+				}, iterator_to_array($periods));
+				$args['meta_query'][] = [
+					'key'     => '_bechtix_ticket_start_date',
+					'value'   => $days,
+					'compare' => 'BETWEEN',
+					'type'    => 'DATETIME'
+				];
+			} /* else {
+				$dt                    = new DateTime(str_replace('.', '/', $params['time']));
+				$next_date = new DateTime(str_replace('.', '/', $params['time']));
+				$next_date->modify('+1 day');
+				$args['meta_query'][] = [
+					'key'     => '_bechtix_ticket_start_date',
+					'value'   => [$dt->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
+					'compare' => 'BETWEEN',
+					'type'    => 'DATETIME'
+				];
+			}*/
+		}
 	}
 
-	if (isset($params['genre'])) {
+	if (isset($params['genres'])) {
 		$args['tax_query'][] = [
 			'taxonomy' => 'genres',
 			'field'    => 'slug',
-			'terms'    => $params['genre']
+			'terms'    => $params['genres']
 		];
 	}
 
-	if (isset($params['instrument'])) {
+	if (isset($params['instruments'])) {
 		$args['tax_query'][] = [
 			'taxonomy' => 'instruments',
 			'field'    => 'slug',
-			'terms'    => $params['instrument']
+			'terms'    => $params['instruments']
 		];
 	}
 
@@ -566,9 +606,6 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 				</div>
 				<div class="cms-ul-events">
 					<?php foreach ($tickets as $ticket) :
-						$event = get_post(get_post_meta($ticket->ID, '_bechtix_event_relation', true));
-						$purchase_urls = get_post_meta($ticket->ID, '_bechtix_purchase_urls', true);
-						$purchase_urls_normal = json_decode($purchase_urls, true);
 					?>
 						<?php get_template_part('inc/components/whats-on-ticket', '', [
 							'ticket' => $ticket->ID

@@ -32,16 +32,19 @@ Template name: What's on
                   <div class="filters-form">
                     <div>
                       <div class="filters-div">
+                        <input class="visually-hidden" name="from" value="<?php echo !empty($_GET['from']) ? $_GET['from'] : ''; ?>" />
+                        <input class="visually-hidden" name="to" value="<?php if (!empty($_GET['to'])) echo $_GET['to']; ?>" />
+
                         <div class="filters-top-div">
                           <div class="p-20-30">Time to go</div>
-                          <input type="text" id="filter-date" class="calendar-btn__input" placeholder="Calendar" name="time">
+                          <div id="calendar-widget"></div>
                           <!-- <a href="#" class="calendar-btn w-inline-block">
-                          <img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
-                          
-                          <button class="calendar-btn__reset" data-type="reset">✕</button>
-                          <div class="calendar-btn__close">Close</div>
-                          <div id="filter-calendar" class="filter-calendar"></div>
-                        </a> -->
+                            <img src="https://uploads-ssl.webflow.com/62bc3fe7d9cc6134bf261592/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt="" class="img-calendar" />
+
+                            <button class="calendar-btn__reset" data-type="reset">✕</button>
+                            <div class="calendar-btn__close">Close</div>
+                            <div id="filter-calendar" class="filter-calendar"></div>
+                          </a> -->
                         </div>
                         <div class="filters-bottom-div">
                           <label class="w-radio cbx-mom">
@@ -79,7 +82,7 @@ Template name: What's on
                               if ($counter <= 4) : ?>
                                 <label class="w-checkbox cbx-mom">
                                   <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                                  <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="genre[]" data-name="<?php echo $genre->slug; ?>" value="<?php echo $genre->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                                  <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="genres[]" data-name="<?php echo $genre->slug; ?>" value="<?php echo $genre->slug; ?>" <?php if (isset($_GET['genres']) && in_array($genre->slug, $_GET['genres'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
                                   <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $genre->term_id; ?>"><?php echo $genre->name; ?></span>
                                 </label>
                             <?php
@@ -102,7 +105,7 @@ Template name: What's on
                             <?php foreach ($instruments as $instrument) : ?>
                               <label class="w-checkbox cbx-mom">
                                 <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                                <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="instrument[]" data-name="<?php echo $instrument->slug; ?>" value="<?php echo $instrument->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                                <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="instruments[]" data-name="<?php echo $instrument->slug; ?>" value="<?php echo $instrument->slug; ?>" <?php if (isset($_GET['instruments']) && in_array($instrument->slug, $_GET['instruments'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
                                 <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
                               </label>
                             <?php endforeach; ?>
@@ -145,19 +148,58 @@ Template name: What's on
               </div>
               <div class="catalog-column">
                 <h1 class="h1-75-90"><?php the_title(); ?></h1>
-                <div id="selected-filters" class="filters-line-text">
-                  <div>you choose &#x27;<span data-filter="choosen">25 nov 2022—26 nov 2022.</span>’ in filters.</div><a id="clear" href="#" class="clearfilter-btn"> clear filters</a>
+                <?php $selected_filter_string = bech_get_selected_filters_string($_GET); ?>
+                <div id="selected-filters" class="filters-line-text <?php echo !empty($selected_filter_string) ? 'filters-line-text--active' : ''; ?>">
+                  <div>you choose &#x27;<span data-filter="choosen"><?php echo $selected_filter_string; ?></span>’ in filters.</div><a id="clear" href="#" class="clearfilter-btn"> clear filters</a>
                 </div>
                 <div id="tickets-container" class="cms-tems">
                   <?php
-                  $tickets = get_posts([
+                  $tickets_args = [
                     'post_type' => 'tickets',
                     'post_status' => 'publish',
                     'numberposts' => 10,
                     'orderby' => 'meta_value',
                     'meta_key' => '_bechtix_ticket_start_date',
                     'order' => 'ASC',
-                  ]);
+                  ];
+
+                  if (!empty($_GET['from'])) {
+                    $dt = new DateTime($_GET['from']);
+                    $tickets_args['meta_query'][] = [
+                      'key'     => '_bechtix_ticket_start_date',
+                      'value'   => $dt->format('Y-m-d H:i:s'),
+                      'compare' => '>=',
+                      'type'    => 'DATETIME'
+                    ];
+                  }
+
+                  if (!empty($_GET['to'])) {
+                    $dt = new DateTime($_GET['to']);
+                    $tickets_args['meta_query'][] = [
+                      'key'     => '_bechtix_ticket_start_date',
+                      'value'   => $dt->format('Y-m-d H:i:s'),
+                      'compare' => '<=',
+                      'type'    => 'DATETIME'
+                    ];
+                  }
+
+                  if (!empty($_GET['genres'])) {
+                    $tickets_args['tax_query'][] = [
+                      'taxonomy' => 'genres',
+                      'field'    => 'slug',
+                      'terms'    => $_GET['genres']
+                    ];
+                  }
+
+                  if (!empty($_GET['instruments'])) {
+                    $tickets_args['tax_query'][] = [
+                      'taxonomy' => 'instruments',
+                      'field'    => 'slug',
+                      'terms'    => $_GET['instruments']
+                    ];
+                  }
+
+                  $tickets = get_posts($tickets_args);
 
                   $sorted_tickets = bech_sort_tickets($tickets);
 
