@@ -1121,7 +1121,11 @@ class CalendarWidget {
       selectDayCallback: (dates = []) => {
         let datesString;
         if (dates.length !== 0) {
-          datesString = dates.join('–');
+          datesString = dates
+            .map((date) => {
+              return this.formatDate(new Date(date));
+            })
+            .join('—');
           this.widget.classList.add('calendar-btn--selected');
         } else {
           datesString = 'Calendar';
@@ -1166,6 +1170,28 @@ class CalendarWidget {
   setEvents() {
     this.handleToggle = this.handleToggle.bind(this);
     document.addEventListener('click', this.handleToggle);
+  }
+
+  formatDate(date = new Date()) {
+    const abbrMonths = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'June',
+      'July',
+      'Aug',
+      'Sept',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    return `${day} ${abbrMonths[month]} ${year}`;
   }
 
   reset() {
