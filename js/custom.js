@@ -112,6 +112,7 @@ class WOCalendar {
     if (!this.calendarNode) return;
     this.options = {
       theme: 'dark',
+      beforeDispatchEvent: () => {},
       selectDayCallback: () => {},
       ...options,
     };
@@ -322,6 +323,7 @@ class WOCalendar {
     }
 
     if (this.fromInput) {
+      this.options.beforeDispatchEvent();
       this.fromInput.dispatchEvent(new Event('change'));
     }
   }
@@ -336,7 +338,15 @@ class WOCalendar {
 
   reset() {
     this.selectedDates = [];
-    this.setDatesInInputs();
+    if (this.fromInput.value !== '') {
+      this.setDatesInInputs();
+    }
+    // if (this.fromInput) {
+    //   this.fromInput.value = '';
+    // }
+    // if (this.toInput) {
+    //   this.toInput.value = '';
+    // }
     this.setDaysMarkup();
   }
 }
@@ -703,7 +713,6 @@ class BechCalendar {
   }
 
   reset() {
-    console.log('BechCalendar reset');
     this._num = 0;
     this._chosenDate = this._today;
     this._setDate();
@@ -1118,6 +1127,16 @@ class CalendarWidget {
     );
     this.calendar = WOCalendar.create('[data-type="calendar"]', {
       theme: 'light',
+      beforeDispatchEvent: () => {
+        const inputsWithNameTime = this.calendarContainerNode
+          .closest('form')
+          .querySelectorAll('input[name="time"]');
+
+        inputsWithNameTime.forEach((input) => {
+          input.removeAttribute('checked');
+          input.checked = false;
+        });
+      },
       selectDayCallback: (dates = []) => {
         let datesString;
         if (dates.length !== 0) {
@@ -1658,8 +1677,14 @@ const initWhatsOnFilters = () => {
   //   }
   // };
   const changeInputHandler = async (event) => {
+    const target = event?.target;
+    if (target?.getAttribute('name') === 'time') {
+      filterInputs.find(
+        (input) => input.getAttribute('name') === 'from'
+      ).value = '';
+      calendarWidget.reset();
+    }
     const formData = new FormData(filterFormNode);
-    console.log(Object.fromEntries(formData));
     const response = await getTickets(formData);
     const ticketsHTML = response.html;
     const selectedString = response?.selected_string;

@@ -422,6 +422,31 @@ function bech_get_selected_filters_string($params)
 	return $selected_string;
 }
 
+function bech_get_smaller_date($param)
+{
+	if ($param === 'today' || $param === 'tomorrow') {
+		$date_time = new DateTime($param);
+		return $date_time->format('l');
+	} elseif ($param === 'next-week') {
+		$date_time = new DateTime();
+		$date_time->setISODate($date_time->format('o'), absint($date_time->format('W')) + 1);
+		$periods = new DatePeriod($date_time, new DateInterval('P1D'), 7);
+		$days    = array_map(function ($datetime) {
+			return $datetime->format('j M');
+		}, iterator_to_array($periods));
+
+		return $days[0] . '-' . $days[count($days) - 1];
+	} elseif ($param === 'weekend') {
+		$date_time             = new DateTime('next Saturday');
+		$periods               = new DatePeriod($date_time, new DateInterval('P1D'), 2);
+		$days                  = array_map(function ($datetime) {
+			return $datetime->format('j M');
+		}, iterator_to_array($periods));
+
+		return $days[0] . '-' . $days[count($days) - 1];
+	}
+}
+
 /* What's on filters */
 
 add_action('rest_api_init', function () {
@@ -593,30 +618,51 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 	}
 
 	$tickets = get_posts($args);
-	$sorted_tickets = bech_sort_tickets($tickets);
 	$data           = "<p class='no-event-message'>There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>";
-	ob_start();
-	if (!empty($sorted_tickets)) :
-		foreach ($sorted_tickets as $date => $tickets) :
-?>
-			<div class="cms-ul">
-				<div class="cms-heading">
-					<h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
-					<h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
-				</div>
-				<div class="cms-ul-events">
-					<?php foreach ($tickets as $ticket) :
-					?>
-						<?php get_template_part('inc/components/whats-on-ticket', '', [
-							'ticket' => $ticket->ID
-						]); ?>
-					<?php endforeach; ?>
-				</div>
+
+	if (!empty($params['time']) && empty($params['from'])) {
+		ob_start(); ?>
+		<div class="cms-ul">
+			<div class="cms-heading">
+				<h2 class="h2-cms"><?php echo str_replace(['-'], ' ', $params['time']); ?></h2>
+				<h2 class="h2-cms day"><?php echo bech_get_smaller_date($params['time']); ?></h2>
 			</div>
-	<?php
-		endforeach;
+			<div class="cms-ul-events">
+				<?php foreach ($tickets as $ticket) :
+				?>
+					<?php get_template_part('inc/components/whats-on-ticket', '', [
+						'ticket' => $ticket->ID
+					]); ?>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php
 		$data = ob_get_clean();
-	endif;
+	} else {
+		$sorted_tickets = bech_sort_tickets($tickets);
+		ob_start();
+		if (!empty($sorted_tickets)) :
+			foreach ($sorted_tickets as $date => $tickets) :
+		?>
+				<div class="cms-ul">
+					<div class="cms-heading">
+						<h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
+						<h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
+					</div>
+					<div class="cms-ul-events">
+						<?php foreach ($tickets as $ticket) :
+						?>
+							<?php get_template_part('inc/components/whats-on-ticket', '', [
+								'ticket' => $ticket->ID
+							]); ?>
+						<?php endforeach; ?>
+					</div>
+				</div>
+	<?php
+			endforeach;
+			$data = ob_get_clean();
+		endif;
+	}
 
 	$rest_response = rest_ensure_response([
 		'code'    => 'success',
