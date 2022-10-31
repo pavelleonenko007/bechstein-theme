@@ -873,6 +873,7 @@ p strong {
 .wo-day:not(.wo-day[disabled]) .wo-day__label:hover,
 .wo-day:not(.wo-day[disabled]) .wo-day__label:focus {
   background-color: #34343b;
+  color: #fff;
 }
 
 .visually-hidden {
@@ -898,6 +899,7 @@ p strong {
 .wo-calendar--light .wo-day:not(.wo-day[disabled]) .wo-day__label:hover,
 .wo-calendar--light .wo-day:not(.wo-day[disabled]) .wo-day__label:focus {
   background-color: rgba(220, 202, 153, 0.2);
+  color: #030e14;
 }
 
 .wo-calendar--light .wo-calendar__button:hover,
