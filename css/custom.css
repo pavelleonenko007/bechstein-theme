@@ -870,8 +870,8 @@ p strong {
   transition: all 0.2s ease-in-out;
 }
 
-.wo-day__label:hover,
-.wo-day__label:focus {
+.wo-day:not(.wo-day[disabled]) .wo-day__label:hover,
+.wo-day:not(.wo-day[disabled]) .wo-day__label:focus {
   background-color: #34343b;
 }
 
@@ -895,8 +895,8 @@ p strong {
   color: #030e14;
 }
 
-.wo-calendar--light .wo-day__label:hover,
-.wo-calendar--light .wo-day__label:focus {
+.wo-calendar--light .wo-day:not(.wo-day[disabled]) .wo-day__label:hover,
+.wo-calendar--light .wo-day:not(.wo-day[disabled]) .wo-day__label:focus {
   background-color: rgba(220, 202, 153, 0.2);
 }
 

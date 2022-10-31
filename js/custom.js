@@ -218,6 +218,11 @@ class WOCalendar {
 
   setDaysMarkup() {
     const dates = [];
+    const firstAvailableDay = new Date(
+      this.today.getFullYear(),
+      this.today.getMonth(),
+      this.today.getDate() - 1
+    );
     let dayNumber = 1;
     let paddingDays =
       this.firstDayInMonth.getDay() - 1 < 0
@@ -250,7 +255,9 @@ class WOCalendar {
           }
           return `<button type="button" class="${classes.join(
             ' '
-          )}" data-date="${dateString}">
+          )}" data-date="${dateString}" ${
+            date < firstAvailableDay ? 'disabled' : ''
+          }>
             <div class="wo-day__label">${date.getDate()}</div>
           </button>`;
         }
@@ -277,7 +284,7 @@ class WOCalendar {
     }
     const day = event.target.closest('.wo-day');
 
-    if (!day || !day.dataset?.date) {
+    if (!day || !day.dataset?.date || day.disabled) {
       return;
     }
 
