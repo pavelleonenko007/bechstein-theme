@@ -621,10 +621,16 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 	$data           = "<p class='no-event-message'>There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>";
 
 	if (!empty($params['time']) && empty($params['from'])) {
+		$date_map = [
+			'today' => 'Today',
+			'tomorrow' => 'Tomorrow',
+			'weekend' => 'This Weekend',
+			'next-week' => 'Next Week'
+		];
 		ob_start(); ?>
 		<div class="cms-ul">
 			<div class="cms-heading">
-				<h2 class="h2-cms"><?php echo str_replace(['-'], ' ', $params['time']); ?></h2>
+				<h2 class="h2-cms"><?php echo $date_map[$params['time']]; ?></h2>
 				<h2 class="h2-cms day"><?php echo bech_get_smaller_date($params['time']); ?></h2>
 			</div>
 			<div class="cms-ul-events">
