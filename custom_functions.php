@@ -372,10 +372,14 @@ function bech_get_specials_filters()
 	$events = get_posts([
 		'post_type' => 'events',
 		'post_status' => 'publish',
-		'meta_key' => '_bechtix_festival_relation',
-		'meta_value' => '',
-		'meta_compare' => '!=',
-		'fields' => 'ids'
+		'fields' => 'ids',
+		'meta_query' => [
+			[
+				'key' => '_bechtix_festival_relation',
+				'value' => '',
+				'compare' => '!='
+			]
+		]
 	]);
 
 	$festivals = array_map(function ($event) {
