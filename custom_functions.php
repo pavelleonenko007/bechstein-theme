@@ -13,6 +13,7 @@ function bech_add_scripts(): void
 	wp_enqueue_script('jquery-ui-core');
 	wp_enqueue_script('jquery-ui-datepicker');
 	wp_enqueue_script('main', get_template_directory_uri() . '/js/main.js', ['jquery'], time(), true);
+	wp_enqueue_script('ics', get_template_directory_uri() . '/js/ics.deps.min.js', ['main'], false, true);
 	wp_enqueue_script('front', get_template_directory_uri() . '/js/front.js', ['main'], false, true);
 	wp_enqueue_script('splide', '//cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js', ['front'], false, true);
 	wp_enqueue_script('tween-max', '//thevogne.ru/wp-content/themes/twentyfifteen/js/TweenMax.min.js', ['front'], false, true);
@@ -881,4 +882,15 @@ function bech_get_format_date_for_whats_on_slide($post_id)
 	$time = ', ' . date('H:i', $start_date) . '—' . date('H:i', $end_date);
 
 	return $long_date . $time;
+}
+
+function bech_get_ticket_event_data_for_calendar($ticket)
+{
+	return _wp_specialchars(wp_json_encode([
+		'subject' => $ticket->post_title,
+		'description' => $ticket->post_content,
+		'location' => 'Bechstein Hall',
+		'begin' => get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true),
+		'end' => get_post_meta($ticket->ID, '_bechtix_ticket_end_date', true)
+	]), ENT_QUOTES, 'UTF-8', true);
 }

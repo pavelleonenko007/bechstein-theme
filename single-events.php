@@ -72,7 +72,7 @@ Template name: Event
                         <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" class="booktickets-btn min">
                           <strong>Book tickets</strong>
                         </a>
-                        <a href="#" class="event-ticket_calendar-btn w-inline-block">
+                        <a href="#" data-calendar="<?php echo bech_get_ticket_event_data_for_calendar($ticket); ?>" class="event-ticket_calendar-btn w-inline-block">
                           <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
                           <div>ADD TO CALENDAR</div>
                         </a>
@@ -132,7 +132,7 @@ Template name: Event
                         <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" target="_blank" class="booktickets-btn min left-side">
                           <strong>Book tickets</strong>
                         </a>
-                        <a href="#" class="event-ticket_calendar-btn min w-inline-block">
+                        <a href="#" data-calendar="<?php echo bech_get_ticket_event_data_for_calendar($ticket); ?>" class="event-ticket_calendar-btn min w-inline-block">
                           <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
                           <div>ADD TO CALENDAR</div>
                         </a>
