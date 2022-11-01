@@ -138,7 +138,8 @@ Template name: Event
                         </a>
                       </div>
                     </div>
-                  <?php endforeach; ?>
+                  <?php endforeach;
+                  unset($ticket); ?>
                 </div>
                 <div class="info-right-side-bottom">
                   <div>Tickets information</div>
@@ -475,26 +476,41 @@ Template name: Event
               </div>
             <?php } ?>
             <div id="tickets" class="tikets-mob">
-              <div class="events-ticket">
-                <div class="events-ticket_left">
-                  <div class="p-17-25 top-ticket _2">Thursday</div>
-                  <div class="p-20-30 w20 m30">29 February</div>
-                  <div class="p-20-30 w20">19:00–21:00</div>
+              <?php foreach ($tickets as $ticket) : ?>
+                <div class="events-ticket">
+                  <div class="events-ticket_left">
+                    <div class="p-17-25 top-ticket _2"><?php echo date('l', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
+                    <div class="p-20-30 w20 m30"><?php echo date('d F', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
+                    <div class="p-20-30 w20"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
+                  </div>
+                  <div class="events-ticket_right">
+                    <?php $sale_status = get_post_meta($ticket->ID, '_bechtix_sale_status', true);
+                    $sale_statuses = [
+                      'No Status',
+                      'Few tickets',
+                      'Sold out',
+                      'Cancelled',
+                      'Not scheduled'
+                    ];
+                    if ($sale_status === '0' || $sale_status === '1' || empty($sale_status)) :
+
+                      $purchase_urls = json_decode(get_post_meta($ticket->ID, '_bechtix_purchase_urls', true), true); ?>
+                      <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" class="booktickets-btn min left-side">
+                        <strong>Book tickets</strong>
+                      </a>
+                      <a data-calendar="<?php echo bech_get_ticket_event_data_for_calendar($ticket); ?>" class="event-ticket_calendar-btn min w-inline-block">
+                        <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
+                        <div>ADD TO CALENDAR</div>
+                      </a>
+                    <?php else : ?>
+                      <a bgline="2" href="#" class="booktickets-btn sold-out min">
+                        <strong><?php echo $sale_statuses[$sale_status]; ?></strong>
+                      </a>
+                    <?php endif; ?>
+                  </div>
                 </div>
-                <div class="events-ticket_right"><a bgline="1" href="#" class="booktickets-btn min left-side"><strong>Book tickets</strong></a><a href="#" class="event-ticket_calendar-btn min w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
-                    <div>ADD TO CALENDAR</div>
-                  </a></div>
-              </div>
-              <div class="events-ticket">
-                <div class="events-ticket_left">
-                  <div class="p-17-25 top-ticket _2">Thursday</div>
-                  <div class="p-20-30 w20 m30">29 February</div>
-                  <div class="p-20-30 w20">19:00–21:00</div>
-                </div>
-                <div class="events-ticket_right"><a bgline="1" href="#" class="booktickets-btn min left-side"><strong>Book tickets</strong></a><a href="#" class="event-ticket_calendar-btn min w-inline-block"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
-                    <div>ADD TO CALENDAR</div>
-                  </a></div>
-              </div>
+              <?php endforeach;
+              unset($ticket); ?>
               <div class="info-right-side-bottom">
                 <div>Tickets information</div>
                 <div>Seating plan</div>
