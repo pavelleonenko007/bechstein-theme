@@ -923,3 +923,25 @@ function bech_get_sale_status_string_value($sale_status)
 
 	return $sale_statuses[$sale_status];
 }
+
+function bech_is_event_sold_out($event_id)
+{
+	$all_tickets = get_posts([
+		'post_type' => 'tickets',
+		'post_status' => 'publish',
+		'fields' => 'ids',
+		'meta_query' => [
+			[
+				'key' => '_bechtix_event_relation',
+				'value' => $event_id,
+				'compare' => '='
+			]
+		]
+	]);
+
+	$all_tickets_statuses = array_unique(array_map(function ($ticket) {
+		return bech_get_sale_status_string_value(get_post_meta($ticket, '_bechtix_sale_status', true));
+	}, $all_tickets), SORT_STRING);
+
+	return $all_tickets_statuses[0] === 'Sold out';
+}
