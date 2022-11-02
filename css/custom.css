@@ -1,3 +1,7 @@
+#atcb-pos-wrapper {
+  display: none;
+}
+
 .wo-slider .link-block {
   transform: translateZ(0);
 }

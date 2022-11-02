@@ -1946,7 +1946,6 @@ const initAddToCalendarButtons = () => {
         () => document.getElementById('atcb-btn-custom-apple').click(),
         200
       );
-      // addEventToCalendar([eventCalendarObj], eventCalendarObj.subject);
     });
   });
 };
