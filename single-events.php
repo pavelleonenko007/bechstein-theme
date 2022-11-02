@@ -122,10 +122,12 @@ Template name: Event
                 continue;
               elseif ($content_block['acf_fc_layout'] === 'alert_block') :
                 $link = $content_block['link'];
-                $link_html = $link['url'] ? '<a href="' . $link['url'] . '">' . $link['link_text'] . '</a>' : ''; ?>
-                <div class="ui_alert-block w-richtext">
-                  <p><?php echo $content_block['text']; ?> <?php echo $link_html; ?></p>
-                </div>
+                $link_html = $link['url'] ? '<a href="' . $link['url'] . '">' . $link['link_text'] . '</a>' : '';
+                if ($content_block['text']) : ?>
+                  <div class="ui_alert-block w-richtext">
+                    <p><?php echo $content_block['text']; ?> <?php echo $link_html; ?></p>
+                  </div>
+                <?php endif; ?>
               <?php elseif ($content_block['acf_fc_layout'] === 'paragraph') : ?>
                 <div class="ui_text-block w-richtext">
                   <?php echo $content_block['paragraph']; ?>

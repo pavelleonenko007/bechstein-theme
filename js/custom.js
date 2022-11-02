@@ -99,6 +99,11 @@ class CustomCursor {
   }
 }
 
+// new CustomCursor(
+//   'whats-on-cursor',
+//   document.querySelector('.slider-wvwnts-home')
+// );
+
 new CustomCursor(
   'ball',
   document.getElementById(

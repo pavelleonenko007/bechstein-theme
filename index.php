@@ -134,6 +134,7 @@ Template name: Copy of Bechstein Hall
                                     wp_reset_postdata(); ?>
                                 </div>
                             </div>
+                            <div id="whats-on-cursor" class="splide__cursor"></div>
                         </div>
                         <div id="w-node-_0c687936-78a2-7976-2297-97e720f86e4e-89261594" class="slider-wvwnts-home_bottom">
                             <?php $events = get_posts([
