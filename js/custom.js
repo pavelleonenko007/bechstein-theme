@@ -1928,27 +1928,25 @@ const initBenefitsForUser = (user = {}) => {
   });
 };
 
-const addEventToCalendar = (eventObjects = [], filename = 'Event') => {
-  const calendar = ics();
-  eventObjects.forEach((eventObject) => {
-    calendar.addEvent(
-      eventObject.subject,
-      eventObject.description,
-      eventObject.location,
-      eventObject.begin,
-      eventObject.end
-    );
-  });
-  return calendar.download(filename);
-};
-
 const initAddToCalendarButtons = () => {
   const addToCalendarButtons = document.querySelectorAll('[data-calendar]');
   addToCalendarButtons.forEach((button) => {
     button.addEventListener('click', (event) => {
       event.preventDefault();
       const eventCalendarObj = JSON.parse(button.dataset.calendar);
-      addEventToCalendar([eventCalendarObj], eventCalendarObj.subject);
+      const addToCalendarConfig = {
+        options: ['Apple'],
+        timeZone: 'Europe/Berlin',
+        trigger: 'click',
+        ...eventCalendarObj,
+      };
+
+      atcb_action(addToCalendarConfig, button);
+      setTimeout(
+        () => document.getElementById('atcb-btn-custom-apple').click(),
+        200
+      );
+      // addEventToCalendar([eventCalendarObj], eventCalendarObj.subject);
     });
   });
 };
@@ -1962,16 +1960,4 @@ document.addEventListener('DOMContentLoaded', () => {
   window.whatsOnSlider = new WhatsOnSlider(
     Array.from(document.querySelectorAll('.wo-slide'))
   );
-  // addEventToCalendar(
-  //   [
-  //     {
-  //       subject: 'Super Event',
-  //       description: 'My Super Event',
-  //       location: 'Bechstein Hall',
-  //       begin: '2022-11-17T12:00:00+00:00',
-  //       end: '2022-11-17T22:00:00+00:00',
-  //     },
-  //   ],
-  //   'Eva smotri rabotaet'
-  // );
 });
