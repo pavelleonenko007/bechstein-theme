@@ -900,3 +900,26 @@ function bech_get_ticket_event_data_for_calendar($ticket)
 		'iCalFileName' => $ticket->post_title,
 	]), ENT_QUOTES, 'UTF-8', true);
 }
+
+function bech_get_purchase_urls($ticket_id)
+{
+	return json_decode(get_post_meta($ticket_id, '_bechtix_purchase_urls', true), true);
+}
+
+function bech_get_purchase_urls_attribute($ticket_id)
+{
+	return _wp_specialchars(get_post_meta($ticket_id, '_bechtix_purchase_urls', true), ENT_QUOTES, 'UTF-8', true);
+}
+
+function bech_get_sale_status_string_value($sale_status)
+{
+	$sale_statuses = [
+		'No Status',
+		'Few tickets',
+		'Sold out',
+		'Cancelled',
+		'Not scheduled'
+	];
+
+	return $sale_statuses[$sale_status];
+}

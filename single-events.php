@@ -29,7 +29,7 @@ Template name: Event
                 <div class="p-25-40">
                   <?php the_content(); ?>
                 </div>
-                <a href="#tickets" bgline="1" class="choisetckets-btn min">
+                <a href="#tickets-mob" bgline="1" class="choisetckets-btn min">
                   <strong>choose tickets</strong>
                 </a>
               </div>
@@ -37,7 +37,10 @@ Template name: Event
               $args = [
                 'post_type' => 'tickets',
                 'post_status' => 'publish',
-                'numberposts' => -1,
+                'posts_per_page' => 3,
+                'meta_key' => '_bechtix_ticket_start_date',
+                'orderby' => 'meta_value',
+                'order' => 'ASC',
                 'meta_query' => [
                   [
                     'key' => '_bechtix_event_relation',
@@ -47,45 +50,20 @@ Template name: Event
                 ]
               ];
 
-              $tickets = get_posts($args);
+              $tickets_query = new WP_Query($args);
+              if ($tickets_query->have_posts()) :
               ?>
-              <div class="right-event-col">
-                <?php foreach ($tickets as $ticket) : ?>
-                  <div class="events-ticket">
-                    <div class="events-ticket_left">
-                      <div class="p-17-25 top-ticket"><?php echo date('l', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
-                      <div class="p-20-30"><?php echo date('d F', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
-                      <div class="p-20-30 w20"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
-                    </div>
-                    <div class="events-ticket_right">
-                      <?php $sale_status = get_post_meta($ticket->ID, '_bechtix_sale_status', true);
-                      $sale_statuses = [
-                        'No Status',
-                        'Few tickets',
-                        'Sold out',
-                        'Cancelled',
-                        'Not scheduled'
-                      ];
-                      if ($sale_status === '0' || $sale_status === '1' || empty($sale_status)) :
-
-                        $purchase_urls = json_decode(get_post_meta($ticket->ID, '_bechtix_purchase_urls', true), true); ?>
-                        <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" class="booktickets-btn min">
-                          <strong>Book tickets</strong>
-                        </a>
-                        <a href="#" data-calendar="<?php echo bech_get_ticket_event_data_for_calendar($ticket); ?>" class="event-ticket_calendar-btn w-inline-block">
-                          <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
-                          <div>ADD TO CALENDAR</div>
-                        </a>
-                      <?php else : ?>
-                        <a bgline="2" href="#" class="booktickets-btn sold-out min">
-                          <strong><?php echo $sale_statuses[$sale_status]; ?></strong>
-                        </a>
-                      <?php endif; ?>
-                    </div>
-                  </div>
-                <?php endforeach;
-                unset($ticket); ?>
-              </div>
+                <div class="right-event-col">
+                  <?php while ($tickets_query->have_posts()) : $tickets_query->the_post(); ?>
+                    <?php get_template_part('inc/components/single-event-ticket'); ?>
+                  <?php endwhile;
+                  wp_reset_postdata(); ?>
+                  <?php if ($tickets_query->max_num_pages > 1) : ?>
+                    <a href="#tickets" class="link-20 home">More tickets</a>
+                  <?php endif; ?>
+                </div>
+              <?php endif;
+              unset($tickets_query); ?>
             </div>
           </div>
         </div>
@@ -118,29 +96,17 @@ Template name: Event
                   </div>
                 </div>
               </div>
+              <?php $args['posts_per_page'] = -1;
+              $tickets_query = new WP_Query($args); ?>
               <div class="tikets-pc">
-                <div>
-                  <?php foreach ($tickets as $ticket) : ?>
-                    <div class="events-ticket">
-                      <div class="events-ticket_left">
-                        <div class="p-17-25 top-ticket _2"><?php echo date('l', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
-                        <div class="p-20-30 w20 m30"><?php echo date('d F', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
-                        <div class="p-20-30 w20"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
-                      </div>
-                      <div class="events-ticket_right">
-                        <?php $purchase_urls = json_decode(get_post_meta($ticket->ID, '_bechtix_purchase_urls', true), true); ?>
-                        <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" target="_blank" class="booktickets-btn min left-side">
-                          <strong>Book tickets</strong>
-                        </a>
-                        <a href="#" data-calendar="<?php echo bech_get_ticket_event_data_for_calendar($ticket); ?>" class="event-ticket_calendar-btn min w-inline-block">
-                          <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
-                          <div>ADD TO CALENDAR</div>
-                        </a>
-                      </div>
-                    </div>
-                  <?php endforeach;
-                  unset($ticket); ?>
-                </div>
+                <?php if ($tickets_query->have_posts()) : ?>
+                  <div id="tickets">
+                    <?php while ($tickets_query->have_posts()) : $tickets_query->the_post(); ?>
+                      <?php get_template_part('inc/components/single-event-ticket-small'); ?>
+                    <?php endwhile;
+                    wp_reset_postdata(); ?>
+                  </div>
+                <?php endif; ?>
                 <div class="info-right-side-bottom">
                   <div>Tickets information</div>
                   <div>Seating plan</div>
@@ -475,47 +441,53 @@ Template name: Event
                 <?php } ?>
               </div>
             <?php } ?>
-            <div id="tickets" class="tikets-mob">
-              <?php foreach ($tickets as $ticket) : ?>
-                <div class="events-ticket">
-                  <div class="events-ticket_left">
-                    <div class="p-17-25 top-ticket _2"><?php echo date('l', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
-                    <div class="p-20-30 w20 m30"><?php echo date('d F', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
-                    <div class="p-20-30 w20"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
-                  </div>
-                  <div class="events-ticket_right">
-                    <?php $sale_status = get_post_meta($ticket->ID, '_bechtix_sale_status', true);
-                    $sale_statuses = [
-                      'No Status',
-                      'Few tickets',
-                      'Sold out',
-                      'Cancelled',
-                      'Not scheduled'
-                    ];
-                    if ($sale_status === '0' || $sale_status === '1' || empty($sale_status)) :
+            <?php if ($tickets_query->have_posts()) : ?>
+              <div id="tickets-mob" class="tikets-mob">
+                <?php while ($tickets_query->have_posts()) : $tickets_query->the_post(); ?>
+                  <?php get_template_part('inc/components/single-event-ticket-small'); ?>
+                <?php endwhile;
+                wp_reset_postdata(); ?>
+                <?php foreach ($tickets as $ticket) : ?>
+                  <div class="events-ticket">
+                    <div class="events-ticket_left">
+                      <div class="p-17-25 top-ticket _2"><?php echo date('l', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
+                      <div class="p-20-30 w20 m30"><?php echo date('d F', strtotime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true))); ?></div>
+                      <div class="p-20-30 w20"><?php echo bech_get_ticket_times($ticket->ID); ?></div>
+                    </div>
+                    <div class="events-ticket_right">
+                      <?php $sale_status = get_post_meta($ticket->ID, '_bechtix_sale_status', true);
+                      $sale_statuses = [
+                        'No Status',
+                        'Few tickets',
+                        'Sold out',
+                        'Cancelled',
+                        'Not scheduled'
+                      ];
+                      if ($sale_status === '0' || $sale_status === '1' || empty($sale_status)) :
 
-                      $purchase_urls = json_decode(get_post_meta($ticket->ID, '_bechtix_purchase_urls', true), true); ?>
-                      <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" class="booktickets-btn min left-side">
-                        <strong>Book tickets</strong>
-                      </a>
-                      <a data-calendar="<?php echo bech_get_ticket_event_data_for_calendar($ticket); ?>" class="event-ticket_calendar-btn min w-inline-block">
-                        <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
-                        <div>ADD TO CALENDAR</div>
-                      </a>
-                    <?php else : ?>
-                      <a bgline="2" href="#" class="booktickets-btn sold-out min">
-                        <strong><?php echo $sale_statuses[$sale_status]; ?></strong>
-                      </a>
-                    <?php endif; ?>
+                        $purchase_urls = json_decode(get_post_meta($ticket->ID, '_bechtix_purchase_urls', true), true); ?>
+                        <a bgline="1" href="<?php echo $purchase_urls[0]['link']; ?>" data-book-urls="<?php echo _wp_specialchars(wp_json_encode($purchase_urls), ENT_QUOTES, 'UTF-8', true); ?>" class="booktickets-btn min left-side">
+                          <strong>Book tickets</strong>
+                        </a>
+                        <a data-calendar="<?php echo bech_get_ticket_event_data_for_calendar($ticket); ?>" class="event-ticket_calendar-btn min w-inline-block">
+                          <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
+                          <div>ADD TO CALENDAR</div>
+                        </a>
+                      <?php else : ?>
+                        <a bgline="2" href="#" class="booktickets-btn sold-out min">
+                          <strong><?php echo $sale_statuses[$sale_status]; ?></strong>
+                        </a>
+                      <?php endif; ?>
+                    </div>
                   </div>
+                <?php endforeach;
+                unset($ticket); ?>
+                <div class="info-right-side-bottom">
+                  <div>Tickets information</div>
+                  <div>Seating plan</div>
                 </div>
-              <?php endforeach;
-              unset($ticket); ?>
-              <div class="info-right-side-bottom">
-                <div>Tickets information</div>
-                <div>Seating plan</div>
               </div>
-            </div>
+            <?php endif; ?>
           </div>
         </div>
       </section>
