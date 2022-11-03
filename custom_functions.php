@@ -921,7 +921,7 @@ function bech_get_sale_status_string_value($sale_status)
 		'Not scheduled'
 	];
 
-	return $sale_statuses[$sale_status];
+	return $sale_statuses[intval($sale_status)];
 }
 
 function bech_is_event_sold_out($event_id)
@@ -944,4 +944,29 @@ function bech_is_event_sold_out($event_id)
 	}, $all_tickets), SORT_STRING);
 
 	return $all_tickets_statuses[0] === 'Sold out';
+}
+
+function bech_get_event_duration($event_id)
+{
+	$event_duration = get_post_meta($event_id, '_bechtix_event_duration_info', true);
+
+	if ($event_duration !== '') {
+		return $event_duration;
+	}
+
+	$tickets = get_posts([
+		'post_type' => 'tickets',
+		'post_status' => 'publish',
+		'numberposts' => 1,
+		'fields' => 'ids',
+		'meta_query' => [
+			[
+				'key' => '_bechtix_event_relation',
+				'value' => $event_id,
+				'compare' => '='
+			]
+		]
+	]);
+
+	return get_post_meta($tickets[0], '_bechtix_duration', true);
 }

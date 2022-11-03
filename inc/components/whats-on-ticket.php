@@ -19,22 +19,15 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
       ]
     ); ?>
     <?php $sale_status = get_post_meta($post->ID, '_bechtix_sale_status', true);
-    $sale_statuses = [
-      'No Status',
-      'Few tickets',
-      'Sold out',
-      'Cancelled',
-      'Not scheduled'
-    ];
     if ($sale_status === '2' || $sale_status === '3') :
     ?>
-      <div class="cms-li_sold-out-banner"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
+      <div class="cms-li_sold-out-banner"><?php echo bech_get_sale_status_string_value($sale_status); ?></div>
     <?php endif; ?>
   </a>
   <div class="cms-li_content">
     <div class="cms-li_time-div">
       <div class="p-30-45"><?php echo bech_get_ticket_times($post->ID); ?></div>
-      <div class="p-17-25 italic"><?php echo get_post_meta($post->ID, '_bechtix_duration', true); ?></div>
+      <div class="p-17-25 italic"><?php echo bech_get_event_duration($event->ID); ?></div>
     </div>
     <a href="<?php echo get_the_permalink($event->ID); ?>" class="p-20-30 title-event"><?php echo get_the_title($post); ?></a>
     <p class="p-17-25"><?php echo get_field('event_subheader', $post->ID); ?></p>
@@ -52,7 +45,7 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
         </a>
       <?php else : ?>
         <a bgline="2" href="#" class="booktickets-btn sold-out">
-          <strong><?php echo $sale_statuses[intval($sale_status)]; ?></strong>
+          <strong><?php echo bech_get_sale_status_string_value($sale_status); ?></strong>
         </a>
       <?php endif; ?>
       <a href="<?php echo get_the_permalink($event->ID); ?>" class="readmore-btn w-inline-block">
@@ -63,7 +56,7 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
     <?php if ($sale_status === '' || $sale_status === '0') : ?>
       <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($post->ID); ?></div>
     <?php elseif ($sale_status === '1') : ?>
-      <div class="cms-li_price" style="color: #B47171;"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
+      <div class="cms-li_price" style="color: #B47171;"><?php echo bech_get_sale_status_string_value($sale_status); ?></div>
     <?php endif; ?>
   </div>
   <div class="cms-li_actions-div biger">
