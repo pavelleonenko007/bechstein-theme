@@ -168,7 +168,7 @@
             </div>
             <div class="footer-col _3">
                 <div class="foo-bottomer">
-                    <div><?php echo get_field('copyright', 'option'); ?></div>
+                    <div>© <?php echo date('Y'); ?>, <?php echo get_field('copyright', 'option'); ?></div>
                     <a href="https:func.agency" rel="nofollow" class="funk-link">Website made by Func. ↗</a>
                 </div>
             </div>
