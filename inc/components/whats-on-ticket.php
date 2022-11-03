@@ -60,13 +60,20 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
     <?php endif; ?>
   </div>
   <div class="cms-li_actions-div biger">
-    <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
-      <strong>Book tickets</strong>
-    </a>
+    <?php
+    if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') : ?>
+      <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
+        <strong>Book tickets</strong>
+      </a>
+    <?php else : ?>
+      <a bgline="2" href="#" class="booktickets-btn sold-out">
+        <strong><?php echo bech_get_sale_status_string_value($sale_status); ?></strong>
+      </a>
+    <?php endif; ?>
     <?php if ($sale_status === '' || $sale_status === '0') : ?>
       <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($post->ID); ?></div>
     <?php elseif ($sale_status === '1') : ?>
-      <div class="cms-li_price" style="color: #B47171;"><?php echo $sale_statuses[intval($sale_status)]; ?></div>
+      <div class="cms-li_price" style="color: #B47171;"><?php echo bech_get_sale_status_string_value($sale_status); ?></div>
     <?php endif; ?>
   </div>
 </div>
