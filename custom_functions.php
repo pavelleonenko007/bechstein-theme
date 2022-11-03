@@ -89,8 +89,7 @@ function bech_is_current_url($url)
 	return bech_get_current_url() === $formatted_url;
 }
 
-// add_action('init', 'bech_register_post_types');
-
+add_action('init', 'bech_register_post_types');
 function bech_register_post_types()
 {
 	register_post_type('team', [
@@ -110,19 +109,19 @@ function bech_register_post_types()
 			'menu_name'          => 'Team', // название меню
 		],
 		'description'   => '',
-		'public'        => true,
+		'public'        => false,
 		// 'publicly_queryable'  => null, // зависит от public
 		// 'exclude_from_search' => null, // зависит от public
-		// 'show_ui'             => null, // зависит от public
+		'show_ui'             => true, // зависит от public
 		// 'show_in_nav_menus'   => null, // зависит от public
-		'show_in_menu'  => null,
+		'show_in_menu'  => true,
 		// показывать ли в меню адмнки
 		// 'show_in_admin_bar'   => null, // зависит от show_in_menu
-		'show_in_rest'  => null,
+		'show_in_rest'  => true,
 		// добавить в REST API. C WP 4.7
 		'rest_base'     => null,
 		// $post_type. C WP 4.7
-		'menu_position' => null,
+		'menu_position' => 15,
 		'menu_icon'     => 'dashicons-groups',
 		//'capability_type'   => 'post',
 		//'capabilities'      => 'post', // массив дополнительных прав для этого типа записи

@@ -17,16 +17,16 @@ $facebook = get_field('facebook');
 			<?php the_title(); ?>
 		</div>
 		<div class="p-17-25 op05">
-			<?php echo get_sub_field( 'job_title' ) ?>
+			<?php echo get_field('job_title') ?>
 		</div>
 		<div class="div-block-12">
-			<?php if (!empty($linkedIn)): ?>
-			<a rel="nofollow" href="<?php echo $linkedIn; ?>" target="_blank" class="p-17-25 italic link-color">LinkedIn</a>
+			<?php if (!empty($linkedIn)) : ?>
+				<a rel="nofollow" href="<?php echo $linkedIn; ?>" target="_blank" class="p-17-25 italic link-color">LinkedIn</a>
 			<?php endif; ?>
-			<?php if (!empty($instagram)): ?>
+			<?php if (!empty($instagram)) : ?>
 				<a rel="nofollow" href="<?php echo $instagram; ?>" target="_blank" class="p-17-25 italic link-color">Instagram</a>
 			<?php endif; ?>
-			<?php if (!empty($facebook)): ?>
+			<?php if (!empty($facebook)) : ?>
 				<a rel="nofollow" href="<?php echo $facebook; ?>" target="_blank" class="p-17-25 italic link-color">Facebook</a>
 			<?php endif; ?>
 		</div>
