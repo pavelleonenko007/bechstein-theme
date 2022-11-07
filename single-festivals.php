@@ -186,8 +186,13 @@ Template name: Festival
 												<?php endforeach; ?>
 											</div>
 										</div>
-								<?php endforeach;
-								endif; ?>
+									<?php endforeach;
+								else : ?>
+									<div class="no-events">
+										<p class="no-event-message">There is no events — we're working on a concert program.</p>
+										<a href="<?php echo get_the_permalink(255); ?>" class="link-20"><?php echo get_the_title(255); ?></a>
+									</div>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
