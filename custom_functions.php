@@ -969,3 +969,12 @@ function bech_get_event_duration($event_id)
 
 	return get_post_meta($tickets[0], '_bechtix_duration', true);
 }
+
+function bech_get_the_content_without_formatting($post_id)
+{
+	remove_filter('the_content', 'wpautop');
+	$content = get_the_content(null, false, $post_id);
+	add_filter('the_content', 'wpautop');
+
+	return $content;
+}

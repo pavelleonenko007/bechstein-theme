@@ -64,7 +64,7 @@ Template name: Your Visit archive template
 					</div>
 					<div class="yourvisit-column">
 						<h1 class="h1-75-90 yv-page"><?php the_title(); ?></h1>
-						<?php $description = get_the_content(null, false, $post->ID);
+						<?php $description = bech_get_the_content_without_formatting($post->ID);
 						if (!empty($description)) : ?>
 							<p class="p-25-40 your-visit"><?php echo $description; ?></p>
 						<?php endif; ?>
