@@ -1,3 +1,8 @@
+.link-foo-big.w--current,
+.link-foo-small.w--current {
+  color: #b0935b !important;
+}
+
 #atcb-pos-wrapper {
   display: none;
 }
