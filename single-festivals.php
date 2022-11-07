@@ -59,7 +59,11 @@ Template name: Festival
 							<div class="p-20-30 fest">
 								<?php echo get_post_meta($post->ID, '_bechtix_festival_dates', true); ?>
 							</div>
-							<div class="p-15-25"><strong>Tickets information</strong></div>
+							<?php $tickets_information_link = get_field('tickets_information_url', $post->ID) ? get_field('tickets_information_url', $post->ID) : get_field('tickets_information_url', 'option');
+
+							if (trim($tickets_information_link) !== '') : ?>
+								<a href="<?php echo $tickets_information_link; ?>" class="p-15-25"><strong>Tickets information</strong></a>
+							<?php endif; ?>
 							<div class="p-17-25 italic">
 								<?php echo get_post_meta($post->ID, '_bechtix_festival_note', true); ?>
 							</div>
