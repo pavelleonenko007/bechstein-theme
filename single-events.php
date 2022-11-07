@@ -113,8 +113,16 @@ Template name: Event
                   </div>
                 <?php endif; ?>
                 <div class="info-right-side-bottom">
-                  <div>Tickets information</div>
-                  <div>Seating plan</div>
+                  <?php $tickets_information_link = get_field('tickets_information_url', $post->ID) ? get_field('tickets_information_url', $post->ID) : get_field('tickets_information_url', 'option');
+
+                  $seating_plan_link = get_field('tickets_information_url', $post->ID) ? get_field('tickets_information_url', $post->ID) : get_field('tickets_information_url', 'option');
+
+                  if (trim($tickets_information_link) !== '') : ?>
+                    <a href="<?php echo $tickets_information_link; ?>">Tickets information</a>
+                  <?php endif; ?>
+                  <?php if (trim($seating_plan_link) !== '') : ?>
+                    <a href="<?php echo $seating_plan_link; ?>">Seating plan</a>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>
