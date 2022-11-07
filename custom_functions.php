@@ -972,9 +972,5 @@ function bech_get_event_duration($event_id)
 
 function bech_get_the_content_without_formatting($post_id)
 {
-	remove_filter('the_content', 'wpautop');
-	$content = get_the_content(null, false, $post_id);
-	add_filter('the_content', 'wpautop');
-
-	return $content;
+	return strip_tags(get_the_content(null, false, $post_id), ['br', 'a', 'b', 'strong', 'i']);
 }
