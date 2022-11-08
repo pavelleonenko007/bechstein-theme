@@ -914,7 +914,7 @@ function bech_get_sale_status_string_value($sale_status)
 {
 	$sale_statuses = [
 		'No Status',
-		'Few tickets',
+		'Few tickets left',
 		'Sold out',
 		'Cancelled',
 		'Not scheduled'
