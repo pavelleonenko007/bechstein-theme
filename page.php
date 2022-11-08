@@ -56,7 +56,7 @@ Template name: Simple page template
 											</div>
 											<div class="page-sidebar-block__content">
 												<?php foreach ($sidebar_item['link_list'] as $list_item) : ?>
-													<a href="<?php echo $sidebar_item['item_link']; ?>" class="ui-yourvisit_link-in w-inline-block" target="_blank">
+													<a href="<?php echo $list_item['item_link']; ?>" class="ui-yourvisit_link-in w-inline-block" target="_blank">
 														<div class="p-20-30 med w20"><?php echo $list_item['item_title']; ?></div>
 														<div class="p-17-25 mar10"><?php echo $list_item['item_short_description']; ?></div>
 													</a>
