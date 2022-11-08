@@ -407,7 +407,7 @@ function bech_get_selected_filters_string($params)
 	}
 
 	foreach ($params as $prop => $param) {
-		if ($prop === 'genres' || $prop === 'instruments' || $prop === 'time' || $prop === 'festival') {
+		if ($prop === 'genres' || $prop === 'instruments' || $prop === 'time' || $prop === 'festival' || $prop === 'event_tag') {
 			if ($prop === 'festival') {
 				foreach ($param as $festival_id) {
 					$festival = get_post($festival_id);
@@ -489,7 +489,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 	}
 
 	if (isset($params['event_tag'])) {
-		$events_args['event_tag'][] = [
+		$events_args['tax_query'][] = [
 			'taxonomy' => 'event_tag',
 			'field' => 'slug',
 			'terms' => $params['event_tag']

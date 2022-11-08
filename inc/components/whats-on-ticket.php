@@ -32,7 +32,7 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
     <a href="<?php echo get_the_permalink($event->ID); ?>" class="p-20-30 title-event"><?php echo get_the_title($post); ?></a>
     <div class="p-17-25"><?php echo get_the_content(null, null, $event); ?></div>
     <div class="cms-li_tags-div">
-      <?php $tags = wp_get_object_terms($post->ID, ['event_tag', 'genres', 'instruments']);
+      <?php $tags = wp_get_object_terms($event->ID, ['event_tag', 'genres', 'instruments']);
       foreach ($tags as $tag) : ?>
         <a href="#" class="cms-li_tag-link"><?php echo $tag->name; ?></a>
       <?php endforeach; ?>
