@@ -248,9 +248,7 @@ Template name: Event
                       </div>
                     </div>
                     <div class="ui-drop-container_content">
-                      <p class="p-17-25">
-                        <?php echo $dropdown['dropdown_content']; ?>
-                      </p>
+                      <?php echo preg_replace('/<p([^>]+)?>/', '<p$1 class="p-17-25">', $dropdown['dropdown_content']); ?>
                     </div>
                   </div>
                 <?php endforeach; ?>
