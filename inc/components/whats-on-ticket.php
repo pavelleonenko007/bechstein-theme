@@ -33,9 +33,11 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
     <div class="p-17-25"><?php echo get_the_content(null, null, $event); ?></div>
     <div class="cms-li_tags-div">
       <?php $tags = wp_get_object_terms($event->ID, ['event_tag', 'genres', 'instruments']);
-      foreach ($tags as $tag) : ?>
-        <a href="#" class="cms-li_tag-link"><?php echo $tag->name; ?></a>
-      <?php endforeach; ?>
+      foreach ($tags as $index => $tag) :
+        if ($index <= 4) : ?>
+          <a class="cms-li_tag-link"><?php echo $tag->name; ?></a>
+      <?php endif;
+      endforeach; ?>
     </div>
     <div class="cms-li_actions-div">
       <?php
