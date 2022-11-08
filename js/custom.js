@@ -1744,6 +1744,17 @@ const initWhatsOnFilters = () => {
   );
 
   clearFiltersButton.addEventListener('click', clearFilters);
+
+  filterFormNode.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(filterFormNode);
+    const response = await getTickets(formData);
+    const ticketsHTML = response.html;
+    const selectedString = response?.selected_string;
+
+    showSelectedFilters(selectedString);
+    ticketsContainer.innerHTML = ticketsHTML;
+  });
 };
 
 initWhatsOnFilters();

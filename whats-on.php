@@ -129,17 +129,24 @@ Template name: What's on
                             <?php endforeach; ?>
                           </div>
                         </div>
-                      <?php endif; ?>
-                      <div class="filters-div">
-                        <div class="filters-top-div">
-                          <div class="p-20-30">Event</div>
+                      <?php endif;
+                      $event_tags = bech_get_custom_taxonomies('event_tag');
+                      if (!empty($event_tags)) : ?>
+                        <div class="filters-div">
+                          <div class="filters-top-div">
+                            <div class="p-20-30">Event</div>
+                          </div>
+                          <div class="filters-bottom-div">
+                            <?php foreach ($event_tags as $event_tag) : ?>
+                              <label class="w-checkbox cbx-mom">
+                                <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                                <input type="checkbox" id="event_tag-<?php echo $event_tag->term_id; ?>" name="event_tag[]" value="<?php echo $event_tag->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                                <span class="filter-cbx ischbx w-form-label" for="event_tag-<?php echo $event_tag->term_id; ?>"><?php echo $event_tag->name; ?></span>
+                              </label>
+                            <?php endforeach; ?>
+                          </div>
                         </div>
-                        <div class="filters-bottom-div"><label class="w-checkbox cbx-mom">
-                            <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">contemporary</span>
-                          </label><label class="w-checkbox cbx-mom">
-                            <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div><input type="checkbox" id="checkbox-3" name="checkbox-3" data-name="Checkbox 3" style="opacity:0;position:absolute;z-index:-1" /><span class="filter-cbx ischbx w-form-label" for="checkbox-3">minimalism</span>
-                          </label></div>
-                      </div>
+                      <?php endif; ?>
                       <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
                       <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
                     </div>

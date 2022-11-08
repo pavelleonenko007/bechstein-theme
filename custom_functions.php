@@ -348,7 +348,7 @@ function bech_get_custom_taxonomies($taxonomy)
 		'parent'     => 0,
 	]), function ($term) {
 		$tickets = get_posts([
-			'post_type' => 'tickets',
+			'post_type' => 'events',
 			'post_status' => 'publish',
 			'tax_query' => [
 				[
@@ -465,42 +465,70 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 {
 	$params = $request->get_params();
 
-	// if (!wp_verify_nonce($params['bech_filter_nonce'], 'bech_filter_nonce_action')) {
-	//   $rest_response = rest_ensure_response([
-	//     'code' => 'fail',
-	//     'message' => 'Something goes wrong',
-	//     'data' => [
-	//       'status' => 400
-	//     ]
-	//   ]);
-
-	//   $rest_response->set_status(400);
-
-	//   return $rest_response;
-	// }
-
-	$selected_string = bech_get_selected_filters_string($params);
-
-	$args = [
-		'post_type' => 'tickets',
+	$events_args = [
+		'post_type' => 'events',
 		'post_status' => 'publish',
 		'numberposts' => 10,
+		'fields' => 'ids',
+	];
+
+	if (isset($params['genres'])) {
+		$events_args['tax_query'][] = [
+			'taxonomy' => 'genres',
+			'field' => 'slug',
+			'terms' => $params['genres']
+		];
+	}
+
+	if (isset($params['instruments'])) {
+		$events_args['tax_query'][] = [
+			'taxonomy' => 'instruments',
+			'field' => 'slug',
+			'terms' => $params['instruments']
+		];
+	}
+
+	if (isset($params['event_tag'])) {
+		$events_args['event_tag'][] = [
+			'taxonomy' => 'event_tag',
+			'field' => 'slug',
+			'terms' => $params['event_tag']
+		];
+	}
+
+	if (isset($params['festival'])) {
+		$events_args['meta_query'][] = [
+			'key' => '_bechtix_festival_relation',
+			'value' => $params['festival'],
+			'compare' => 'IN'
+		];
+	}
+
+	if (!empty($params['s'])) {
+		$events_args['s'] = $params['s'];
+	}
+
+	$events_ids = get_posts($events_args);
+
+	$tickets_args = [
+		'post_type' => 'tickets',
+		'post_status' => 'publish',
+		'numberposts' => -1,
 		'orderby' => 'meta_value',
 		'meta_key' => '_bechtix_ticket_start_date',
 		'order' => 'ASC',
-		// 'meta_query'  => [
-		// 	[
-		// 		'key'     => 'start_date',
-		// 		'value'   => date('Y.m.d H:i'),
-		// 		'compare' => '>=',
-		// 		'type'    => 'DATETIME'
-		// 	]
-		// ]
+		'meta_query' => [
+			[
+				'key' => '_bechtix_event_relation',
+				'value' => $events_ids,
+				'compare' => 'IN'
+			]
+		]
 	];
 
 	if (!empty($params['from'])) {
 		$dt = new DateTime($params['from']);
-		$args['meta_query'][] = [
+		$tickets_args['meta_query'][] = [
 			'key'     => '_bechtix_ticket_start_date',
 			'value'   => $dt->format('Y-m-d H:i:s'),
 			'compare' => '>=',
@@ -509,7 +537,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 
 		if (!empty($params['to'])) {
 			$dt = new DateTime($params['to']);
-			$args['meta_query'][] = [
+			$tickets_args['meta_query'][] = [
 				'key'     => '_bechtix_ticket_start_date',
 				'value'   => $dt->format('Y-m-d H:i:s'),
 				'compare' => '<=',
@@ -522,7 +550,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 				$datetime  = new DateTime('today');
 				$next_date = new DateTime('tomorrow');
 
-				$args['meta_query'][] = [
+				$tickets_args['meta_query'][] = [
 					'key'     => '_bechtix_ticket_start_date',
 					'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
 					'compare' => 'BETWEEN',
@@ -533,7 +561,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 				$next_date = new DateTime('tomorrow');
 				$next_date->modify('+1 day');
 
-				$args['meta_query'][] = [
+				$tickets_args['meta_query'][] = [
 					'key'     => '_bechtix_ticket_start_date',
 					'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
 					'compare' => 'BETWEEN',
@@ -547,7 +575,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 					return $datetime->format('Y-m-d H:i:s');
 				}, iterator_to_array($periods));
 
-				$args['meta_query'][] = [
+				$tickets_args['meta_query'][] = [
 					'key'     => '_bechtix_ticket_start_date',
 					'value'   => [$days[0], $days[7]],
 					'compare' => 'BETWEEN',
@@ -559,69 +587,19 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 				$days                  = array_map(function ($datetime) {
 					return $datetime->format('Y-m-d H:i:s');
 				}, iterator_to_array($periods));
-				$args['meta_query'][] = [
+				$tickets_args['meta_query'][] = [
 					'key'     => '_bechtix_ticket_start_date',
 					'value'   => $days,
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
 				];
-			} /* else {
-				$dt                    = new DateTime(str_replace('.', '/', $params['time']));
-				$next_date = new DateTime(str_replace('.', '/', $params['time']));
-				$next_date->modify('+1 day');
-				$args['meta_query'][] = [
-					'key'     => '_bechtix_ticket_start_date',
-					'value'   => [$dt->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
-					'compare' => 'BETWEEN',
-					'type'    => 'DATETIME'
-				];
-			}*/
+			}
 		}
 	}
 
-	if (isset($params['genres'])) {
-		$args['tax_query'][] = [
-			'taxonomy' => 'genres',
-			'field'    => 'slug',
-			'terms'    => $params['genres']
-		];
-	}
+	$selected_string = bech_get_selected_filters_string($params);
 
-	if (isset($params['instruments'])) {
-		$args['tax_query'][] = [
-			'taxonomy' => 'instruments',
-			'field'    => 'slug',
-			'terms'    => $params['instruments']
-		];
-	}
-
-	if (isset($params['festival'])) {
-		$events = get_posts([
-			'post_type' => 'events',
-			'post_status' => 'publish',
-			'numberposts' => -1,
-			'fields' => 'ids',
-			'meta_query' => [
-				[
-					'key' => '_bechtix_festival_relation',
-					'value'    => $params['festival'],
-					'compare' => 'IN'
-				]
-			]
-		]);
-
-		$args['meta_query'][] = [
-			'key' => '_bechtix_event_relation',
-			'value'    => $events,
-			'compare' => 'IN'
-		];
-	}
-
-	if (!empty($params['s'])) {
-		$args['s'] = $params['s'];
-	}
-
-	$tickets = get_posts($args);
+	$tickets = get_posts($tickets_args);
 	$data           = "<p class='no-event-message'>There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>";
 
 	if (!empty($params['time']) && empty($params['from'])) {
