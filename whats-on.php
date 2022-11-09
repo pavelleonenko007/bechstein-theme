@@ -242,8 +242,10 @@ Template name: What's on
                           <?php endforeach; ?>
                         </div>
                       </div>
-                  <?php endforeach;
-                  endif; ?>
+                    <?php endforeach;
+                  else : ?>
+                    <p class="no-event-message">There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>
