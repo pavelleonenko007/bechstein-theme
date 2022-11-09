@@ -1,3 +1,20 @@
+.breadcrumbs-line {
+  align-items: center;
+}
+
+.breadcrumbs-line > span {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.breadcrumbs-line > span:first-child {
+  margin-left: 0;
+}
+
+.breadcrumbs-line > span:last-child {
+  margin-right: 0;
+}
+
 .link-foo-big.w--current,
 .link-foo-small.w--current {
   color: #b0935b !important;
@@ -389,11 +406,6 @@ html {
 .year-horizontal.first,
 .cursor {
   pointer-events: none;
-}
-
-.breadcrumbs-link:after {
-  content: ' → ';
-  white-space: pre;
 }
 
 .breadcrumbs-link:nth-last-child(1):after {
