@@ -147,6 +147,7 @@ Template name: What's on
                           </div>
                         </div>
                       <?php endif; ?>
+                      <input type="hidden" name="action" value="get_filtered_tickets">
                       <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
                       <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
                     </div>

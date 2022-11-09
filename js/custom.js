@@ -1094,18 +1094,15 @@ const getTickets = async (filters) => {
 
   try {
     const response = await (
-      await fetch(
-        `${bech_var.home_url}/wp-json/tix-webhook/v1/whats-on-filter`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      )
+      await fetch(bech_var.url, {
+        method: 'POST',
+        body: formData,
+      })
     ).json();
 
     console.log(response);
 
-    if (response.code !== 'success') {
+    if (response.status !== 'success') {
       throw new Error(data.message);
     }
 
@@ -1703,6 +1700,8 @@ const initWhatsOnFilters = () => {
     filterFormNode.reset();
     calendarWidget.reset();
     filterInputs.forEach((filterInput) => {
+      if (filterInput.type === 'hidden') return;
+
       if (filterInput.type === 'checkbox' || filterInput.type === 'radio') {
         filterInput.removeAttribute('checked');
         filterInput.checked = false;

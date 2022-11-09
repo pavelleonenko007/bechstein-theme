@@ -16,18 +16,37 @@ Template name: Whats on - search results
     <?php get_header(); ?>
     <?php
     global $wp_query;
+    $event_ids = array_map(function ($event) {
+      return $event->ID;
+    }, $wp_query->posts);
+
+    $ticket_objects = get_posts([
+      'post_type' => 'tickets',
+      'post_status' => 'publish',
+      'numberposts' => -1,
+      'orderby' => 'meta_value',
+      'meta_key' => '_bechtix_ticket_start_date',
+      'order' => 'ASC',
+      'meta_query' => [
+        [
+          'key' => '_bechtix_event_relation',
+          'value' => $event_ids,
+          'compare' => 'IN'
+        ]
+      ]
+    ]);
     ?>
     <main class="wrapper">
       <section class="section wf-section">
         <div class="search-row">
           <div class="filter-column"></div>
           <div class="search-column">
-            <h1 class="h1-75-90 searh">SEARCH RESULTS <span class="search-span"><?php echo count($wp_query->posts); ?></span></h1>
+            <h1 class="h1-75-90 searh">SEARCH RESULTS <span class="search-span"><?php echo count($ticket_objects); ?></span></h1>
             <form method="get" action="<?php echo home_url('/') ?>" class="search w-form">
               <input type="search" class="search0page-line w-input" autofocus="true" maxlength="256" value="<?php echo get_search_query() ?>" name="s" placeholder="search by keyword…" id="search" required>
               <input type="submit" value="Search" class="search-button w-button">
             </form>
-            <?php $sorted_tickets = bech_sort_tickets($wp_query->posts); ?>
+            <?php $sorted_tickets = bech_sort_tickets($ticket_objects); ?>
             <div class="cms-tems">
               <?php if (!empty($sorted_tickets)) :
                 foreach ($sorted_tickets as $date => $tickets) : ?>

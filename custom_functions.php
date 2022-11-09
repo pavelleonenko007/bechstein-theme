@@ -453,17 +453,24 @@ function bech_get_smaller_date($param)
 
 /* What's on filters */
 
-add_action('rest_api_init', function () {
-	register_rest_route('tix-webhook/v1', '/whats-on-filter', array(
-		'methods'             => 'POST',
-		'callback'            => 'bech_filter_whats_on_tickets',
-		'permission_callback' => '__return_true'
-	));
-});
+add_action('wp_ajax_get_filtered_tickets', 'bech_get_filtered_tickets');
+add_action('wp_ajax_nopriv_get_filtered_tickets', 'bech_get_filtered_tickets');
 
-function bech_filter_whats_on_tickets(WP_REST_Request $request)
+function bech_get_filtered_tickets()
 {
-	$params = $request->get_params();
+	if (!isset($_POST['bech_filter_nonce']) || !wp_verify_nonce($_POST['bech_filter_nonce'], 'bech_filter_nonce_action')) {
+		wp_send_json([
+			'status' => 'bad',
+			'message' => 'Sorry but you are not authorize',
+			'data'    => [
+				'status' => 400
+			]
+		], 400);
+		wp_die();
+	}
+
+	$data = "<p class='no-event-message'>There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>";
+	$selected_string = bech_get_selected_filters_string($_POST);
 
 	$events_args = [
 		'post_type' => 'events',
@@ -472,43 +479,56 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 		'fields' => 'ids',
 	];
 
-	if (isset($params['genres'])) {
+	if (isset($_POST['genres'])) {
 		$events_args['tax_query'][] = [
 			'taxonomy' => 'genres',
 			'field' => 'slug',
-			'terms' => $params['genres']
+			'terms' => $_POST['genres']
 		];
 	}
 
-	if (isset($params['instruments'])) {
+	if (isset($_POST['instruments'])) {
 		$events_args['tax_query'][] = [
 			'taxonomy' => 'instruments',
 			'field' => 'slug',
-			'terms' => $params['instruments']
+			'terms' => $_POST['instruments']
 		];
 	}
 
-	if (isset($params['event_tag'])) {
+	if (isset($_POST['event_tag'])) {
 		$events_args['tax_query'][] = [
 			'taxonomy' => 'event_tag',
 			'field' => 'slug',
-			'terms' => $params['event_tag']
+			'terms' => $_POST['event_tag']
 		];
 	}
 
-	if (isset($params['festival'])) {
+	if (isset($_POST['festival'])) {
 		$events_args['meta_query'][] = [
 			'key' => '_bechtix_festival_relation',
-			'value' => $params['festival'],
+			'value' => $_POST['festival'],
 			'compare' => 'IN'
 		];
 	}
 
-	if (!empty($params['s'])) {
-		$events_args['s'] = $params['s'];
+	if (!empty($_POST['s'])) {
+		$events_args['s'] = $_POST['s'];
 	}
 
-	$events_ids = get_posts($events_args);
+	$events_query = new WP_Query($events_args);
+
+	if (empty($events_query->posts)) {
+		wp_send_json([
+			'status' => 'success',
+			'message' => 'Data succesfully updated',
+			'data'    => [
+				'status'          => 200,
+				'html'            => $data,
+				'selected_string' => $selected_string,
+			]
+		], 200);
+		wp_die();
+	}
 
 	$tickets_args = [
 		'post_type' => 'tickets',
@@ -520,14 +540,14 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 		'meta_query' => [
 			[
 				'key' => '_bechtix_event_relation',
-				'value' => $events_ids,
+				'value' => $events_query->posts,
 				'compare' => 'IN'
 			]
 		]
 	];
 
-	if (!empty($params['from'])) {
-		$dt = new DateTime($params['from']);
+	if (!empty($_POST['from'])) {
+		$dt = new DateTime($_POST['from']);
 		$tickets_args['meta_query'][] = [
 			'key'     => '_bechtix_ticket_start_date',
 			'value'   => $dt->format('Y-m-d H:i:s'),
@@ -535,8 +555,8 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 			'type'    => 'DATETIME'
 		];
 
-		if (!empty($params['to'])) {
-			$dt = new DateTime($params['to']);
+		if (!empty($_POST['to'])) {
+			$dt = new DateTime($_POST['to']);
 			$tickets_args['meta_query'][] = [
 				'key'     => '_bechtix_ticket_start_date',
 				'value'   => $dt->format('Y-m-d H:i:s'),
@@ -545,8 +565,8 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 			];
 		}
 	} else {
-		if (!empty($params['time'])) {
-			if ($params['time'] === 'today') {
+		if (!empty($_POST['time'])) {
+			if ($_POST['time'] === 'today') {
 				$datetime  = new DateTime('today');
 				$next_date = new DateTime('tomorrow');
 
@@ -556,7 +576,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
 				];
-			} elseif ($params['time'] === 'tomorrow') {
+			} elseif ($_POST['time'] === 'tomorrow') {
 				$datetime  = new DateTime('tomorrow');
 				$next_date = new DateTime('tomorrow');
 				$next_date->modify('+1 day');
@@ -567,7 +587,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
 				];
-			} elseif ($params['time'] === 'next-week') {
+			} elseif ($_POST['time'] === 'next-week') {
 				$dt = new DateTime();
 				$dt->setISODate($dt->format('o'), absint($dt->format('W')) + 1);
 				$periods = new DatePeriod($dt, new DateInterval('P1D'), 7);
@@ -581,7 +601,7 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
 				];
-			} elseif ($params['time'] === 'weekend') {
+			} elseif ($_POST['time'] === 'weekend') {
 				$dt                    = new DateTime('next Saturday');
 				$periods               = new DatePeriod($dt, new DateInterval('P1D'), 2);
 				$days                  = array_map(function ($datetime) {
@@ -597,12 +617,9 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 		}
 	}
 
-	$selected_string = bech_get_selected_filters_string($params);
-
 	$tickets = get_posts($tickets_args);
-	$data           = "<p class='no-event-message'>There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>";
 
-	if (!empty($params['time']) && empty($params['from'])) {
+	if (!empty($_POST['time']) && empty($_POST['from'])) {
 		$date_map = [
 			'today' => 'Today',
 			'tomorrow' => 'Tomorrow',
@@ -612,8 +629,8 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 		ob_start(); ?>
 		<div class="cms-ul">
 			<div class="cms-heading">
-				<h2 class="h2-cms"><?php echo $date_map[$params['time']]; ?></h2>
-				<h2 class="h2-cms day"><?php echo bech_get_smaller_date($params['time']); ?></h2>
+				<h2 class="h2-cms"><?php echo $date_map[$_POST['time']]; ?></h2>
+				<h2 class="h2-cms day"><?php echo bech_get_smaller_date($_POST['time']); ?></h2>
 			</div>
 			<div class="cms-ul-events">
 				<?php foreach ($tickets as $ticket) :
@@ -652,19 +669,16 @@ function bech_filter_whats_on_tickets(WP_REST_Request $request)
 		endif;
 	}
 
-	$rest_response = rest_ensure_response([
-		'code'    => 'success',
+	wp_send_json([
+		'status' => 'success',
 		'message' => 'Data succesfully updated',
 		'data'    => [
 			'status'          => 200,
 			'html'            => $data,
 			'selected_string' => $selected_string,
 		]
-	]);
-
-	$rest_response->set_status(200);
-
-	return $rest_response;
+	], 200);
+	wp_die();
 }
 
 /* What's on filters */
