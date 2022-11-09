@@ -165,7 +165,7 @@ Template name: What's on
                   $events_args = [
                     'post_type' => 'events',
                     'post_status' => 'publish',
-                    'numberposts' => 10,
+                    'numberposts' => -1,
                     'fields' => 'ids',
                   ];
 
@@ -187,47 +187,48 @@ Template name: What's on
 
                   $event_ids = get_posts($events_args);
 
-                  $tickets_args = [
-                    'post_type' => 'tickets',
-                    'post_status' => 'publish',
-                    'numberposts' => 10,
-                    'orderby' => 'meta_value',
-                    'meta_key' => '_bechtix_ticket_start_date',
-                    'order' => 'ASC',
-                    'meta_query' => [
-                      [
-                        'key' => '_bechtix_event_relation',
-                        'value' => $event_ids,
-                        'compare' => 'IN'
+                  if (empty($event_ids)) : ?>
+                    <p class="no-event-message">There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>
+                    <?php else :
+                    $tickets_args = [
+                      'post_type' => 'tickets',
+                      'post_status' => 'publish',
+                      'numberposts' => -1,
+                      'orderby' => 'meta_value',
+                      'meta_key' => '_bechtix_ticket_start_date',
+                      'order' => 'ASC',
+                      'meta_query' => [
+                        [
+                          'key' => '_bechtix_event_relation',
+                          'value' => $event_ids,
+                          'compare' => 'IN'
+                        ]
                       ]
-                    ]
-                  ];
-
-                  if (!empty($_GET['from'])) {
-                    $dt = new DateTime($_GET['from']);
-                    $tickets_args['meta_query'][] = [
-                      'key'     => '_bechtix_ticket_start_date',
-                      'value'   => $dt->format('Y-m-d H:i:s'),
-                      'compare' => '>=',
-                      'type'    => 'DATETIME'
                     ];
-                  }
 
-                  if (!empty($_GET['to'])) {
-                    $dt = new DateTime($_GET['to']);
-                    $tickets_args['meta_query'][] = [
-                      'key'     => '_bechtix_ticket_start_date',
-                      'value'   => $dt->format('Y-m-d H:i:s'),
-                      'compare' => '<=',
-                      'type'    => 'DATETIME'
-                    ];
-                  }
+                    if (!empty($_GET['from'])) {
+                      $dt = new DateTime($_GET['from']);
+                      $tickets_args['meta_query'][] = [
+                        'key'     => '_bechtix_ticket_start_date',
+                        'value'   => $dt->format('Y-m-d H:i:s'),
+                        'compare' => '>=',
+                        'type'    => 'DATETIME'
+                      ];
+                    }
 
-                  $tickets = get_posts($tickets_args);
+                    if (!empty($_GET['to'])) {
+                      $dt = new DateTime($_GET['to']);
+                      $tickets_args['meta_query'][] = [
+                        'key'     => '_bechtix_ticket_start_date',
+                        'value'   => $dt->format('Y-m-d H:i:s'),
+                        'compare' => '<=',
+                        'type'    => 'DATETIME'
+                      ];
+                    }
 
-                  $sorted_tickets = bech_sort_tickets($tickets);
+                    $tickets = get_posts($tickets_args);
 
-                  if (!empty($sorted_tickets)) :
+                    $sorted_tickets = bech_sort_tickets($tickets);
                     foreach ($sorted_tickets as $date => $tickets) : ?>
                       <div class="cms-ul">
                         <div class="cms-heading">
@@ -242,10 +243,8 @@ Template name: What's on
                           <?php endforeach; ?>
                         </div>
                       </div>
-                    <?php endforeach;
-                  else : ?>
-                    <p class="no-event-message">There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>
-                  <?php endif; ?>
+                  <?php endforeach;
+                  endif; ?>
                 </div>
               </div>
             </div>
