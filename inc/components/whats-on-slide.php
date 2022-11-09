@@ -16,14 +16,14 @@ global $post; ?>
         </a>
       <?php endif;  ?>
 
-      <?php $term_query = wp_get_object_terms($post->ID, [
+      <?php $term_query = wp_get_object_terms($event_id, [
         'event_tag',
         'genres',
         'instruments'
       ]); ?>
       <div class="slider-wvwnts_top-cats">
         <?php foreach ($term_query as $term) : ?>
-          <a href="#" class="slider-wvwnts_top-cats_a"><?php echo $term->name; ?></a>
+          <a class="slider-wvwnts_top-cats_a"><?php echo $term->name; ?></a>
         <?php endforeach; ?>
       </div>
     </div>
