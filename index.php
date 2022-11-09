@@ -80,16 +80,15 @@ Template name: Copy of Bechstein Hall
                                 // TODO: hide_empty => true
                                 $tags_args = [
                                     'taxonomy'   => ['event_tag', 'genres', 'instruments'],
-                                    'hide_empty' => false
                                 ];
                                 $tags      = get_terms($tags_args);
                                 if (!empty($tags)) : ?>
                                     <div class="filter-flex">
                                         <?php foreach ($tags as $tag) : ?>
                                             <label class="w-checkbox filter-flex-btn">
-                                                <div class="w-checkbox-input w-checkbox-input--inputType-custom filter-flex-bg" for="tag_<?php echo $tag->term_id; ?>"></div>
+                                                <div class="w-checkbox-input w-checkbox-input--inputType-custom filter-flex-bg"></div>
                                                 <input type="checkbox" id="tag_<?php echo $tag->term_id; ?>" name="<?php echo $tag->taxonomy; ?>[]" value="<?php echo $tag->slug; ?>" style="opacity:0;position:absolute;z-index:-1">
-                                                <span class="w-form-label" for="contemporary"><?php echo $tag->name; ?></span>
+                                                <span class="w-form-label" for="tag_<?php echo $tag->term_id; ?>"><?php echo $tag->name; ?></span>
                                             </label>
                                         <?php endforeach; ?>
                                     </div>
