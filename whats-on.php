@@ -162,6 +162,31 @@ Template name: What's on
                 </div>
                 <div id="tickets-container" class="cms-tems">
                   <?php
+                  $events_args = [
+                    'post_type' => 'events',
+                    'post_status' => 'publish',
+                    'numberposts' => 10,
+                    'fields' => 'ids',
+                  ];
+
+                  if (!empty($_GET['genres'])) {
+                    $events_args['tax_query'][] = [
+                      'taxonomy' => 'genres',
+                      'field'    => 'slug',
+                      'terms'    => $_GET['genres']
+                    ];
+                  }
+
+                  if (!empty($_GET['instruments'])) {
+                    $events_args['tax_query'][] = [
+                      'taxonomy' => 'instruments',
+                      'field'    => 'slug',
+                      'terms'    => $_GET['instruments']
+                    ];
+                  }
+
+                  $event_ids = get_posts($events_args);
+
                   $tickets_args = [
                     'post_type' => 'tickets',
                     'post_status' => 'publish',
@@ -169,6 +194,13 @@ Template name: What's on
                     'orderby' => 'meta_value',
                     'meta_key' => '_bechtix_ticket_start_date',
                     'order' => 'ASC',
+                    'meta_query' => [
+                      [
+                        'key' => '_bechtix_event_relation',
+                        'value' => $event_ids,
+                        'compare' => 'IN'
+                      ]
+                    ]
                   ];
 
                   if (!empty($_GET['from'])) {
@@ -188,22 +220,6 @@ Template name: What's on
                       'value'   => $dt->format('Y-m-d H:i:s'),
                       'compare' => '<=',
                       'type'    => 'DATETIME'
-                    ];
-                  }
-
-                  if (!empty($_GET['genres'])) {
-                    $tickets_args['tax_query'][] = [
-                      'taxonomy' => 'genres',
-                      'field'    => 'slug',
-                      'terms'    => $_GET['genres']
-                    ];
-                  }
-
-                  if (!empty($_GET['instruments'])) {
-                    $tickets_args['tax_query'][] = [
-                      'taxonomy' => 'instruments',
-                      'field'    => 'slug',
-                      'terms'    => $_GET['instruments']
                     ];
                   }
 
