@@ -407,7 +407,7 @@ function bech_get_selected_filters_string($params)
 	}
 
 	foreach ($params as $prop => $param) {
-		if ($prop === 'genres' || $prop === 'instruments' || $prop === 'time' || $prop === 'festival' || $prop === 'event_tag') {
+		if ($prop === 'genres' || $prop === 'instruments' || $prop === 'time' || $prop === 'festival' || $prop === 'event_tag' || $prop === 's') {
 			if ($prop === 'festival') {
 				foreach ($param as $festival_id) {
 					$festival = get_post($festival_id);

@@ -1709,7 +1709,7 @@ const initWhatsOnFilters = () => {
   searchInput.addEventListener(
     'input',
     debounce((event) => {
-      event.target.dispatchEvent(new Event('change'));
+      event.target.dispatchEvent(new Event('change', { bubbles: true }));
     }, 500)
   );
 
