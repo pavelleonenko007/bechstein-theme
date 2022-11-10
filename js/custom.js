@@ -1758,6 +1758,105 @@ const initWhatsOnFilters = () => {
 
 initWhatsOnFilters();
 
+// const initWhatsOnFilters2 = () => {
+//   const filterForm = document.querySelector('[data-filter="form"]');
+
+//   if (!filterForm) return;
+//   const calendarWidget = new CalendarWidget('calendar-widget');
+//   const filterFields = filterForm.querySelectorAll(
+//     '[name]:not([type="hidden"]):not([type="submit"])'
+//   );
+//   const clearFiltersButton = document.getElementById('clear');
+//   const selectedFiltersStringContainer =
+//     document.getElementById('selected-filters');
+
+//   const getTickets = async (filters = {}) => {
+//     const formData = filters instanceof FormData ? filters : new FormData();
+//     if (!formData instanceof FormData) {
+//       for (const property in filters) {
+//         if (Object.hasOwnProperty.call(filters, property)) {
+//           const value = filters[property];
+//           formData.set(property, value);
+//         }
+//       }
+//     }
+
+//     try {
+//       const response = await (
+//         await fetch(bech_var.url, {
+//           method: 'POST',
+//           body: formData,
+//         })
+//       ).json();
+
+//       console.log(response);
+
+//       if (response.status !== 'success') {
+//         throw new Error('Error: ' + response.message);
+//       }
+
+//       return response.data;
+//     } catch (e) {
+//       window.alert(e);
+//     }
+//   };
+
+//   const getAndSetTickets = async () => {
+//     console.log('get tickets');
+//     const ticketsContainer = document.getElementById('tickets-container');
+//     if (!ticketsContainer) return;
+//     const formData = new FormData(filterForm);
+//     const ticketsData = await getTickets(formData);
+
+//     selectedFiltersStringContainer.querySelector(
+//       '[data-filter="choosen"]'
+//     ).textContent = ticketsData.selected_string;
+//     selectedFiltersStringContainer.classList.add('filters-line-text--active');
+//     ticketsContainer.innerHTML = ticketsData.html;
+//   };
+
+//   const changeFilterFieldsHandler = (event) => {
+//     const targetFilter = event.target;
+//     if (targetFilter.name === 'time') {
+//       filterFields.find(
+//         (input) => input.getAttribute('name') === 'from'
+//       ).value = '';
+//       calendarWidget.reset();
+//     }
+
+//     getAndSetTickets();
+//   };
+
+//   const resetForm = () => {
+//     filterForm.reset();
+//     calendarWidget.reset();
+//     filterFields.forEach((input) => {
+//       if (input.type === 'checkbox' || input.type === 'radio') {
+//         input.removeAttribute('checked');
+//         input.checked = false;
+//       } else {
+//         input.value = '';
+//       }
+//     });
+
+//     getAndSetTickets();
+//   };
+
+//   clearFiltersButton?.addEventListener('click', (event) => {
+//     event.preventDefault();
+//     selectedFiltersStringContainer.classList.remove(
+//       'filters-line-text--active'
+//     );
+//     resetForm();
+//   });
+
+//   filterFields.forEach((filterField) => {
+//     filterField.addEventListener('change', changeFilterFieldsHandler);
+//   });
+// };
+
+// initWhatsOnFilters2();
+
 const initPressReleaseFilters = () => {
   const formFiltersNode = document.getElementById('press-filter-form');
 

@@ -82,8 +82,8 @@ Template name: What's on
                               if ($counter <= 4) : ?>
                                 <label class="w-checkbox cbx-mom">
                                   <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                                  <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $genre->term_id; ?>" name="genres[]" data-name="<?php echo $genre->slug; ?>" value="<?php echo $genre->slug; ?>" <?php if (isset($_GET['genres']) && in_array($genre->slug, $_GET['genres'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
-                                  <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $genre->term_id; ?>"><?php echo $genre->name; ?></span>
+                                  <input data-filter="checkbox" type="checkbox" id="<?php echo $genre->taxonomy . '-' . $genre->term_id; ?>" name="genres[]" value="<?php echo $genre->slug; ?>" <?php if (isset($_GET['genres']) && in_array($genre->slug, $_GET['genres'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
+                                  <span class="filter-cbx ischbx w-form-label" for="<?php echo $genre->taxonomy . '-' . $genre->term_id; ?>"><?php echo $genre->name; ?></span>
                                 </label>
                             <?php
                                 $counter++;
@@ -105,8 +105,8 @@ Template name: What's on
                             <?php foreach ($instruments as $instrument) : ?>
                               <label class="w-checkbox cbx-mom">
                                 <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                                <input data-filter="checkbox" type="checkbox" id="checkbox-<?php echo $instrument->term_id; ?>" name="instruments[]" data-name="<?php echo $instrument->slug; ?>" value="<?php echo $instrument->slug; ?>" <?php if (isset($_GET['instruments']) && in_array($instrument->slug, $_GET['instruments'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
-                                <span class="filter-cbx ischbx w-form-label" for="checkbox-<?php echo $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
+                                <input data-filter="checkbox" type="checkbox" id="<?php echo $instrument->taxonomy . '-' . $instrument->term_id; ?>" name="instruments[]" value="<?php echo $instrument->slug; ?>" <?php if (isset($_GET['instruments']) && in_array($instrument->slug, $_GET['instruments'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
+                                <span class="filter-cbx ischbx w-form-label" for="<?php echo $instrument->taxonomy . '-' . $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
                               </label>
                             <?php endforeach; ?>
                           </div>
