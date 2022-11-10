@@ -1680,7 +1680,7 @@ const initWhatsOnFilters = () => {
         filterInput.value = '';
       }
     });
-    // changeInputHandler();
+    changeInputHandler();
   };
 
   const searchInputMiddleware = (callback) => {
