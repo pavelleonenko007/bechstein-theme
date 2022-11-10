@@ -188,7 +188,7 @@ Template name: What's on
                   $event_ids = get_posts($events_args);
 
                   if (empty($event_ids)) : ?>
-                    <p class="no-event-message">There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>
+                    <p class="no-event-message">There is no events — we're working on a concert program.</p>
                     <?php else :
                     $tickets_args = [
                       'post_type' => 'tickets',

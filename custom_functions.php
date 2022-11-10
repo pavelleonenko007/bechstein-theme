@@ -469,7 +469,7 @@ function bech_get_filtered_tickets()
 		wp_die();
 	}
 
-	$data = "<p class='no-event-message'>There is no events — we're working on a concert program. Now you can read about Bechstein Hall.</p>";
+	$data = "<p class='no-event-message'>There is no events — we're working on a concert program.</p>";
 	$selected_string = bech_get_selected_filters_string($_POST);
 
 	$events_args = [
