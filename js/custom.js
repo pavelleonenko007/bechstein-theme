@@ -329,7 +329,7 @@ class WOCalendar {
 
     if (this.fromInput) {
       this.options.beforeDispatchEvent();
-      this.fromInput.dispatchEvent(new Event('change'));
+      this.fromInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
   }
 
@@ -1648,36 +1648,7 @@ const initWhatsOnFilters = () => {
     );
     selectedTextBlock.textContent = selectedString;
   };
-  // const getTickets = async (event) => {
-  //   event?.preventDefault();
 
-  //   const formData = new FormData(filterFormNode);
-  //   const fetchOptions = {
-  //     method: 'POST',
-  //     body: formData,
-  //   };
-
-  //   try {
-  //     const data = await (
-  //       await fetch(
-  //         `${bech_var.home_url}/wp-json/tix-webhook/v1/whats-on-filter`,
-  //         fetchOptions
-  //       )
-  //     ).text();
-
-  //     console.log(data);
-
-  //     if (data.code !== 'success') {
-  //       throw new Error(data.message);
-  //     }
-
-  //     showSelectedFilters(data?.data?.selected_string);
-  //     ticketsContainer.innerHTML = data?.data?.html;
-  //   } catch (e) {
-  //     console.error(e);
-  //     alert('Something goes wrong, please try again later!');
-  //   }
-  // };
   const changeInputHandler = async (event) => {
     const target = event?.target;
     if (target?.getAttribute('name') === 'time') {
@@ -1709,7 +1680,7 @@ const initWhatsOnFilters = () => {
         filterInput.value = '';
       }
     });
-    changeInputHandler();
+    // changeInputHandler();
   };
 
   const searchInputMiddleware = (callback) => {
@@ -1724,16 +1695,16 @@ const initWhatsOnFilters = () => {
     };
   };
 
-  filterInputs.forEach((filterInput) => {
-    if (filterInput.type === 'search') {
-      filterInput.addEventListener(
-        'change',
-        searchInputMiddleware(changeInputHandler)
-      );
-    } else {
-      filterInput.addEventListener('change', changeInputHandler);
-    }
-  });
+  // filterInputs.forEach((filterInput) => {
+  //   if (filterInput.type === 'search') {
+  //     filterInput.addEventListener(
+  //       'change',
+  //       searchInputMiddleware(changeInputHandler)
+  //     );
+  //   } else {
+  //     filterInput.addEventListener('change', changeInputHandler);
+  //   }
+  // });
 
   searchInput.addEventListener(
     'input',
@@ -1754,9 +1725,54 @@ const initWhatsOnFilters = () => {
     showSelectedFilters(selectedString);
     ticketsContainer.innerHTML = ticketsHTML;
   });
+
+  filterFormNode.addEventListener('change', changeInputHandler);
 };
 
 initWhatsOnFilters();
+
+const initShowMoreFilterButtons = () => {
+  const SHOW_MORE_BUTTON_SELECTOR = '[data-button="show-all-filters"]';
+  const showAllButtons = Array.from(
+    document.querySelectorAll(SHOW_MORE_BUTTON_SELECTOR)
+  );
+  const getAllFilterButtons = async (event) => {
+    event.preventDefault();
+    const target = event.target;
+    const showAllButton = target.closest(SHOW_MORE_BUTTON_SELECTOR);
+    const { taxonomy } = showAllButton.dataset;
+    const formData = new FormData();
+
+    formData.append('action', 'get_more_filter_buttons');
+    formData.append('taxonomy', taxonomy);
+
+    try {
+      const response = await (
+        await fetch(bech_var.url, {
+          method: 'POST',
+          body: formData,
+        })
+      ).json();
+
+      console.log(response);
+
+      if (response.status !== 'success') {
+        throw new Error('Error: ' + response.message);
+      }
+
+      showAllButton.insertAdjacentHTML('beforebegin', response.data.html);
+      showAllButton.remove();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  showAllButtons.forEach((showAllButton) =>
+    showAllButton.addEventListener('click', getAllFilterButtons)
+  );
+};
+
+initShowMoreFilterButtons();
 
 // const initWhatsOnFilters2 = () => {
 //   const filterForm = document.querySelector('[data-filter="form"]');

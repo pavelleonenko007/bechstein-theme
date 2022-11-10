@@ -854,7 +854,7 @@ function bech_get_homepage_slider_items()
 		<?php }
 	} else { ?>
 		<p>There is no tickets with this filter parameters</p>
-<?php }
+		<?php }
 	$html = ob_get_clean();
 
 	wp_send_json([
@@ -965,4 +965,65 @@ function bech_get_event_duration($event_id)
 function bech_get_the_content_without_formatting($post_id)
 {
 	return strip_tags(get_the_content(null, false, $post_id), ['br', 'a', 'b', 'strong', 'i']);
+}
+
+
+add_action('wp_ajax_get_more_filter_buttons', 'bech_get_more_filter_buttons');
+add_action('wp_ajax_nopriv_get_more_filter_buttons', 'bech_get_more_filter_buttons');
+function bech_get_more_filter_buttons()
+{
+	if (isset($_POST['taxonomy']) && $_POST['taxonomy'] !== '') {
+		$taxonomy_terms_count = wp_count_terms($_POST['taxonomy']);
+		$offset = 5;
+		$number = $taxonomy_terms_count - $offset;
+		$other_filters = array_filter(get_terms([
+			'taxonomy' => $_POST['taxonomy'],
+			'number' => $number,
+			'offset' => $offset
+		]), function ($term) {
+			$events = get_posts([
+				'post_type' => 'events',
+				'post_status' => 'publish',
+				'tax_query' => [
+					[
+						'taxonomy' => $_POST['taxonomy'],
+						'field' => 'slug',
+						'terms' => $term->slug
+					]
+				]
+			]);
+
+			return !empty($events);
+		});
+
+		ob_start();
+
+		foreach ($other_filters as $index => $other_filter) : ?>
+			<label class="w-checkbox cbx-mom">
+				<div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+				<input data-filter="checkbox" type="checkbox" id="<?php echo $other_filter->taxonomy . '-' . $other_filter->term_id; ?>" name="<?php echo $other_filter->taxonomy; ?>[]" value="<?php echo $other_filter->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+				<span class="filter-cbx ischbx w-form-label" for="<?php echo $other_filter->taxonomy . '-' . $other_filter->term_id; ?>"><?php echo $other_filter->name; ?></span>
+			</label>
+<?php endforeach;
+
+		$html = ob_get_clean();
+
+		$response = [
+			'status' => 'success',
+			'data' => [
+				'html' => $html
+			]
+		];
+
+		wp_send_json($response, 200);
+		wp_die();
+	} else {
+		$response = [
+			'status' => 'bad',
+			'message' => 'Wrong taxonomy parameter',
+		];
+
+		wp_send_json($response, 400);
+		wp_die();
+	}
 }

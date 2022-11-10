@@ -88,9 +88,10 @@ Template name: What's on
                             <?php
                                 $counter++;
                               endif;
-                            endforeach; ?>
+                            endforeach;
+                            unset($index); ?>
                             <?php if (count($genres) > 5) : ?>
-                              <a href="#" class="show-all-btn">show all</a>
+                              <button type="button" class="show-all-btn" data-button="show-all-filters" data-taxonomy="<?php echo $instruments[0]->taxonomy; ?>">show all</button>
                             <?php endif; ?>
                           </div>
                         </div>
@@ -102,13 +103,19 @@ Template name: What's on
                             <div class="p-20-30">Instruments</div>
                           </div>
                           <div class="filters-bottom-div">
-                            <?php foreach ($instruments as $instrument) : ?>
-                              <label class="w-checkbox cbx-mom">
-                                <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                                <input data-filter="checkbox" type="checkbox" id="<?php echo $instrument->taxonomy . '-' . $instrument->term_id; ?>" name="instruments[]" value="<?php echo $instrument->slug; ?>" <?php if (isset($_GET['instruments']) && in_array($instrument->slug, $_GET['instruments'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
-                                <span class="filter-cbx ischbx w-form-label" for="<?php echo $instrument->taxonomy . '-' . $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
-                              </label>
-                            <?php endforeach; ?>
+                            <?php foreach ($instruments as $index => $instrument) :
+                              if ($index <= 4) : ?>
+                                <label class="w-checkbox cbx-mom">
+                                  <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                                  <input data-filter="checkbox" type="checkbox" id="<?php echo $instrument->taxonomy . '-' . $instrument->term_id; ?>" name="instruments[]" value="<?php echo $instrument->slug; ?>" <?php if (isset($_GET['instruments']) && in_array($instrument->slug, $_GET['instruments'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
+                                  <span class="filter-cbx ischbx w-form-label" for="<?php echo $instrument->taxonomy . '-' . $instrument->term_id; ?>"><?php echo $instrument->name; ?></span>
+                                </label>
+                            <?php
+                              endif;
+                            endforeach; ?>
+                            <?php if (count($instruments) > 5) : ?>
+                              <button type="button" class="show-all-btn" data-button="show-all-filters" data-taxonomy="<?php echo $instruments[0]->taxonomy; ?>">show all</button>
+                            <?php endif; ?>
                           </div>
                         </div>
                       <?php endif; ?>
