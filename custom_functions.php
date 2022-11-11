@@ -1027,3 +1027,10 @@ function bech_get_more_filter_buttons()
 		wp_die();
 	}
 }
+
+add_action('admin_menu', 'bech_register_custom_admin_links');
+function bech_register_custom_admin_links()
+{
+	add_menu_page(null, 'Header & Footer', 'edit_posts', '/themes.php?page=options#footer-&-header-fields', null, 'dashicons-align-center', 26);
+	add_menu_page(null, 'Tickets Information', 'edit_posts', '/themes.php?page=options#tickets-information', null, 'dashicons-info', 26);
+}

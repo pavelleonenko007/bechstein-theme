@@ -79,9 +79,12 @@ Template name: Copy of Bechstein Hall
                                 <?php
                                 // TODO: hide_empty => true
                                 $tags_args = [
-                                    'taxonomy'   => ['event_tag', 'genres', 'instruments'],
+                                    'taxonomy' => ['genres', 'instruments', 'event_tag'],
+                                    'orderby' => 'count',
+                                    'order' => 'DESC',
+                                    'number' => 10
                                 ];
-                                $tags      = get_terms($tags_args);
+                                $tags = get_terms($tags_args);
                                 if (!empty($tags)) : ?>
                                     <div class="filter-flex">
                                         <?php foreach ($tags as $tag) : ?>
