@@ -26,7 +26,7 @@ Template name: Simple page template
 			<section class="section wf-section">
 				<div class="head-fest _2">
 					<h1 class="h1-50-65"><?php the_title(); ?></h1>
-					test
+					<?php echo preg_replace('/<p([^>]+)?>/', '<p$1 class="p-25-40">', get_the_content()); ?>
 				</div>
 				<?php $thumbnail = get_the_post_thumbnail($post, 'full', [
 					'class'   => "img-fest",
