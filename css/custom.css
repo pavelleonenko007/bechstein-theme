@@ -835,8 +835,7 @@ p strong {
   transition: all 0.2s ease-in-out;
 }
 
-.wo-calendar__button:hover,
-.wo-calendar__button:focus {
+.wo-calendar__button:hover {
   border: 1px solid #fff;
 }
 
