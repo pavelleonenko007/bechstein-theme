@@ -1210,9 +1210,8 @@ class CalendarWidget {
     ];
     const day = date.getDate();
     const month = date.getMonth();
-    const year = date.getFullYear();
 
-    return `${day} ${abbrMonths[month]} ${year}`;
+    return `${day} ${abbrMonths[month]}`;
   }
 
   reset() {
