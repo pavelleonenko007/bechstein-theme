@@ -1936,7 +1936,24 @@ const initPressReleaseFilters = () => {
 
 initPressReleaseFilters();
 
+//<iframe src="https://tix.bechsteinhall.func.agency/en/itix" style="display: none;" onload="(function(){ console.log('iFrame Loaded'); })();" frameborder="0" id="tix"></iframe>
+
+const addTixFrame = () => {
+  const frame = document.createElement('iframe');
+  frame.setAttribute('src', 'https://tix.bechsteinhall.func.agency/en/itix');
+  frame.setAttribute('id', 'tix');
+  frame.setAttribute(
+    'onload',
+    '(function(){ console.log("iTix Loaded"); })();'
+  );
+
+  frame.style.display = 'none';
+
+  document.body.insertAdjacentElement('afterbegin', frame);
+};
+
 const initTixSessions = () => {
+  addTixFrame();
   const tixIframe = document.getElementById('tix');
   if (!tixIframe) return;
 
@@ -1990,11 +2007,6 @@ const initTixSessions = () => {
 
   // initBenefitsForUser(user);
 };
-
-window.addEventListener('load', () => {
-  $('#date-picker').datepicker();
-  // initMainBookTicketsCursor();
-});
 
 function quickSort(array = []) {
   if (array.length <= 1) {
@@ -2083,10 +2095,14 @@ const initAddToCalendarButtons = () => {
 document.addEventListener('DOMContentLoaded', () => {
   initAddToCalendarButtons();
   initLoader();
-  initTixSessions();
+  // initTixSessions();
   initSplideCarousel();
 
   window.whatsOnSlider = new WhatsOnSlider(
     Array.from(document.querySelectorAll('.wo-slide'))
   );
+});
+
+window.addEventListener('load', () => {
+  initTixSessions();
 });
