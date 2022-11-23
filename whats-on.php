@@ -201,9 +201,9 @@ Template name: What's on
                       'post_type' => 'tickets',
                       'post_status' => 'publish',
                       'numberposts' => -1,
-                      'orderby' => 'meta_value',
-                      'meta_key' => '_bechtix_ticket_start_date',
-                      'order' => 'ASC',
+                      // 'orderby' => 'meta_value',
+                      // 'meta_key' => '_bechtix_ticket_start_date',
+                      // 'order' => 'ASC',
                       'meta_query' => [
                         [
                           'key' => '_bechtix_event_relation',
@@ -237,7 +237,7 @@ Template name: What's on
 
                     $sorted_tickets = bech_sort_tickets_2($tickets);
                     // var_dump($tickets);
-                    // var_dump($sorted_tickets);
+                    var_dump($sorted_tickets);
                     // bech_sort_tickets_2($tickets);
                     foreach ($sorted_tickets as $date => $tickets) : ?>
                       <div class="cms-ul">
