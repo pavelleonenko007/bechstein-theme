@@ -99,14 +99,17 @@ function slugify(str) {
     }
   }
   // run when ACF is ready
-  acf.add_action('ready', function () {
-    // check if there is a hash
-    checkChangeHash();
-    // when a tab is clicked, update the hash in the URL
-    $('.acf-tab-wrap .acf-tab-button').on('click', function ($el) {
-      location.hash = '#' + $(this).text().toLowerCase().replaceAll(' ', '-');
-    });
+  if (typeof acf.add_action === 'function') {
+    acf.add_action('ready', function () {
+      console.log('acf ready');
+      // check if there is a hash
+      checkChangeHash();
+      // when a tab is clicked, update the hash in the URL
+      $('.acf-tab-wrap .acf-tab-button').on('click', function ($el) {
+        location.hash = '#' + $(this).text().toLowerCase().replaceAll(' ', '-');
+      });
 
-    window.addEventListener('locationchange', checkChangeHash);
-  });
+      window.addEventListener('locationchange', checkChangeHash);
+    });
+  }
 })(jQuery);

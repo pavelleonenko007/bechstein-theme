@@ -302,6 +302,37 @@ function bech_sort_tickets($tickets)
 	return $sorted_tickets;
 }
 
+function bech_sort_tickets_2(array $tickets, string $from = null, string $to = null): array
+{
+	$sorted_tickets = [];
+
+	foreach ($tickets as $ticket) {
+		$online_sale_start_dates = json_decode(get_post_meta($ticket->ID, '_bechtix_ticket_start_dates', true), true);
+
+		foreach ($online_sale_start_dates as $online_sale_start_date) {
+			$ticket_date = strtotime($online_sale_start_date['date']);
+
+			$sorted_tickets[$ticket_date][] = $ticket;
+		}
+	}
+
+	if (!empty($from)) {
+		$sorted_tickets = array_filter($sorted_tickets, function ($key) use ($from) {
+			return $key >= strtotime($from);
+		}, ARRAY_FILTER_USE_KEY);
+	}
+
+	if (!empty($to)) {
+		$sorted_tickets = array_filter($sorted_tickets, function ($key) use ($to) {
+			return $key <= strtotime($to);
+		}, ARRAY_FILTER_USE_KEY);
+	}
+
+	ksort($sorted_tickets, SORT_NUMERIC);
+
+	return $sorted_tickets;
+}
+
 function bech_get_ticket_from_to_price($post_id)
 {
 	$from_price = get_field('_bechtix_min_price', $post_id);
@@ -359,8 +390,6 @@ function bech_get_custom_taxonomies($taxonomy)
 			]
 		]);
 
-		// var_dump([$term->slug => count($tickets)]);
-
 		return !empty($tickets);
 	});
 
@@ -389,41 +418,64 @@ function bech_get_specials_filters()
 	return array_unique($festivals, SORT_REGULAR);
 }
 
-function bech_get_selected_filters_string($params)
+function bech_get_selected_filters_string(array $params): string
 {
-	$selected_string = '';
+	$selected_params = [];
 
-	if (!empty($params['from'])) {
-		$dates_values = array_values(array_filter($params, function ($value, $param) {
-			return $param === 'from' || ($param === 'to' && $value !== '');
-		}, ARRAY_FILTER_USE_BOTH));
-
-		$formatted_dates = array_map(function ($date) {
-			$date_time = new DateTime($date);
-			return $date_time->format('j M Y');
-		}, $dates_values);
-
-		$selected_string .= implode('–', $formatted_dates) . ', ';
-	}
-
-	foreach ($params as $prop => $param) {
-		if ($prop === 'genres' || $prop === 'instruments' || $prop === 'time' || $prop === 'festival' || $prop === 'event_tag' || $prop === 's') {
-			if ($prop === 'festival') {
-				foreach ($param as $festival_id) {
-					$festival = get_post($festival_id);
-					$selected_string .= $festival->post_title;
-					$selected_string .= ', ';
+	foreach ($params as $key => $param) {
+		if (($key === 'from' || $key === 'to') && $param !== '') {
+			$selected_params[] = gmdate('j M Y', strtotime($param));
+		} elseif ($key === 'festival') {
+			foreach ($param as $festival_id) {
+				$festival = get_post($festival_id);
+				$selected_params[] = $festival->post_title;
+			}
+		} elseif ($key === 'genres' || $key === 'instruments' || $key === 'time' || $key === 'festival' || $key === 'event_tag' || $key === 's') {
+			if (is_array($param)) {
+				foreach ($param as $values) {
+					$selected_params[] = $values;
 				}
-			} else {
-				$selected_string .= is_array($param) ? implode(', ', $param) : $param;
-				$selected_string .= ', ';
+			}
+
+			if (is_string($param) && $param !== '') {
+				$selected_params[] = $param;
 			}
 		}
 	}
 
-	$selected_string = mb_substr($selected_string, 0, -2);
+	return join(', ', $selected_params);
 
-	return $selected_string;
+	// if (!empty($params['from'])) {
+	// 	$dates_values = array_values(array_filter($params, function ($value, $param) {
+	// 		return $param === 'from' || ($param === 'to' && $value !== '');
+	// 	}, ARRAY_FILTER_USE_BOTH));
+
+	// 	$formatted_dates = array_map(function ($date) {
+	// 		$date_time = new DateTime($date);
+	// 		return $date_time->format('j M Y');
+	// 	}, $dates_values);
+
+	// 	$selected_string .= implode('–', $formatted_dates) . ', ';
+	// }
+
+	// foreach ($params as $prop => $param) {
+	// 	if ($prop === 'genres' || $prop === 'instruments' || $prop === 'time' || $prop === 'festival' || $prop === 'event_tag' || $prop === 's') {
+	// 		if ($prop === 'festival') {
+	// 			foreach ($param as $festival_id) {
+	// 				$festival = get_post($festival_id);
+	// 				$selected_string .= $festival->post_title;
+	// 				$selected_string .= ', ';
+	// 			}
+	// 		} else {
+	// 			$selected_string .= is_array($param) ? implode(', ', $param) : $param;
+	// 			$selected_string .= ', ';
+	// 		}
+	// 	}
+	// }
+
+	// $selected_string = mb_substr($selected_string, 0, -2);
+
+	// return $selected_string;
 }
 
 function bech_get_smaller_date($param)
@@ -534,9 +586,7 @@ function bech_get_filtered_tickets()
 		'post_type' => 'tickets',
 		'post_status' => 'publish',
 		'numberposts' => -1,
-		'orderby' => 'meta_value',
-		'meta_key' => '_bechtix_ticket_start_date',
-		'order' => 'ASC',
+		'posts_per_page' => -1,
 		'meta_query' => [
 			[
 				'key' => '_bechtix_event_relation',
@@ -546,10 +596,20 @@ function bech_get_filtered_tickets()
 		]
 	];
 
+	if (!empty($_POST['from']) || isset($_POST['time'])) {
+		function my_posts_where($where)
+		{
+			$where = str_replace("meta_key = 'online_dates_$", "meta_key LIKE 'online_dates_%", $where);
+			return $where;
+		}
+		add_filter('posts_where', 'my_posts_where');
+	}
+
 	if (!empty($_POST['from'])) {
 		$dt = new DateTime($_POST['from']);
+
 		$tickets_args['meta_query'][] = [
-			'key'     => '_bechtix_ticket_start_date',
+			'key'     => 'online_dates_$_date',
 			'value'   => $dt->format('Y-m-d H:i:s'),
 			'compare' => '>=',
 			'type'    => 'DATETIME'
@@ -558,7 +618,7 @@ function bech_get_filtered_tickets()
 		if (!empty($_POST['to'])) {
 			$dt = new DateTime($_POST['to']);
 			$tickets_args['meta_query'][] = [
-				'key'     => '_bechtix_ticket_start_date',
+				'key'     => 'online_dates_$_date',
 				'value'   => $dt->format('Y-m-d H:i:s'),
 				'compare' => '<=',
 				'type'    => 'DATETIME'
@@ -571,7 +631,7 @@ function bech_get_filtered_tickets()
 				$next_date = new DateTime('tomorrow');
 
 				$tickets_args['meta_query'][] = [
-					'key'     => '_bechtix_ticket_start_date',
+					'key'     => 'online_dates_$_date',
 					'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
@@ -582,7 +642,7 @@ function bech_get_filtered_tickets()
 				$next_date->modify('+1 day');
 
 				$tickets_args['meta_query'][] = [
-					'key'     => '_bechtix_ticket_start_date',
+					'key'     => 'online_dates_$_date',
 					'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
@@ -596,7 +656,7 @@ function bech_get_filtered_tickets()
 				}, iterator_to_array($periods));
 
 				$tickets_args['meta_query'][] = [
-					'key'     => '_bechtix_ticket_start_date',
+					'key'     => 'online_dates_$_date',
 					'value'   => [$days[0], $days[7]],
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
@@ -608,7 +668,7 @@ function bech_get_filtered_tickets()
 					return $datetime->format('Y-m-d H:i:s');
 				}, iterator_to_array($periods));
 				$tickets_args['meta_query'][] = [
-					'key'     => '_bechtix_ticket_start_date',
+					'key'     => 'online_dates_$_date',
 					'value'   => $days,
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
@@ -617,7 +677,14 @@ function bech_get_filtered_tickets()
 		}
 	}
 
-	$tickets = get_posts($tickets_args);
+	$tickets_query = new WP_Query($tickets_args);
+	// var_dump($tickets_query->request, $tickets_query->posts);
+	// exit;
+
+	// $tickets = get_posts($tickets_args);
+	$tickets = $tickets_query->posts;
+	// var_dump($tickets, $tickets_query->posts);
+	// exit;
 
 	if (!empty($_POST['time']) && empty($_POST['from'])) {
 		$date_map = [
@@ -644,15 +711,15 @@ function bech_get_filtered_tickets()
 		<?php
 		$data = ob_get_clean();
 	} else {
-		$sorted_tickets = bech_sort_tickets($tickets);
+		$sorted_tickets = bech_sort_tickets_2($tickets, $_POST['from'], $_POST['to']);
 		ob_start();
 		if (!empty($sorted_tickets)) :
 			foreach ($sorted_tickets as $date => $tickets) :
 		?>
 				<div class="cms-ul">
 					<div class="cms-heading">
-						<h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
-						<h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
+						<h2 class="h2-cms"><?php echo date('d F', $date); ?></h2>
+						<h2 class="h2-cms day"><?php echo date('l', $date); ?></h2>
 					</div>
 					<div class="cms-ul-events">
 						<?php foreach ($tickets as $ticket) :
@@ -1035,7 +1102,7 @@ function bech_register_custom_admin_links()
 	add_menu_page(null, 'Tickets Information', 'edit_posts', '/themes.php?page=options#tickets-information', null, 'dashicons-info', 26);
 }
 
-add_filter('wp_insert_post_data', function ($data, $postarr) {
-	$data['post_content'] = wpautop($data['post_content']);
-	return $data;
-}, 10, 2);
+// add_filter('wp_insert_post_data', function ($data, $postarr) {
+// 	$data['post_content'] = wpautop($data['post_content']);
+// 	return $data;
+// }, 10, 2);

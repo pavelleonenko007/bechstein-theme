@@ -20,21 +20,25 @@ Template name: Whats on - search results
       return $event->ID;
     }, $wp_query->posts);
 
-    $ticket_objects = get_posts([
-      'post_type' => 'tickets',
-      'post_status' => 'publish',
-      'numberposts' => -1,
-      'orderby' => 'meta_value',
-      'meta_key' => '_bechtix_ticket_start_date',
-      'order' => 'ASC',
-      'meta_query' => [
-        [
-          'key' => '_bechtix_event_relation',
-          'value' => $event_ids,
-          'compare' => 'IN'
+    $ticket_objects = [];
+
+    if (!empty($event_ids)) {
+      $ticket_objects = get_posts([
+        'post_type' => 'tickets',
+        'post_status' => 'publish',
+        'numberposts' => -1,
+        'orderby' => 'meta_value',
+        'meta_key' => '_bechtix_ticket_start_date',
+        'order' => 'ASC',
+        'meta_query' => [
+          [
+            'key' => '_bechtix_event_relation',
+            'value' => $event_ids,
+            'compare' => 'IN'
+          ]
         ]
-      ]
-    ]);
+      ]);
+    }
     ?>
     <main class="wrapper">
       <section class="section wf-section">
@@ -46,14 +50,14 @@ Template name: Whats on - search results
               <input type="search" class="search0page-line w-input" autofocus="true" maxlength="256" value="<?php echo get_search_query() ?>" name="s" placeholder="search by keyword…" id="search" required>
               <input type="submit" value="Search" class="search-button w-button">
             </form>
-            <?php $sorted_tickets = bech_sort_tickets($ticket_objects); ?>
-            <div class="cms-tems">
-              <?php if (!empty($sorted_tickets)) :
-                foreach ($sorted_tickets as $date => $tickets) : ?>
+            <?php $sorted_tickets = !empty($ticket_objects) ? bech_sort_tickets_2($ticket_objects) : []; ?>
+            <?php if (!empty($sorted_tickets)) : ?>
+              <div class="cms-tems">
+                <?php foreach ($sorted_tickets as $date => $tickets) : ?>
                   <div class="cms-ul">
                     <div class="cms-heading">
-                      <h2 class="h2-cms"><?php echo date('d F', strtotime($date)); ?></h2>
-                      <h2 class="h2-cms day"><?php echo date('l', strtotime($date)); ?></h2>
+                      <h2 class="h2-cms"><?php echo date('d F', $date); ?></h2>
+                      <h2 class="h2-cms day"><?php echo date('l', $date); ?></h2>
                     </div>
                     <div class="cms-ul-events">
                       <?php foreach ($tickets as $ticket) : ?>
@@ -63,10 +67,11 @@ Template name: Whats on - search results
                       <?php endforeach; ?>
                     </div>
                   </div>
-              <?php endforeach;
-              endif; ?>
-            </div>
-            <h2 class="h2-cms no-events">there's no events</h2>
+                <?php endforeach; ?>
+              </div>
+            <?php else : ?>
+              <div class="h2-cms no-events">there's no events</div>
+            <?php endif; ?>
           </div>
         </div>
       </section>
