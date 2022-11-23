@@ -237,7 +237,7 @@ Template name: What's on
 
                     $sorted_tickets = bech_sort_tickets_2($tickets);
                     // var_dump($tickets);
-                    var_dump($sorted_tickets);
+                    // var_dump($sorted_tickets);
                     // bech_sort_tickets_2($tickets);
                     foreach ($sorted_tickets as $date => $tickets) : ?>
                       <div class="cms-ul">

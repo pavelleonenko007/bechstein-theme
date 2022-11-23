@@ -307,7 +307,7 @@ function bech_sort_tickets_2(array $tickets, string $from = null, string $to = n
 	$sorted_tickets = [];
 
 	foreach ($tickets as $ticket) {
-		$online_sale_start_dates = json_decode(get_post_meta($ticket->ID, '_bechtix_ticket_start_dates', true), true);
+		$online_sale_start_dates = get_field('online_dates', $ticket->ID);
 
 		foreach ($online_sale_start_dates as $online_sale_start_date) {
 			$ticket_date = strtotime($online_sale_start_date['date']);
