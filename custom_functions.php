@@ -289,46 +289,18 @@ function bech_webhook_callback(WP_REST_Request $request)
 	return $rest_response;
 }
 
-function bech_sort_tickets($tickets)
+function bech_sort_tickets(array $tickets): array
 {
 	$sorted_tickets = [];
 
 	foreach ($tickets as $ticket) {
-		$date_time                        = new DateTime(get_field('_bechtix_ticket_start_date', $ticket->ID));
-		$ticket_date                      = $date_time->format('Y-m-d');
-		$sorted_tickets[$ticket_date][] = $ticket;
+		$date_time = new DateTime(get_post_meta($ticket->ID, '_bechtix_ticket_start_date', true));
+		$ticket_date = $date_time->format('Y-m-d');
+		$ticket_date_unix = strtotime($ticket_date);
+		$sorted_tickets[$ticket_date_unix][] = $ticket;
 	}
 
-	return $sorted_tickets;
-}
-
-function bech_sort_tickets_2(array $tickets, string $from = null, string $to = null): array
-{
-	$sorted_tickets = [];
-
-	foreach ($tickets as $ticket) {
-		$online_sale_start_dates = get_field('online_dates', $ticket->ID);
-
-		foreach ($online_sale_start_dates as $online_sale_start_date) {
-			$ticket_date = strtotime($online_sale_start_date['date']);
-
-			$sorted_tickets[$ticket_date][] = $ticket;
-		}
-	}
-
-	if (!empty($from)) {
-		$sorted_tickets = array_filter($sorted_tickets, function ($key) use ($from) {
-			return $key >= strtotime($from);
-		}, ARRAY_FILTER_USE_KEY);
-	}
-
-	if (!empty($to)) {
-		$sorted_tickets = array_filter($sorted_tickets, function ($key) use ($to) {
-			return $key <= strtotime($to);
-		}, ARRAY_FILTER_USE_KEY);
-	}
-
-	ksort($sorted_tickets, SORT_NUMERIC);
+	ksort($sorted_tickets);
 
 	return $sorted_tickets;
 }
@@ -478,6 +450,13 @@ function bech_get_selected_filters_string(array $params): string
 	// return $selected_string;
 }
 
+/**
+ * Event -> 
+ * 	[
+ * 		
+ * 	]
+ */
+
 function bech_get_smaller_date($param)
 {
 	if ($param === 'today' || $param === 'tomorrow') {
@@ -527,7 +506,7 @@ function bech_get_filtered_tickets()
 	$events_args = [
 		'post_type' => 'events',
 		'post_status' => 'publish',
-		'numberposts' => 10,
+		'posts_per_page' => -1,
 		'fields' => 'ids',
 	];
 
@@ -577,6 +556,7 @@ function bech_get_filtered_tickets()
 				'status'          => 200,
 				'html'            => $data,
 				'selected_string' => $selected_string,
+				'max_pages' => 1
 			]
 		], 200);
 		wp_die();
@@ -585,8 +565,10 @@ function bech_get_filtered_tickets()
 	$tickets_args = [
 		'post_type' => 'tickets',
 		'post_status' => 'publish',
-		'numberposts' => -1,
-		'posts_per_page' => -1,
+		'posts_per_page' => 10,
+		'orderby' => 'meta_value',
+		'meta_key' => '_bechtix_ticket_start_date',
+		'order' => 'ASC',
 		'meta_query' => [
 			[
 				'key' => '_bechtix_event_relation',
@@ -596,20 +578,15 @@ function bech_get_filtered_tickets()
 		]
 	];
 
-	if (!empty($_POST['from']) || isset($_POST['time'])) {
-		function my_posts_where($where)
-		{
-			$where = str_replace("meta_key = 'online_dates_$", "meta_key LIKE 'online_dates_%", $where);
-			return $where;
-		}
-		add_filter('posts_where', 'my_posts_where');
+	if (isset($_POST['paged'])) {
+		$tickets_args['paged'] = $_POST['paged'];
 	}
 
 	if (!empty($_POST['from'])) {
 		$dt = new DateTime($_POST['from']);
 
 		$tickets_args['meta_query'][] = [
-			'key'     => 'online_dates_$_date',
+			'key'     => '_bechtix_ticket_start_date',
 			'value'   => $dt->format('Y-m-d H:i:s'),
 			'compare' => '>=',
 			'type'    => 'DATETIME'
@@ -618,7 +595,7 @@ function bech_get_filtered_tickets()
 		if (!empty($_POST['to'])) {
 			$dt = new DateTime($_POST['to']);
 			$tickets_args['meta_query'][] = [
-				'key'     => 'online_dates_$_date',
+				'key'     => '_bechtix_ticket_start_date',
 				'value'   => $dt->format('Y-m-d H:i:s'),
 				'compare' => '<=',
 				'type'    => 'DATETIME'
@@ -631,7 +608,7 @@ function bech_get_filtered_tickets()
 				$next_date = new DateTime('tomorrow');
 
 				$tickets_args['meta_query'][] = [
-					'key'     => 'online_dates_$_date',
+					'key'     => '_bechtix_ticket_start_date',
 					'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
@@ -642,7 +619,7 @@ function bech_get_filtered_tickets()
 				$next_date->modify('+1 day');
 
 				$tickets_args['meta_query'][] = [
-					'key'     => 'online_dates_$_date',
+					'key'     => '_bechtix_ticket_start_date',
 					'value'   => [$datetime->format('Y-m-d H:i:s'), $next_date->format('Y-m-d H:i:s')],
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
@@ -656,7 +633,7 @@ function bech_get_filtered_tickets()
 				}, iterator_to_array($periods));
 
 				$tickets_args['meta_query'][] = [
-					'key'     => 'online_dates_$_date',
+					'key'     => '_bechtix_ticket_start_date',
 					'value'   => [$days[0], $days[7]],
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
@@ -668,7 +645,7 @@ function bech_get_filtered_tickets()
 					return $datetime->format('Y-m-d H:i:s');
 				}, iterator_to_array($periods));
 				$tickets_args['meta_query'][] = [
-					'key'     => 'online_dates_$_date',
+					'key'     => '_bechtix_ticket_start_date',
 					'value'   => $days,
 					'compare' => 'BETWEEN',
 					'type'    => 'DATETIME'
@@ -678,15 +655,10 @@ function bech_get_filtered_tickets()
 	}
 
 	$tickets_query = new WP_Query($tickets_args);
-	// var_dump($tickets_query->request, $tickets_query->posts);
-	// exit;
-
-	// $tickets = get_posts($tickets_args);
 	$tickets = $tickets_query->posts;
-	// var_dump($tickets, $tickets_query->posts);
-	// exit;
 
 	if (!empty($_POST['time']) && empty($_POST['from'])) {
+		// $sorted_tickets = bech_sort_tickets($tickets, false);
 		$date_map = [
 			'today' => 'Today',
 			'tomorrow' => 'Tomorrow',
@@ -703,7 +675,7 @@ function bech_get_filtered_tickets()
 				<?php foreach ($tickets as $ticket) :
 				?>
 					<?php get_template_part('inc/components/whats-on-ticket', '', [
-						'ticket' => $ticket->ID
+						'ticket' => $ticket->ID,
 					]); ?>
 				<?php endforeach; ?>
 			</div>
@@ -711,7 +683,7 @@ function bech_get_filtered_tickets()
 		<?php
 		$data = ob_get_clean();
 	} else {
-		$sorted_tickets = bech_sort_tickets_2($tickets, $_POST['from'], $_POST['to']);
+		$sorted_tickets = bech_sort_tickets($tickets);
 		ob_start();
 		if (!empty($sorted_tickets)) :
 			foreach ($sorted_tickets as $date => $tickets) :
@@ -743,6 +715,7 @@ function bech_get_filtered_tickets()
 			'status'          => 200,
 			'html'            => $data,
 			'selected_string' => $selected_string,
+			'max_pages' => $tickets_query->max_num_pages
 		]
 	], 200);
 	wp_die();

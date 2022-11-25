@@ -154,6 +154,7 @@ Template name: What's on
                           </div>
                         </div>
                       <?php endif; ?>
+                      <input type="hidden" name="paged" value="1" />
                       <input type="hidden" name="action" value="get_filtered_tickets">
                       <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
                       <input type="submit" value="Submit" data-wait="Please wait..." class="hidden-input w-button" />
@@ -200,10 +201,10 @@ Template name: What's on
                     $tickets_args = [
                       'post_type' => 'tickets',
                       'post_status' => 'publish',
-                      'numberposts' => -1,
-                      // 'orderby' => 'meta_value',
-                      // 'meta_key' => '_bechtix_ticket_start_date',
-                      // 'order' => 'ASC',
+                      'posts_per_page' => 10,
+                      'orderby' => 'meta_value',
+                      'meta_key' => '_bechtix_ticket_start_date',
+                      'order' => 'ASC',
                       'meta_query' => [
                         [
                           'key' => '_bechtix_event_relation',
@@ -233,12 +234,11 @@ Template name: What's on
                       ];
                     }
 
-                    $tickets = get_posts($tickets_args);
+                    $tickets_query = new WP_Query($tickets_args);
+                    $tickets = $tickets_query->posts;
 
-                    $sorted_tickets = bech_sort_tickets_2($tickets);
-                    // var_dump($tickets);
-                    // var_dump($sorted_tickets);
-                    // bech_sort_tickets_2($tickets);
+                    $sorted_tickets = bech_sort_tickets($tickets);
+
                     foreach ($sorted_tickets as $date => $tickets) : ?>
                       <div class="cms-ul">
                         <div class="cms-heading">
@@ -256,6 +256,7 @@ Template name: What's on
                   <?php endforeach;
                   endif; ?>
                 </div>
+                <div data-type="load_more" data-max-pages="<?php echo $tickets_query->max_num_pages; ?>" style="width: 100%; height: 0px; background: green"></div>
               </div>
             </div>
         <?php endwhile;

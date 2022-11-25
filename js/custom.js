@@ -1100,16 +1100,16 @@ const getTickets = async (filters) => {
       })
     ).json();
 
-    console.log(response);
-
     if (response.status !== 'success') {
       throw new Error(data.message);
     }
 
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    alert('Error: ' + error.message);
+    return response;
+  } catch (e) {
+    return {
+      status: 'bad',
+      message: e.message,
+    };
   }
 };
 
@@ -1658,11 +1658,18 @@ const initWhatsOnFilters = () => {
     }
     const formData = new FormData(filterFormNode);
     const response = await getTickets(formData);
-    const ticketsHTML = response.html;
-    const selectedString = response?.selected_string;
 
-    showSelectedFilters(selectedString);
-    ticketsContainer.innerHTML = ticketsHTML;
+    if (response.status !== 'success') {
+      window.alert(`Error: ${response.message}`);
+    }
+
+    console.log(response);
+
+    // const ticketsHTML = response.data.html;
+    // const selectedString = response?.data?.selected_string;
+
+    // showSelectedFilters(selectedString);
+    // ticketsContainer.innerHTML = ticketsHTML;
   };
 
   const clearFilters = (event) => {
@@ -1705,12 +1712,12 @@ const initWhatsOnFilters = () => {
   //   }
   // });
 
-  searchInput.addEventListener(
-    'input',
-    debounce((event) => {
-      event.target.dispatchEvent(new Event('change', { bubbles: true }));
-    }, 500)
-  );
+  // searchInput.addEventListener(
+  //   'input',
+  //   debounce((event) => {
+  //     event.target.dispatchEvent(new Event('change', { bubbles: true }));
+  //   }, 500)
+  // );
 
   clearFiltersButton.addEventListener('click', clearFilters);
 
@@ -1728,7 +1735,114 @@ const initWhatsOnFilters = () => {
   filterFormNode.addEventListener('change', changeInputHandler);
 };
 
-initWhatsOnFilters();
+// initWhatsOnFilters();
+
+function initWhatsOnFilters3() {
+  const filterForm = document.querySelector('[data-filter="form"]');
+
+  if (!filterForm) return;
+
+  const calendarWidget = new CalendarWidget('calendar-widget');
+  const filters = Array.from(
+    filterForm.querySelectorAll(
+      'input:not([type="hidden"]):not([type="submit"])'
+    )
+  );
+  const pageNumberInput = filterForm.querySelector('[name="paged"]');
+  const clearFiltersButton = document.getElementById('clear');
+  const loadMoreTriggerNode = document.querySelector('[data-type="load_more"]');
+  async function submitFormCallback(event) {
+    event?.preventDefault();
+
+    const formData = new FormData(filterForm);
+
+    try {
+      const response = await getTickets(formData);
+
+      if (response.status !== 'success') {
+        throw new Error(response.message);
+      }
+
+      console.log(response);
+
+      const ticketsContainer = document.querySelector('.cms-tems');
+      const ticketsHTML = response.data.html;
+
+      if (Number(pageNumberInput.value) > 1) {
+        ticketsContainer.insertAdjacentHTML('beforeend', ticketsHTML);
+      } else {
+        ticketsContainer.innerHTML = ticketsHTML;
+      }
+
+      showSelectedFilters(response.data.selected_string);
+      loadMoreTriggerNode.setAttribute(
+        'data-max-pages',
+        response.data.max_pages
+      );
+    } catch (e) {
+      window.alert(e.message);
+    }
+  }
+  const clearFilters = (event) => {
+    event?.preventDefault();
+    filterForm.reset();
+    calendarWidget.reset();
+    filters.forEach((filter) => {
+      if (filter.type === 'checkbox' || filter.type === 'radio') {
+        filter.removeAttribute('checked');
+        filter.checked = false;
+      } else {
+        filter.value = '';
+      }
+    });
+
+    pageNumberInput.value = 1;
+    submitFormCallback();
+  };
+  const showSelectedFilters = (selectedString = '') => {
+    const selectedBlock = document.getElementById('selected-filters');
+    const selectedTextBlock = selectedBlock?.querySelector(
+      '[data-filter="choosen"]'
+    );
+
+    selectedBlock.classList.toggle(
+      'filters-line-text--active',
+      !!selectedString
+    );
+    selectedTextBlock.textContent = selectedString;
+  };
+  const changeInputsHandler = (event) => {
+    pageNumberInput.value = 1;
+    submitFormCallback();
+  };
+
+  function initScrollPagination() {
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const maxPages = Number(entry.target.dataset.maxPages);
+          const currentPage = Number(pageNumberInput.value);
+
+          if (currentPage < maxPages) {
+            pageNumberInput.value = currentPage + 1;
+            submitFormCallback();
+          }
+        }
+      });
+    });
+
+    observer.observe(loadMoreTriggerNode);
+  }
+
+  initScrollPagination();
+
+  filterForm.addEventListener('change', changeInputsHandler);
+  filterForm.addEventListener('submit', submitFormCallback);
+
+  clearFiltersButton.addEventListener('click', clearFilters);
+}
+
+initWhatsOnFilters3();
 
 const initShowMoreFilterButtons = () => {
   const SHOW_MORE_BUTTON_SELECTOR = '[data-button="show-all-filters"]';
