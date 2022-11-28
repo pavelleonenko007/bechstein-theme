@@ -6,6 +6,21 @@ $purchase_urls = get_post_meta($post->ID, '_bechtix_purchase_urls', true);
 $purchase_urls_normal = json_decode($purchase_urls, true);
 $benefits_json = get_post_meta($post->ID, '_bechtix_ticket_benefits', true);
 $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
+$online_sale_start = get_post_meta($post->ID, '_bechtix_ticket_online_sale_start', true);
+$is_priority_booking_time = bech_is_priority_booking_time($post->ID);
+
+/**
+ * 
+ * Ticket statuses:
+ * 
+ *  1. Canceled [3]
+ *  2. Sold Out [2]
+ *  3. Not Scheduled [4]
+ *  4. None [0]
+ *   4.1. Priority Booking
+ *   4.2. Free sales
+ *    4.2.1. Few tickets [1]
+ */
 ?>
 <div class="cms-li" data-ticket_benefits="<?php echo $benefits; ?>">
   <a href="<?php echo get_the_permalink($event->ID); ?>" class="cms-li_mom-img">
@@ -41,8 +56,13 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
     </div>
     <div class="cms-li_actions-div">
       <?php
-      if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') : ?>
-        <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
+      if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') :
+        if ($is_priority_booking_time) : ?>
+          <a bgline="1" class="booktickets-btn priority">
+            <strong>priority booking only</strong>
+          </a>
+        <?php endif; ?>
+        <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn <?php echo $is_priority_booking_time ? 'none' : ''; ?>">
           <strong>Book tickets</strong>
         </a>
       <?php else : ?>
@@ -56,15 +76,23 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
       </a>
     </div>
     <?php if ($sale_status === '' || $sale_status === '0') : ?>
-      <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($post->ID); ?></div>
+      <?php if ($is_priority_booking_time) : ?>
+        <div class="cms-li_price">free sales from <?php echo date('j F', strtotime($online_sale_start)); ?></div>
+      <?php endif; ?>
+      <div class="cms-li_price <?php echo $is_priority_booking_time ? 'none' : ''; ?>"><?php echo bech_get_ticket_from_to_price($post->ID); ?></div>
     <?php elseif ($sale_status === '1') : ?>
       <div class="cms-li_price" style="color: #B47171;"><?php echo bech_get_sale_status_string_value($sale_status); ?></div>
     <?php endif; ?>
   </div>
   <div class="cms-li_actions-div biger">
     <?php
-    if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') : ?>
-      <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn">
+    if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') :
+      if ($is_priority_booking_time) : ?>
+        <a bgline="1" class="booktickets-btn priority">
+          <strong>priority booking only</strong>
+        </a>
+      <?php endif; ?>
+      <a bgline="1" href="<?php echo $purchase_urls_normal[0]['link']; ?>" class="booktickets-btn <?php echo $is_priority_booking_time ? 'none' : ''; ?>">
         <strong>Book tickets</strong>
       </a>
     <?php else : ?>
@@ -73,6 +101,9 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
       </a>
     <?php endif; ?>
     <?php if ($sale_status === '' || $sale_status === '0') : ?>
+      <?php if ($is_priority_booking_time) : ?>
+        <div class="cms-li_price <?php echo $is_priority_booking_time ? 'none' : ''; ?>">free sales from <?php echo date('j F', strtotime($online_sale_start)); ?></div>
+      <?php endif; ?>
       <div class="cms-li_price"><?php echo bech_get_ticket_from_to_price($post->ID); ?></div>
     <?php elseif ($sale_status === '1') : ?>
       <div class="cms-li_price" style="color: #B47171;"><?php echo bech_get_sale_status_string_value($sale_status); ?></div>

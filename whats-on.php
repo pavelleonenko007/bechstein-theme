@@ -242,7 +242,7 @@ Template name: What's on
                     foreach ($sorted_tickets as $date => $tickets) : ?>
                       <div class="cms-ul">
                         <div class="cms-heading">
-                          <h2 class="h2-cms"><?php echo date('d F', $date); ?></h2>
+                          <h2 class="h2-cms"><?php echo date('d F Y', $date); ?></h2>
                           <h2 class="h2-cms day"><?php echo date('l', $date); ?></h2>
                         </div>
                         <div class="cms-ul-events">

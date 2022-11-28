@@ -690,7 +690,7 @@ function bech_get_filtered_tickets()
 		?>
 				<div class="cms-ul">
 					<div class="cms-heading">
-						<h2 class="h2-cms"><?php echo date('d F', $date); ?></h2>
+						<h2 class="h2-cms"><?php echo date('d F Y', $date); ?></h2>
 						<h2 class="h2-cms day"><?php echo date('l', $date); ?></h2>
 					</div>
 					<div class="cms-ul-events">
@@ -1079,3 +1079,47 @@ function bech_register_custom_admin_links()
 // 	$data['post_content'] = wpautop($data['post_content']);
 // 	return $data;
 // }, 10, 2);
+
+/**
+ * [
+ * 	[
+ * 		'date' => DateTime,
+ * 		'customer_id' => int|''
+ * 	]
+ * ]
+ */
+
+function bech_get_min_date_index(array $dates): int
+{
+	$index = 0;
+	$min_date = strtotime($dates[0]['date']);
+
+	for ($i = 1; $i < count($dates); $i++) {
+		if (strtotime($dates[$i]['date']) < $min_date) {
+			$index = $i;
+		}
+	}
+
+	return $index;
+}
+
+function bech_is_priority_booking_time(int $post_id): bool
+{
+	$online_sale_start_dates = get_field('online_dates', $post_id) ?? [['date' => get_post_meta($post_id, '_bechtix_ticket_online_sale_start', true)]];
+
+	$min_date_index = bech_get_min_date_index($online_sale_start_dates);
+
+	if (empty($online_sale_start_dates[$min_date_index]['customer_id'])) {
+		return false;
+	}
+
+	$time_now = time();
+	$benefit_sale_time = strtotime($online_sale_start_dates[$min_date_index]);
+	$free_sales_date_time = strtotime(get_post_meta($post_id, '_bechtix_ticket_online_sale_start', true));
+
+	if ($time_now >= $benefit_sale_time && $time_now < $free_sales_date_time) {
+		return true;
+	}
+
+	return false;
+}
