@@ -1116,7 +1116,7 @@ function bech_is_priority_booking_time(int $post_id): bool
 	}
 
 	$time_now = time();
-	$benefit_sale_time = strtotime($online_sale_start_dates[$min_date_index]);
+	$benefit_sale_time = strtotime($online_sale_start_dates[$min_date_index]['date']);
 	$free_sales_date_time = strtotime(get_post_meta($post_id, '_bechtix_ticket_online_sale_start', true));
 
 	if ($time_now >= $benefit_sale_time && $time_now < $free_sales_date_time) {

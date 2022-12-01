@@ -44,7 +44,7 @@ $is_priority_booking_time = bech_is_priority_booking_time($post->ID);
       <div class="p-30-45"><?php echo bech_get_ticket_times($post->ID); ?></div>
       <div class="p-17-25 italic"><?php echo bech_get_event_duration($event->ID); ?></div>
     </div>
-    <a href="<?php echo get_the_permalink($event->ID); ?>" class="p-20-30 title-event"><?php echo get_the_title($post); ?></a>
+    <a href="<?php echo get_the_permalink($event->ID); ?>" class="p-20-30 title-event"><?php echo get_the_title($post); ?> <?php echo $post->ID; ?></a>
     <div class="p-17-25"><?php echo get_the_content(null, null, $event); ?></div>
     <div class="cms-li_tags-div">
       <?php $tags = wp_get_object_terms($event->ID, ['event_tag', 'genres', 'instruments']);
