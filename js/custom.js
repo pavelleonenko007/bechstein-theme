@@ -1,3 +1,103 @@
+class SvgLoader {
+  static instance;
+
+  constructor() {
+    if (SvgLoader.instance) {
+      return SvgLoader.instance;
+    }
+    this.svg = document.getElementById('svg');
+    this.path = this.svg.querySelector('#path');
+    this.timeLine = gsap.timeline();
+    this.beforeCurve = 'M0 0 V100 Q50 95, 100 100 V100 0 Z';
+    this.curve = 'M0 0 V100 Q50 50, 100 100 V100 0 Z';
+    this.revertCurve = 'M0 0 V0 Q50 20, 100 0 V0 0 Z';
+    this.revertCurveBeforeEnd = 'M0 0 V90 Q50 110, 100 90 V0 0 Z';
+    this.revertCurveEnd = 'M0 0 V100 Q50 100, 100 100 V100 0 Z';
+    this.flat = 'M0 0 V0 Q50 0, 100 0 V0 0 Z';
+    SvgLoader.instance = this;
+  }
+
+  static create() {
+    return new SvgLoader();
+  }
+
+  open(asMenuBackground = false) {
+    this.svg.style.zIndex = asMenuBackground ? 1 : 2;
+    this.timeLine
+      .to(this.path, {
+        duration: 0.5,
+        attr: {
+          d: this.beforeCurve,
+        },
+        ease: 'power2.easeIn',
+      })
+      .to(this.path, {
+        duration: 0.4,
+        attr: {
+          d: this.curve,
+        },
+        ease: 'power2.easeIn',
+      })
+      .to(this.path, {
+        duration: 0.8,
+        attr: { d: this.flat },
+        ease: 'power2.easeOut',
+      })
+      .to(this.path, {
+        y: -1500,
+      });
+  }
+
+  close(asMenuBackground = false) {
+    this.svg.style.zIndex = asMenuBackground ? 1 : 2;
+    this.timeLine
+      .to(this.path, {
+        y: 0,
+      })
+      .to(this.path, {
+        duration: 0.3,
+        attr: {
+          d: this.revertCurve,
+        },
+        ease: 'power2.easeIn',
+      })
+      .to(this.path, {
+        duration: 1,
+        attr: {
+          d: this.revertCurveBeforeEnd,
+        },
+        ease: 'power2.easeOut',
+      })
+      .to(this.path, {
+        duration: 0.2,
+        attr: {
+          d: this.revertCurveEnd,
+        },
+        ease: 'power2.easeOut',
+      });
+  }
+}
+
+window.svgLoader = SvgLoader.create();
+
+const initBurgerMenu = () => {
+  const burgerMenuButton = document.querySelector('.b-menu');
+
+  if (!burgerMenuButton) return;
+
+  burgerMenuButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    // console.log(window.svgLoader.close());
+    if (burgerMenuButton.classList.contains('menuopenedb')) {
+      burgerMenuButton.classList.remove('menuopenedb');
+      window.svgLoader.open(true);
+    } else {
+      burgerMenuButton.classList.add('menuopenedb');
+      window.svgLoader.close(true);
+    }
+  });
+};
+
 function animate(element, styles = {}, duration, callback = () => {}) {
   let startAnimation;
   const currentStyles = {};
@@ -46,19 +146,19 @@ function formatDate(date) {
 }
 
 class CustomCursor {
-  constructor(cursorId, parentElement) {
+  constructor(cursorId, parentElementSelector, options = {}) {
     this.cursor = document.getElementById(cursorId);
     if (!this.cursor) return;
-    this.parentElement = parentElement;
-    this.mouseCoordinates = {
-      x: 0,
-      y: 0,
-    };
-    this.positionCoordinates = {
-      x: 0,
-      y: 0,
-    };
-    this.ratio = 0.2;
+    this.parentElement = parentElementSelector
+      ? this.cursor.closest(parentElementSelector)
+      : document.body;
+
+    gsap.set(this.cursor, {
+      xPercent: -50,
+      yPercent: -50,
+    });
+
+    this.ratio = options.ratio ?? 0.2;
 
     TweenLite.set(this.cursor, {
       xPercent: -50,
@@ -66,13 +166,11 @@ class CustomCursor {
     });
 
     this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
     this.handleHover = this.handleHover.bind(this);
 
     this.parentElement.addEventListener('mousemove', this.handleMouseMove);
     this.parentElement.addEventListener('mouseenter', this.handleHover);
     this.parentElement.addEventListener('mouseleave', this.handleHover);
-    TweenLite.ticker.addEventListener('tick', this.handleUpdate);
   }
 
   handleHover() {
@@ -83,18 +181,9 @@ class CustomCursor {
   }
 
   handleMouseMove(event) {
-    this.mouseCoordinates.x = event.clientX;
-    this.mouseCoordinates.y = event.clientY;
-  }
-
-  handleUpdate() {
-    this.positionCoordinates.x +=
-      (this.mouseCoordinates.x - this.positionCoordinates.x) * this.ratio;
-    this.positionCoordinates.y +=
-      (this.mouseCoordinates.y - this.positionCoordinates.y) * this.ratio;
-    TweenLite.set(this.cursor, {
-      x: this.positionCoordinates.x,
-      y: this.positionCoordinates.y,
+    gsap.to(this.cursor, this.ratio, {
+      x: event.clientX,
+      y: event.clientY,
     });
   }
 }
@@ -106,9 +195,7 @@ class CustomCursor {
 
 new CustomCursor(
   'ball',
-  document.getElementById(
-    'w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'
-  )
+  '#w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'
 );
 
 class WOCalendar {
@@ -1561,7 +1648,7 @@ function initSplideCarousel() {
     },
   }).mount();
 
-  new CustomCursor('splide-cursor', document.querySelector('.splide'));
+  new CustomCursor('splide-cursor', '.splide');
 }
 
 const initLoader = () => {
@@ -1611,20 +1698,6 @@ const initLoader = () => {
   }
 
   openPlayerButton.addEventListener('click', openVideoPlayer);
-};
-
-const initMainBookTicketsCursor = () => {
-  const cursor = document.querySelector('[data-type="cursor"]');
-  if (!cursor) return;
-  const cursorContainer = document.querySelector('[data-type="cursor-area"]');
-
-  cursorContainer.addEventListener('mousemove', (event) => {
-    const targetCoords = cursorContainer.getBoundingClientRect();
-    const xCoord = event.clientX - targetCoords.left + cursor.clientWidth / 2;
-    const yCoord = event.clientY - targetCoords.top + cursor.clientHeight / 2;
-
-    cursor.style.transform = `translate3d(${xCoord}px, ${yCoord}px, 0)`;
-  });
 };
 
 const initWhatsOnFilters = () => {
@@ -2218,4 +2291,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.addEventListener('load', () => {
   initTixSessions();
+  window.svgLoader.open();
+  initBurgerMenu();
 });

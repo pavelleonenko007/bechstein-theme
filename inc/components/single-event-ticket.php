@@ -7,6 +7,7 @@ $sale_status = get_post_meta($ticket->ID, '_bechtix_sale_status', true);
 $purchase_urls = bech_get_purchase_urls($ticket->ID);
 ?>
 
+//TODO: date_default_timezone_get(), date_default_timezone_set();
 <div class="events-ticket">
   <div class="events-ticket_left">
     <div class="p-17-25 top-ticket"><?php echo date('l', $ticket_start_date_unix); ?></div>

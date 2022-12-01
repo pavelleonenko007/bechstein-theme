@@ -228,12 +228,15 @@ $email           = get_field('email', 'option');
                 </div>
             </div>
         </div>
-        <svg class="overlay-nav_bg" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg id="svg" class="curtain" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path id="path" fill="#030e14" d="M0 0 V100 Q50 100, 100 100 V100 0 Z"></path>
+        </svg>
+        <!-- <svg class="overlay-nav_bg" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
             <path id="p1" class="overlay-nav_path" vector-effect="non-scaling-stroke" d="M 0 0 V 0 Q 50 0 100 0 V 0 Z">
                 <animate class="opensvg" xlink:href="#p1" repeatCount="1" attributeName="d" attributeType="XML" values="M 0 0 V 0 Q 50 0 100 0 V 0 Z;M 0 0 V 20 Q 50 50 100 20 V 0 Z;M 0 0 V 80 Q 50 90 100 80 V 0 Z;M 0 0 V 100 Q 50 100 100 100 V 0 Z" dur="1s" keyTimes="0; 0.5; 0.75; 1" calcMode="linear" />
                 <animate class="closesvg" xlink:href="#p1" repeatCount="1" attributeName="d" attributeType="XML" values="M 0 0 V 100 Q 50 100 100 100 V 0 Z;M 0 0 V 100 Q 50 100 100 100 V 0 Z;M 0 0 V 100 Q 50 50 100 100 V 0 Z;M 0 0 V 0 Q 50 0 100 0 V 0 Z" dur="1.5s" keyTimes="0; 0.5; 0.75; 1" calcMode="linear" />
             </path>
-        </svg>
+        </svg> -->
     </div>
 </div>
 <!-- <iframe src="https://tix.bechsteinhall.func.agency/en/itix" style="display: none;" onload="(function(){ console.log('iFrame Loaded'); })();" frameborder="0" id="tix"></iframe> -->
