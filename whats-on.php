@@ -91,11 +91,12 @@ Template name: What's on
                             endforeach;
                             unset($index); ?>
                             <?php if (count($genres) > 5) : ?>
-                              <button type="button" class="show-all-btn" data-button="show-all-filters" data-taxonomy="<?php echo $instruments[0]->taxonomy; ?>">show all</button>
+                              <button type="button" class="show-all-btn" data-button="show-all-filters" data-taxonomy="<?php echo $genres[0]->taxonomy; ?>">show all</button>
                             <?php endif; ?>
                           </div>
                         </div>
-                      <?php endif; ?>
+                      <?php endif;
+                      unset($genres); ?>
                       <?php $instruments = bech_get_custom_taxonomies('instruments');
                       if (!empty($instruments)) : ?>
                         <div class="filters-div">
@@ -118,7 +119,8 @@ Template name: What's on
                             <?php endif; ?>
                           </div>
                         </div>
-                      <?php endif; ?>
+                      <?php endif;
+                      unset($instruments); ?>
                       <?php
                       $festivals = bech_get_specials_filters();
                       if (!empty($festivals)) : ?>
@@ -137,6 +139,7 @@ Template name: What's on
                           </div>
                         </div>
                       <?php endif;
+                      unset($festivals);
                       $event_tags = bech_get_custom_taxonomies('event_tag');
                       if (!empty($event_tags)) : ?>
                         <div class="filters-div">
@@ -153,7 +156,8 @@ Template name: What's on
                             <?php endforeach; ?>
                           </div>
                         </div>
-                      <?php endif; ?>
+                      <?php endif;
+                      unset($event_tags); ?>
                       <input type="hidden" name="paged" value="1" />
                       <input type="hidden" name="action" value="get_filtered_tickets">
                       <?php wp_nonce_field('bech_filter_nonce_action', 'bech_filter_nonce'); ?>
