@@ -1125,3 +1125,16 @@ function bech_is_priority_booking_time(int $post_id): bool
 
 	return false;
 }
+
+function bech_get_page_by_slug(string $slug)
+{
+	$page = get_page_by_path($slug);
+
+	if ($page && !is_array($page)) {
+		return $page;
+	} elseif (is_array($page)) {
+		return $page[0];
+	} else {
+		return null;
+	}
+}
