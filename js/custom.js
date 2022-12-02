@@ -1811,6 +1811,8 @@ const initWhatsOnFilters = () => {
 // initWhatsOnFilters();
 
 function initWhatsOnFilters3() {
+  let popupOpenTimes = 0;
+  let hasSelectedFilters = false;
   const filterForm = document.querySelector('[data-filter="form"]');
 
   if (!filterForm) return;
@@ -1823,11 +1825,33 @@ function initWhatsOnFilters3() {
   );
   const pageNumberInput = filterForm.querySelector('[name="paged"]');
   const clearFiltersButton = document.getElementById('clear');
+  const clearPopupButtons = document.querySelectorAll(
+    '.mobile-filter-popup__clear'
+  );
+  const showEventsPopupButtons = document.querySelectorAll(
+    '.mobile-filter-popup__button'
+  );
   const loadMoreTriggerNode = document.querySelector('[data-type="load_more"]');
   async function submitFormCallback(event) {
     event?.preventDefault();
 
     const formData = new FormData(filterForm);
+
+    console.log(Object.fromEntries(formData.entries()));
+
+    if (
+      formData.get('s') ||
+      formData.get('from') ||
+      formData.get('to') ||
+      formData.get('genres[]') ||
+      formData.get('instruments[]') ||
+      formData.get('event_tag[]') ||
+      formData.get('festival[]')
+    ) {
+      hasSelectedFilters = true;
+    } else {
+      hasSelectedFilters = false;
+    }
 
     try {
       const response = await getTickets(formData);
@@ -1848,6 +1872,7 @@ function initWhatsOnFilters3() {
       }
 
       showSelectedFilters(response.data.selected_string);
+      showPopupShowEventsButtons();
       loadMoreTriggerNode.setAttribute(
         'data-max-pages',
         response.data.max_pages
@@ -1907,12 +1932,70 @@ function initWhatsOnFilters3() {
     observer.observe(loadMoreTriggerNode);
   }
 
+  const showClearButtons = () => {
+    clearPopupButtons.forEach(
+      (clearButton) => (clearButton.style.display = 'flex')
+    );
+  };
+
+  const showPopupShowEventsButtons = () => {
+    console.log('show button show');
+    showEventsPopupButtons.forEach(
+      (clearButton) => (clearButton.style.display = 'flex')
+    );
+  };
+
+  const hidePopupButtons = () => {
+    [...clearPopupButtons, ...showEventsPopupButtons].forEach(
+      (button) => (button.style.display = 'none')
+    );
+  };
+
+  const openPopupHandler = (event) => {
+    const button = event.target.closest('.calendar-btn[data-popup]');
+    if (!button) return;
+    event.preventDefault();
+    const { popup } = button.dataset;
+    const popupNode = document.querySelector(
+      `.mobile-filter-popup[data-popup="${popup}"`
+    );
+
+    if (!popupNode) {
+      console.warn(`there is no popup: ${popup}`);
+      return;
+    }
+
+    popupNode.classList.add('mobile-filter-popup--open');
+    document.body.style.overflow = 'hidden';
+
+    if (hasSelectedFilters) {
+      showClearButtons();
+    }
+  };
+
+  const closePopupHandler = (event) => {
+    const closeButton = event.target.closest('.mobile-filter-popup__close');
+
+    if (!closeButton) return;
+    event.stopPropagation();
+    event.preventDefault();
+
+    const popup = closeButton.closest('.mobile-filter-popup');
+
+    popup.classList.remove('mobile-filter-popup--open');
+    document.body.style.overflow = '';
+    hidePopupButtons();
+  };
+
   initScrollPagination();
 
   filterForm.addEventListener('change', changeInputsHandler);
   filterForm.addEventListener('submit', submitFormCallback);
 
   clearFiltersButton.addEventListener('click', clearFilters);
+
+  document.body.addEventListener('click', openPopupHandler);
+  document.body.addEventListener('click', closePopupHandler);
 }
 
 initWhatsOnFilters3();
@@ -2278,6 +2361,44 @@ const initAddToCalendarButtons = () => {
   });
 };
 
+const initMobileWhatsOnFilters = () => {
+  // const calendarPopup = document.querySelector('.mobile-filter-popup[data-popup="calendar"]');
+  // const filtersPopup = document.querySelector('.mobile-filter-popup[data-popup="filters"]');
+  const openPopupHandler = (event) => {
+    const button = event.target.closest('.calendar-btn[data-popup]');
+    if (!button) return;
+    event.preventDefault();
+    const { popup } = button.dataset;
+    const popupNode = document.querySelector(
+      `.mobile-filter-popup[data-popup="${popup}"`
+    );
+
+    if (!popupNode) {
+      console.warn(`there is no popup: ${popup}`);
+      return;
+    }
+
+    popupNode.classList.add('mobile-filter-popup--open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closePopupHandler = (event) => {
+    const closeButton = event.target.closest('.mobile-filter-popup__close');
+
+    if (!closeButton) return;
+    event.stopPropagation();
+    event.preventDefault();
+
+    const popup = closeButton.closest('.mobile-filter-popup');
+
+    popup.classList.remove('mobile-filter-popup--open');
+    document.body.style.overflow = '';
+  };
+
+  document.body.addEventListener('click', openPopupHandler);
+  document.body.addEventListener('click', closePopupHandler);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initAddToCalendarButtons();
   initLoader();
@@ -2293,4 +2414,5 @@ window.addEventListener('load', () => {
   initTixSessions();
   window.svgLoader.open();
   initBurgerMenu();
+  initMobileWhatsOnFilters();
 });

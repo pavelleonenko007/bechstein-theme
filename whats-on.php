@@ -31,7 +31,7 @@ Template name: What's on
                   </div>
                   <div class="filters-form">
                     <div>
-                      <div class="mobile-filter-popup mobile-filter-popup--open">
+                      <div data-popup="calendar" class="mobile-filter-popup">
                         <div class="mobile-filter-popup__header">
                           <div class="mobile-filter-popup__title">
                             Calendar
@@ -87,7 +87,7 @@ Template name: What's on
                           <strong>Show 10 events</strong>
                         </a>
                       </div>
-                      <div class="mobile-filter-popup">
+                      <div data-popup="filters" class="mobile-filter-popup">
                         <div class="mobile-filter-popup__header">
                           <div class="mobile-filter-popup__title">
                             Filters
