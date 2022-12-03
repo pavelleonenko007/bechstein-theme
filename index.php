@@ -140,7 +140,7 @@ Template name: Copy of Bechstein Hall
                         </div>
                         <div id="w-node-_0c687936-78a2-7976-2297-97e720f86e4e-89261594" class="slider-wvwnts-home_bottom">
                             <?php $events = get_posts([
-                                'post_type' => 'events',
+                                'post_type' => 'tickets',
                                 'post_status' => 'publish',
                                 'numberposts' => -1,
                             ]); ?>

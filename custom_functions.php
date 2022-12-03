@@ -65,9 +65,9 @@ function bech_get_events_number($array, $word)
 	switch (true) {
 		case count($array) < 1:
 			return 'there is no ' . $word . 's';
-		case count($array) % 10 > 1:
-			return count($array) . ' ' . $word . 's';
 		case count($array) % 10 === 1:
+			return count($array) . ' ' . $word . 's';
+		default:
 			return count($array) . ' ' . $word;
 	}
 }
