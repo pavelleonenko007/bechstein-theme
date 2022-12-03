@@ -56,7 +56,7 @@ $is_priority_booking_time = bech_is_priority_booking_time($post->ID);
     </div>
     <div class="cms-li_actions-div">
       <?php
-      if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') :
+      if ($sale_status === '' || $sale_status === '0' || $sale_status === '1' || $sale_status === '4') :
         if ($is_priority_booking_time) : ?>
           <a bgline="1" class="booktickets-btn priority">
             <strong>priority booking only</strong>
@@ -86,7 +86,7 @@ $is_priority_booking_time = bech_is_priority_booking_time($post->ID);
   </div>
   <div class="cms-li_actions-div biger">
     <?php
-    if ($sale_status === '' || $sale_status === '0' || $sale_status === '1') :
+    if ($sale_status === '' || $sale_status === '0' || $sale_status === '1' || $sale_status === '4') :
       if ($is_priority_booking_time) : ?>
         <a bgline="1" class="booktickets-btn priority">
           <strong>priority booking only</strong>
