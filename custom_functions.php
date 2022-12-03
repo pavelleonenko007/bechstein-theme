@@ -311,17 +311,21 @@ function bech_get_ticket_from_to_price($post_id)
 	$from_price = get_post_meta($post_id, '_bechtix_min_price', true);
 	$to_price   = get_post_meta($post_id, '_bechtix_max_price', true);
 
-	if ($from_price === '' || $to_price === '') {
-		switch (true) {
-			case $from_price === '' && $to_price === '':
-				return 'No price yet';
-			case $from_price === '':
-				return "from £" . $to_price;
-			default:
-				return "from £" . $from_price;
+	//from £100 to £320
+	if ($from_price === $to_price) {
+		if ($from_price !== '') {
+			return "up to £{$from_price}";
 		}
 	} else {
-		return 'from £' . $from_price . ' to £' . $to_price;
+		if ($from_price === '') {
+			return "up to £{$to_price}";
+		}
+
+		if ($to_price === '') {
+			return "from £{$from_price}";
+		}
+
+		return "from £{$from_price} to £{$to_price}";
 	}
 }
 
