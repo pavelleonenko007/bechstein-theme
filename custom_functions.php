@@ -308,8 +308,8 @@ function bech_sort_tickets(array $tickets): array
 
 function bech_get_ticket_from_to_price($post_id)
 {
-	$from_price = get_field('_bechtix_min_price', $post_id);
-	$to_price   = get_field('_bechtix_max_price', $post_id);
+	$from_price = get_post_meta($post_id, '_bechtix_min_price', true);
+	$to_price   = get_post_meta($post_id, '_bechtix_max_price', true);
 
 	if ($from_price === '' || $to_price === '') {
 		switch (true) {
@@ -1107,7 +1107,7 @@ function bech_get_min_date_index(array $dates): int
 
 function bech_is_priority_booking_time(int $post_id): bool
 {
-	$online_sale_start_dates = get_field('online_dates', $post_id) ?? [['date' => get_post_meta($post_id, '_bechtix_ticket_online_sale_start', true)]];
+	$online_sale_start_dates = get_field('online_dates', $post_id) ? get_field('online_dates', $post_id) : [['date' => get_post_meta($post_id, '_bechtix_ticket_online_sale_start', true)]];
 
 	$min_date_index = bech_get_min_date_index($online_sale_start_dates);
 
