@@ -837,7 +837,7 @@ class UserCart {
 
   handleClick(event) {
     console.log(event);
-    if (this._orders.length > 0) {
+    if (this._orders.length > 0 && this._user.name) {
       event.preventDefault();
       document.body.classList.toggle(
         'opencart',
@@ -920,7 +920,7 @@ class UserCart {
             <a href="${this._profileUrl}" class="p-17-25 card-block-a">View your account</a>
             <a href="${this._logoutUrl}" class="p-17-25 card-block-a">Log out</a>
          </div>`
-        : `<div id="user-actions"><a href="${this._loginUrl}" class="p-17-25 card-block-a">Log in</a></div>`;
+        : ``;
 
       const userNameHTML = this._user?.name
         ? `<div id="user-name">
@@ -2414,5 +2414,5 @@ window.addEventListener('load', () => {
   initTixSessions();
   window.svgLoader.open();
   initBurgerMenu();
-  initMobileWhatsOnFilters();
+  // initMobileWhatsOnFilters();
 });
