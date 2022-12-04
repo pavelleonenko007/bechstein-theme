@@ -76,7 +76,6 @@ Template name: Press office template
                         if ($posts->have_posts()) : ?>
                             <?php $tags = get_terms([
                                 'taxonomy'   => 'post_tag',
-                                'hide_empty' => false,
                                 'parent'     => 0
                             ]); ?>
                             <div class="filter-press">
