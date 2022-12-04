@@ -1871,6 +1871,10 @@ function initWhatsOnFilters3() {
       if (Number(pageNumberInput.value) > 1) {
         ticketsContainer.insertAdjacentHTML('beforeend', ticketsHTML);
       } else {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
         ticketsContainer.innerHTML = ticketsHTML;
       }
 
@@ -1945,20 +1949,22 @@ function initWhatsOnFilters3() {
   }
 
   const showClearButtons = () => {
-    clearPopupButtons.forEach(
-      (clearButton) => (clearButton.style.display = 'flex')
+    clearPopupButtons.forEach((clearButton) =>
+      clearButton.classList.add('mobile-filter-popup__button--open')
     );
   };
 
   const showPopupShowEventsButtons = () => {
-    showEventsPopupButtons.forEach(
-      (clearButton) => (clearButton.style.display = 'flex')
+    showEventsPopupButtons.forEach((showButton) =>
+      showButton.classList.add('mobile-filter-popup__button--open')
     );
   };
 
+  //clearButton.classList.add('mobile-filter-popup__button--open')
+
   function hidePopupButtons() {
-    [...clearPopupButtons, ...showEventsPopupButtons].forEach(
-      (button) => (button.style.display = 'none')
+    [...clearPopupButtons, ...showEventsPopupButtons].forEach((button) =>
+      button.classList.remove('mobile-filter-popup__button--open')
     );
   }
 
