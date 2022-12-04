@@ -1,3 +1,39 @@
+document.querySelectorAll('.grey-z').forEach((trigger) => {
+  new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          console.log(entry.isIntersecting);
+          $('.navbar').addClass('grey-head-scroll');
+        } else {
+          //$(".navbar").removeClass('grey-head');
+        }
+      });
+    },
+    {
+      threshold: 1,
+    }
+  ).observe(trigger);
+});
+
+document.querySelectorAll('.white-z').forEach((trigger) => {
+  new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          console.log(entry.isIntersecting);
+          $('.navbar').removeClass('grey-head-scroll');
+        } else {
+          //$(".navbar").removeClass('grey-head');
+        }
+      });
+    },
+    {
+      threshold: 1,
+    }
+  ).observe(trigger);
+});
+
 class SvgLoader {
   static instance;
 
