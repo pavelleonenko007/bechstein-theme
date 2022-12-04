@@ -64,7 +64,7 @@ Template name: Event
                   <?php endwhile;
                   wp_reset_postdata(); ?>
                   <?php if ($tickets_query->max_num_pages > 1) : ?>
-                    <a href="#tickets" class="link-20 home">More tickets</a>
+                    <a href="#tickets" class="link-20 home">More dates</a>
                   <?php endif; ?>
                 </div>
               <?php endif;
