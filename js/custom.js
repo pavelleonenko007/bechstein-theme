@@ -1856,6 +1856,13 @@ function initWhatsOnFilters3() {
       hasSelectedFilters = false;
     }
 
+    if (Number(pageNumberInput.value) <= 1) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+
     try {
       const response = await getTickets(formData);
 
@@ -1871,10 +1878,6 @@ function initWhatsOnFilters3() {
       if (Number(pageNumberInput.value) > 1) {
         ticketsContainer.insertAdjacentHTML('beforeend', ticketsHTML);
       } else {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        });
         ticketsContainer.innerHTML = ticketsHTML;
       }
 
