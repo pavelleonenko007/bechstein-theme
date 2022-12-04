@@ -50,7 +50,7 @@ Template name: Whats on - search results
               <input type="search" class="search0page-line w-input" autofocus="true" maxlength="256" value="<?php echo get_search_query() ?>" name="s" placeholder="search by keyword…" id="search" required>
               <input type="submit" value="Search" class="search-button w-button">
             </form>
-            <?php $sorted_tickets = !empty($ticket_objects) ? bech_sort_tickets_2($ticket_objects) : []; ?>
+            <?php $sorted_tickets = !empty($ticket_objects) ? bech_sort_tickets($ticket_objects) : []; ?>
             <?php if (!empty($sorted_tickets)) : ?>
               <div class="cms-tems">
                 <?php foreach ($sorted_tickets as $date => $tickets) : ?>
@@ -118,5 +118,4 @@ Template name: Whats on - search results
       window.onresize = reportWindowSize;
     });
   </script>
-  <script type="text/javascript" src="//thevogne.ru/bech/script-cus.js?ver=6.0.1" id="script-cus-js"></script>
   <?php get_template_part("footer_block", ""); ?>
