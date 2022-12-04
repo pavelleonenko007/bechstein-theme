@@ -34,6 +34,8 @@ Template name: Team
             'post_type'      => 'team',
             'posts_per_page' => -1,
             'post_status'    => 'publish',
+            // 'orderby' => 'menu_order',
+            // 'order' => 'ASC',
             'meta_query'     => [
               [
                 'key'   => 'show_on_top',
@@ -61,6 +63,8 @@ Template name: Team
             'post_type'      => 'team',
             'posts_per_page' => -1,
             'post_status'    => 'publish',
+            // 'orderby' => 'menu_order',
+            // 'order' => 'ASC',
             'meta_query'     => [
               [
                 'key'     => 'show_on_top',

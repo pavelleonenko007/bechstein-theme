@@ -1142,3 +1142,14 @@ function bech_get_page_by_slug(string $slug)
 		return null;
 	}
 }
+
+add_filter('pto/posts_orderby/ignore', 'bech_ignore_tix_queryes_orderby', 10, 3);
+function bech_ignore_tix_queryes_orderby($ignore, $orderBy, $query)
+{
+	$query_vars = $query->query_vars;
+	if ($query_vars['post_type'] === 'tickets' || $query_vars['post_type'] === 'events' || $query_vars['post_type'] === 'festivals') {
+		$ignore = TRUE;
+	}
+
+	return $ignore;
+}

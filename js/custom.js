@@ -1187,6 +1187,8 @@ const getTickets = async (filters) => {
       })
     ).json();
 
+    console.log(response);
+
     if (response.status !== 'success') {
       throw new Error(data.message);
     }
@@ -1732,11 +1734,11 @@ const initWhatsOnFilters = () => {
     const formData = new FormData(filterFormNode);
     const response = await getTickets(formData);
 
+    console.log(response);
+
     if (response.status !== 'success') {
       window.alert(`Error: ${response.message}`);
     }
-
-    console.log(response);
 
     // const ticketsHTML = response.data.html;
     // const selectedString = response?.data?.selected_string;

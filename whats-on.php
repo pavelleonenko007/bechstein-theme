@@ -250,7 +250,7 @@ Template name: What's on
                     ];
                   }
 
-                  $event_ids = get_posts($events_args);
+                  $event_ids = new WP_Query($events_args);
 
                   if (empty($event_ids)) : ?>
                     <p class="no-event-message">There is no events — we're working on a concert program.</p>
@@ -265,7 +265,7 @@ Template name: What's on
                       'meta_query' => [
                         [
                           'key' => '_bechtix_event_relation',
-                          'value' => $event_ids,
+                          'value' => $event_ids->posts,
                           'compare' => 'IN'
                         ]
                       ]
