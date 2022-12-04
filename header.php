@@ -12,7 +12,7 @@ $email           = get_field('email', 'option');
 <div data-animation="default" data-collapse="none" data-duration="400" data-easing="ease" data-easing2="ease" role="banner" class="navbar w-nav">
     <header class="header">
         <div class="left-header">
-            <?php if (!bech_is_current_url(home_url('/'))) : ?>
+            <?php if (!bech_is_current_url(home_url('/')) || is_search()) : ?>
                 <a href="<?php echo home_url('/'); ?>" aria-current="page" class="brand w-nav-brand">
                     <?php echo bech_custom_logo(true); ?>
                 </a>
