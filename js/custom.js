@@ -1839,8 +1839,6 @@ function initWhatsOnFilters3() {
 
     const formData = new FormData(filterForm);
 
-    console.log(Object.fromEntries(formData.entries()));
-
     if (
       formData.get('s') ||
       formData.get('from') ||
@@ -1848,10 +1846,13 @@ function initWhatsOnFilters3() {
       formData.get('genres[]') ||
       formData.get('instruments[]') ||
       formData.get('event_tag[]') ||
-      formData.get('festival[]')
+      formData.get('festival[]') ||
+      formData.get('time')
     ) {
       hasSelectedFilters = true;
+      console.log('has selected true');
     } else {
+      console.log('has selected false');
       hasSelectedFilters = false;
     }
 
@@ -1873,8 +1874,16 @@ function initWhatsOnFilters3() {
         ticketsContainer.innerHTML = ticketsHTML;
       }
 
+      showEventsPopupButtons.forEach(
+        (button) =>
+          (button.querySelector(
+            'strong'
+          ).textContent = `Show ${response.data.posts_count} events`)
+      );
       showSelectedFilters(response.data.selected_string);
-      showPopupShowEventsButtons();
+      if (hasSelectedFilters) {
+        showPopupShowEventsButtons();
+      }
       loadMoreTriggerNode.setAttribute(
         'data-max-pages',
         response.data.max_pages
@@ -1897,6 +1906,7 @@ function initWhatsOnFilters3() {
     });
 
     pageNumberInput.value = 1;
+    hidePopupButtons();
     submitFormCallback();
   };
   const showSelectedFilters = (selectedString = '') => {
@@ -1941,17 +1951,16 @@ function initWhatsOnFilters3() {
   };
 
   const showPopupShowEventsButtons = () => {
-    console.log('show button show');
     showEventsPopupButtons.forEach(
       (clearButton) => (clearButton.style.display = 'flex')
     );
   };
 
-  const hidePopupButtons = () => {
+  function hidePopupButtons() {
     [...clearPopupButtons, ...showEventsPopupButtons].forEach(
       (button) => (button.style.display = 'none')
     );
-  };
+  }
 
   const openPopupHandler = (event) => {
     const button = event.target.closest('.calendar-btn[data-popup]');
@@ -1971,12 +1980,15 @@ function initWhatsOnFilters3() {
     document.body.style.overflow = 'hidden';
 
     if (hasSelectedFilters) {
+      // hidePopupButtons();
       showClearButtons();
     }
   };
 
   const closePopupHandler = (event) => {
-    const closeButton = event.target.closest('.mobile-filter-popup__close');
+    const closeButton =
+      event.target.closest('.mobile-filter-popup__close') ||
+      event.target.closest('.mobile-filter-popup__button');
 
     if (!closeButton) return;
     event.stopPropagation();
@@ -1995,6 +2007,9 @@ function initWhatsOnFilters3() {
   filterForm.addEventListener('submit', submitFormCallback);
 
   clearFiltersButton.addEventListener('click', clearFilters);
+  clearPopupButtons.forEach((button) =>
+    button.addEventListener('click', clearFilters)
+  );
 
   document.body.addEventListener('click', openPopupHandler);
   document.body.addEventListener('click', closePopupHandler);

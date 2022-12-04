@@ -86,6 +86,9 @@ Template name: What's on
                         <a bgline="1" class="booktickets-btn mobile-filter-popup__button">
                           <strong>Show 10 events</strong>
                         </a>
+                        <a bgline="1" class="booktickets-btn mobile-filter-popup__clear">
+                          <strong>Clear filters</strong>
+                        </a>
                       </div>
                       <div data-popup="filters" class="mobile-filter-popup">
                         <div class="mobile-filter-popup__header">
@@ -192,6 +195,9 @@ Template name: What's on
                         </div>
                         <a bgline="1" class="booktickets-btn mobile-filter-popup__button">
                           <strong>Show 10 events</strong>
+                        </a>
+                        <a bgline="1" class="booktickets-btn mobile-filter-popup__clear">
+                          <strong>Clear filters</strong>
                         </a>
                       </div>
                       <input type="hidden" name="paged" value="1" />

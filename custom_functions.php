@@ -720,7 +720,8 @@ function bech_get_filtered_tickets()
 			'status'          => 200,
 			'html'            => $data,
 			'selected_string' => $selected_string,
-			'max_pages' => $tickets_query->max_num_pages
+			'max_pages' => $tickets_query->max_num_pages,
+			'posts_count' => $tickets_query->post_count
 		]
 	], 200);
 	wp_die();
