@@ -67,8 +67,7 @@ Template name: Event
                     <a href="#tickets" class="link-20 home">More dates</a>
                   <?php endif; ?>
                 </div>
-              <?php endif;
-              $ticket = $tickets_query->posts ? $tickets_query->posts[0] : null; ?>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -88,13 +87,11 @@ Template name: Event
                   <div class="p-17-25 no-mob"><?php the_content(); ?></div>
                   <div class="cms-li_tags-div in-left">
                     <?php
-                    if (!empty($ticket)) :
-                      $term_query = wp_get_object_terms($ticket->ID, ['event_tag', 'genres', 'instruments']);
-                      foreach ($term_query as $term) : ?>
-                        <a href="<?php echo get_term_link($term->term_id, $term->taxonomy); ?>" class="cms-li_tag-link"><?php echo $term->name ?></a>
+                    $term_query = wp_get_object_terms($post->ID, ['event_tag', 'genres', 'instruments']);
+                    foreach ($term_query as $term) : ?>
+                      <a href="<?php echo get_term_link($term->term_id, $term->taxonomy); ?>" class="cms-li_tag-link"><?php echo $term->name ?></a>
                     <?php endforeach;
-                      unset($term_query);
-                    endif; ?>
+                    unset($term_query); ?>
                   </div>
                   <div class="p-17-25 italic">
                     <?php echo bech_get_event_duration($post->ID); ?>
