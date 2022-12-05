@@ -22,7 +22,7 @@ $purchase_urls = bech_get_purchase_urls($ticket->ID);
         <strong>Book tickets</strong>
       </a>
       <a href="#" data-calendar="<?php echo bech_get_ticket_event_data_for_calendar($ticket); ?>" class="event-ticket_calendar-btn w-inline-block">
-        <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar">
+        <!-- <img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6162b22615c0_calendar.svg" loading="lazy" alt class="img-calendar"> -->
         <div>ADD TO CALENDAR</div>
       </a>
     <?php else : ?>
