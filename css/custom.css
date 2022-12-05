@@ -1,3 +1,8 @@
+#tickets,
+#tickets:focus {
+  outline: none;
+}
+
 .curtain {
   position: absolute;
   top: 0px;
