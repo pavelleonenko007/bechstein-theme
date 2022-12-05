@@ -1645,6 +1645,8 @@ new BechCarouser(document.querySelector('[data-type="slider"]'), {
 
 function initSplideCarousel() {
   const splideCarouselContainer = document.querySelector('.splide');
+
+  if (!splideCarouselContainer) return;
   // const customCursor = splideCarouselContainer.querySelector('.splide__cursor');
   // const mouseOverCallback = event => {
   //   customCursor.classList.add('splide__cursor--loading');
