@@ -1078,8 +1078,11 @@ function bech_get_more_filter_buttons()
 add_action('admin_menu', 'bech_register_custom_admin_links');
 function bech_register_custom_admin_links()
 {
+	add_menu_page(null, 'Global Widgets', 'edit_posts', '/widgets.php', null, 'dashicons-welcome-widgets-menus', 25);
 	add_menu_page(null, 'Header & Footer', 'edit_posts', '/themes.php?page=options#footer-&-header-fields', null, 'dashicons-align-center', 26);
-	add_menu_page(null, 'Tickets Information', 'edit_posts', '/themes.php?page=options#tickets-information', null, 'dashicons-info', 26);
+	add_menu_page(null, 'Footer Contacts', 'edit_posts', '/themes.php?page=options#footer-contacts', null, 'dashicons-megaphone', 27);
+	add_menu_page(null, 'Video Intro', 'edit_posts', '/themes.php?page=options#video-intro', null, 'dashicons-format-video', 28);
+	add_menu_page(null, 'Tickets Information', 'edit_posts', '/themes.php?page=options#tickets-information', null, 'dashicons-info', 29);
 }
 
 // add_filter('wp_insert_post_data', function ($data, $postarr) {

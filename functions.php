@@ -72,6 +72,7 @@ function add_admin_scripts()
 {
     wp_register_script('admin_script', get_template_directory_uri() . '/js/admin.js', ['jquery'], false, true);
     wp_enqueue_script('admin_script');
+    wp_enqueue_style('admincss', get_template_directory_uri() . '/css/admin.css');
 }
 
 add_action('wp_enqueue_scripts', 'add_site_scripts');
