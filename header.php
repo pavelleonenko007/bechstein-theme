@@ -80,7 +80,7 @@ $email           = get_field('email', 'option');
                 </a>
             </div>
             <form role="search" method="get" id="searchform" action="<?php echo home_url('/') ?>" class="searchhead">
-                <input type="search" class="search-input w-input" autofocus="true" maxlength="256" value="<?php echo get_search_query() ?>" name="s" id="s" placeholder=" search by keyword…" required>
+                <input type="search" class="search-input w-input" autofocus="true" maxlength="256" value="<?php echo get_search_query() ?>" name="s" id="s" placeholder="search by keyword…" required>
                 <input type="submit" id="searchsubmit" value="Search" class="search-button-2 w-button"><a href="#" class="head-search-btn-closen w-inline-block">
                     <div class="ico-60 w-embed">
                         <svg width="32" height="31" viewbox="0 0 32 31" fill="none">
