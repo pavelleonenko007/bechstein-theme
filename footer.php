@@ -180,5 +180,8 @@
             </div>
         </div>
     </div>
-    <div class="white-z"></div>
+    <?php $team_page = bech_get_page_by_slug('team');
+    if (!$team_page) : ?>
+        <div class="white-z"></div>
+    <?php endif; ?>
 </footer>
