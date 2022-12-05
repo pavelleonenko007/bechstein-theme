@@ -97,7 +97,7 @@ Template name: Copy of Bechstein Hall
                                     </div>
                                 <?php endif; ?>
                                 <div class="calendar-devider"></div>
-                                <input class="visually-hidden" name="from" value="<?php echo date('Y-m-d'); ?>" />
+                                <input class="visually-hidden" name="from" value="<?php /* echo date('Y-m-d'); */ ?>" />
                                 <input class="visually-hidden" name="to" value="" />
                                 <div class="p-20-30 white">When would you like to visit?</div>
                                 <div id="calendar" class="cal-slider"></div>

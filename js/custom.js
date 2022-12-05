@@ -350,7 +350,7 @@ class WOCalendar {
     const firstAvailableDay = new Date(
       this.today.getFullYear(),
       this.today.getMonth(),
-      this.today.getDate() - 1
+      this.today.getDate()
     );
     let dayNumber = 1;
     let paddingDays =
