@@ -107,7 +107,7 @@ Template name: What's on
                           if (!empty($event_tags)) : ?>
                             <div class="filters-div">
                               <div class="filters-top-div">
-                                <div class="p-20-30">Event Categories</div>
+                                <div class="p-20-30">Event categories</div>
                               </div>
                               <div class="filters-bottom-div">
                                 <?php foreach ($event_tags as $event_tag) : ?>
