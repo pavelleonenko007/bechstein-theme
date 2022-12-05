@@ -1091,6 +1091,9 @@ p strong {
 }
 
 @media screen and (max-width: 495px) {
+  .navbar {
+    background-image: none;
+  }
   .head-event-content {
     min-height: calc(100vh - 160rem);
   }
