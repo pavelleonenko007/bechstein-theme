@@ -1061,7 +1061,7 @@ p strong {
   }
 
   .navbar.grey-head {
-    background-image: -webkit-gradient(
+    /* background-image: -webkit-gradient(
       linear,
       left top,
       left bottom,
@@ -1074,7 +1074,7 @@ p strong {
       #030e14 30%,
       rgb(3 14 20 / 80%) 65%,
       transparent
-    );
+    ); */
   }
 
   .navbar.grey-head {
