@@ -1203,3 +1203,12 @@ function bech_get_three_month_weekends(): array
 		return [$arr[0], $arr[count($arr) - 1]];
 	}, $dates_array);
 }
+
+function bech_get_whats_on_ticket_image($post_id): string
+{
+	$image_id = get_field('whats_on_image', $post_id);
+	return !empty($image_id) ? wp_get_attachment_image($image_id, 'medium', false, [
+		'class' => 'cms-li_img',
+		'style' => 'max-height: 270rem'
+	]) : '';
+}

@@ -9,6 +9,9 @@ $benefits = _wp_specialchars($benefits_json, ENT_QUOTES, 'UTF-8', true);
 $online_sale_start = get_post_meta($post->ID, '_bechtix_ticket_online_sale_start', true);
 $is_priority_booking_time = bech_is_priority_booking_time($post->ID);
 
+$event_image = bech_get_whats_on_ticket_image($event->ID);
+$sale_status = get_post_meta($post->ID, '_bechtix_sale_status', true);
+
 /**
  * 
  * Ticket statuses:
@@ -23,22 +26,16 @@ $is_priority_booking_time = bech_is_priority_booking_time($post->ID);
  */
 ?>
 <div class="cms-li" data-ticket_benefits="<?php echo $benefits; ?>">
-  <a href="<?php echo get_the_permalink($event->ID); ?>" class="cms-li_mom-img">
-    <?php echo wp_get_attachment_image(
-      get_post_meta($event->ID, '_bechtix_event_image', true),
-      'medium',
-      false,
-      [
-        'class' => 'cms-li_img',
-        'style' => 'max-height: 270rem'
-      ]
-    ); ?>
-    <?php $sale_status = get_post_meta($post->ID, '_bechtix_sale_status', true);
-    if ($sale_status === '2' || $sale_status === '3') :
-    ?>
-      <div class="cms-li_sold-out-banner"><?php echo bech_get_sale_status_string_value($sale_status); ?></div>
-    <?php endif; ?>
-  </a>
+  <?php if (!empty($event_image)) : ?>
+    <a href="<?php echo get_the_permalink($event->ID); ?>" class="cms-li_mom-img">
+      <?php echo $event_image; ?>
+      <?php
+      if ($sale_status === '2' || $sale_status === '3') :
+      ?>
+        <div class="cms-li_sold-out-banner"><?php echo bech_get_sale_status_string_value($sale_status); ?></div>
+      <?php endif; ?>
+    </a>
+  <?php endif; ?>
   <div class="cms-li_content">
     <div class="cms-li_time-div">
       <div class="p-30-45"><?php echo bech_get_ticket_times($post->ID); ?></div>

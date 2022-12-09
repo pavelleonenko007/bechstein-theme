@@ -2,7 +2,7 @@
 /*
 Template name: Event
 */
-
+global $post;
 ?>
 <!DOCTYPE html>
 <!-- This site was created in Webflow. https://www.webflow.com -->
@@ -20,7 +20,7 @@ Template name: Event
       <section class="section wf-section">
         <div class="head-event-container single-page">
           <div class="head-event-content single-page">
-            <?php echo wp_get_attachment_image(get_post_meta($post->ID, '_bechtix_event_image', true), 'full', false, [
+            <?php echo wp_get_attachment_image(get_field('main_image', $post->ID), 'full', false, [
               'class' => 'img-fw mob-cover'
             ]); ?>
             <div class="head-event-content_in">
@@ -78,7 +78,7 @@ Template name: Event
             <div class="event-row_left-info">
               <div class="evetn-left-contnt-div">
                 <div class="event-avatar">
-                  <?php echo wp_get_attachment_image(get_post_meta($post->ID, '_bechtix_event_image', true), 'full', false, [
+                  <?php echo wp_get_attachment_image(get_field('author_image', $post->ID), 'full', false, [
                     'class' => 'img-cover'
                   ]); ?>
                 </div>

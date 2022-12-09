@@ -5,11 +5,10 @@ global $post; ?>
     <div class="slider-wvwnts_top">
       <?php $event_id = get_post_meta($post->ID, '_bechtix_event_relation', true);
       $event_url = get_the_permalink($event_id);
-      $event_image = wp_get_attachment_image(get_post_meta($event_id, '_bechtix_event_image', true), 'large', false, [
+      $event_image = wp_get_attachment_image(get_field('slider_image', $event_id), 'large', false, [
         'class' => 'img-cover'
       ]);
 
-      // echo $event_image;
       if (!empty($event_image)) : ?>
         <a href="<?php echo $event_url; ?>" class="wo-slide__image">
           <?php echo $event_image; ?>
