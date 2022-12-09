@@ -1157,3 +1157,49 @@ function bech_ignore_tix_queryes_orderby($ignore, $orderBy, $query)
 
 	return $ignore;
 }
+
+function bech_recursive_chunk_array($fromArr = [], $newArr = [], $chank = [])
+{
+	if (count($fromArr) === 0) {
+		return $newArr;
+		var_dump('FINISH');
+	}
+
+	$value = array_shift($fromArr);
+	$chank[] = $value;
+
+	if (gmdate('D', strtotime($value)) === 'Mon') {
+		$newArr[] = $chank;
+		return bech_recursive_chunk_array($fromArr, $newArr, []);
+	} else {
+		return bech_recursive_chunk_array($fromArr, $newArr, $chank);
+	}
+}
+
+function bech_get_three_month_weekends(): array
+{
+	$now = new DateTime();
+	$month = new DatePeriod(new DateTime($now->format('Y-m-d')), DateInterval::createFromDateString('+1 day'), new DateTime('+3 month'));
+
+	$month_as_array = array_map(function ($date_time) {
+		return $date_time->format('Y-m-d H:i:s');
+	}, array_filter(iterator_to_array($month, false), function ($date_time) {
+		if ($date_time->format('D') === 'Fri' || $date_time->format('D') === 'Sat' || $date_time->format('D') === 'Sun') {
+			if ($date_time->format('D') === 'Sun') {
+				return $date_time->modify('+1 day');
+			}
+			return $date_time;
+		}
+	}));
+
+	$dates_array = bech_recursive_chunk_array($month_as_array, [], []);
+
+	$todayWeekDay = $now->format('D');
+	if ($todayWeekDay === 'Fri' || $todayWeekDay === 'Sat' || $todayWeekDay === 'Sun') {
+		$dates_array[0][0] = $now->format('Y-m-d H:i:s');
+	}
+
+	return array_map(function ($arr) {
+		return [$arr[0], $arr[count($arr) - 1]];
+	}, $dates_array);
+}

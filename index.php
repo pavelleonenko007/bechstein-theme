@@ -104,28 +104,35 @@ Template name: Copy of Bechstein Hall
                                 <input type="submit" value="Find Events" class="w-button">
                             </form>
                         </div>
-                        <?php $args = [
+                        <?php
+
+                        $weekends = bech_get_three_month_weekends();
+
+                        $args = [
                             'post_type'      => 'tickets',
                             'posts_per_page' => -1,
                             'post_status'    => 'publish',
                             'meta_key' => '_bechtix_ticket_start_date',
                             'orderby' => 'meta_value',
-                            'order' => 'ASC'
+                            'order' => 'ASC',
+                            'meta_query' => [
+                                'relation' => 'OR'
+                            ]
                         ];
 
-                        // $datetime = new DateTime('today');
-                        // $next_date = new DateTime('tomorrow');
+                        foreach ($weekends as $key => $weekend) {
+                            $args['meta_query'][] = [
+                                'key' => '_bechtix_ticket_start_date',
+                                'value' => $weekend,
+                                'compare' => 'BETWEEN',
+                                'type' => 'DATETIME'
+                            ];
+                        }
 
-                        // $args['meta_query'][0] = [
-                        // 	'key' => 'start_date',
-                        // 	'value' => [$datetime->format('Y.m.d H:i'), $next_date->format('Y.m.d H:i')],
-                        // 	'compare' => 'BETWEEN',
-                        // 	'type' => 'DATETIME'
-                        // ];
+                        // var_dump($args);
 
                         $query = new WP_Query($args);
 
-                        // var_dump($query->posts); 
                         ?>
                         <div class="slider-wvwnts-home">
                             <div class="slider-wvwnts">

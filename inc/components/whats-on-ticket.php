@@ -75,7 +75,7 @@ $is_priority_booking_time = bech_is_priority_booking_time($post->ID);
         <div> →</div>
       </a>
     </div>
-    <?php if ($sale_status === '' || $sale_status === '0') : ?>
+    <?php if ($sale_status === '' || $sale_status === '0' || $sale_status === '4') : ?>
       <?php if ($is_priority_booking_time) : ?>
         <div class="cms-li_price">free sales from <?php echo date('j F', strtotime($online_sale_start)); ?></div>
       <?php endif; ?>
