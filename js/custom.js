@@ -2475,8 +2475,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('load', () => {
-  initTixSessions();
   window.svgLoader.open();
+  initTixSessions();
   initBurgerMenu();
   // initMobileWhatsOnFilters();
 });
