@@ -42,7 +42,7 @@ $sale_status = get_post_meta($post->ID, '_bechtix_sale_status', true);
       <div class="p-17-25 italic"><?php echo bech_get_event_duration($event->ID); ?></div>
     </div>
     <a href="<?php echo get_the_permalink($event->ID); ?>" class="p-20-30 title-event"><?php echo get_the_title($post); ?> <?php echo $post->ID; ?></a>
-    <div class="p-17-25"><?php echo get_the_content(null, null, $event); ?></div>
+    <div class="p-17-25"><?php echo get_post_meta($event->ID, '_bechtix_event_description', true); ?></div>
     <div class="cms-li_tags-div">
       <?php $tags = wp_get_object_terms($event->ID, ['event_tag', 'genres', 'instruments']);
       foreach ($tags as $index => $tag) :

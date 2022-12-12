@@ -32,7 +32,7 @@ global $post;
                 <?php endif; ?>
                 <h1 class="h1-75-90 event-h"><?php the_title(); ?></h1>
                 <div class="p-25-40">
-                  <?php the_content(); ?>
+                  <?php echo get_post_meta($post->ID, '_bechtix_event_description', true); ?>
                 </div>
                 <a href="#tickets-mob" bgline="1" class="choisetckets-btn min">
                   <strong>choose tickets</strong>
