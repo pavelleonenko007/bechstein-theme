@@ -1863,6 +1863,7 @@ function initWhatsOnFilters3() {
       'input:not([type="hidden"]):not([type="submit"])'
     )
   );
+  const timeFilters = filters.filter((filter) => filter.name === 'time');
   const pageNumberInput = filterForm.querySelector('[name="paged"]');
   const clearFiltersButton = document.getElementById('clear');
   const clearPopupButtons = document.querySelectorAll(
@@ -1872,6 +1873,21 @@ function initWhatsOnFilters3() {
     '.mobile-filter-popup__button'
   );
   const loadMoreTriggerNode = document.querySelector('[data-type="load_more"]');
+
+  timeFilters.forEach((timeFilter) => {
+    const label = timeFilter.nextElementSibling;
+
+    label.addEventListener('click', (event) => {
+      console.log(timeFilter.checked);
+      if (timeFilter.checked) {
+        event.preventDefault();
+        timeFilter.removeAttribute('checked');
+        timeFilter.checked = false;
+        filterForm.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
   async function submitFormCallback(event) {
     event?.preventDefault();
 
