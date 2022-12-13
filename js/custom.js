@@ -1022,6 +1022,10 @@ class WhatsOnSlider {
     this.nextButtonNode = document.querySelector('[data-button="next"]');
     this._currentIndex = 0;
     this.wasDragging = false;
+    this.freeCardsCount;
+    this.resize();
+
+    // console.log(this.freeCardsCount);
 
     this.setSlidesPosition();
     this.sliderContainerNode.classList.add('wo-slider--ready');
@@ -1029,14 +1033,21 @@ class WhatsOnSlider {
     this.handleScroll = this.handleScroll.bind(this);
     this.handleUp = this.handleUp.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.resize = this.resize.bind(this);
 
     this.sliderContainerNode.addEventListener(
-      'pointerdown',
+      'mousedown',
+      this.handleDown.bind(this)
+    );
+    this.sliderContainerNode.addEventListener(
+      'touchstart',
       this.handleDown.bind(this)
     );
     this.sliderContainerNode.addEventListener('click', this.handleClick);
-    document.addEventListener('pointerup', this.handleUp);
-    document.addEventListener('pointercancel', this.handleUp);
+    document.addEventListener('mouseup', this.handleUp);
+    document.addEventListener('touchend', this.handleUp);
+    window.addEventListener('resize', debounce(this.resize, 100));
+    // document.addEventListener('pointercancel', this.handleUp);
     this.nextButtonNode?.addEventListener('click', this.next.bind(this));
     this.prevButtonNode?.addEventListener('click', this.prev.bind(this));
   }
@@ -1050,8 +1061,8 @@ class WhatsOnSlider {
       case val < 0:
         val = 0;
         break;
-      case val >= this._data.length - 3:
-        val = this._data.length - 3;
+      case val >= this._data.length - this.freeCardsCount:
+        val = this._data.length - this.freeCardsCount;
         break;
     }
 
@@ -1071,6 +1082,20 @@ class WhatsOnSlider {
       .join('');
   }
 
+  resize() {
+    switch (true) {
+      case window.innerWidth > 479 && window.innerWidth <= 991:
+        this.freeCardsCount = 2;
+        break;
+      case window.innerWidth <= 479:
+        this.freeCardsCount = 1;
+        break;
+      default:
+        this.freeCardsCount = 3;
+        break;
+    }
+  }
+
   handleClick(event) {
     if (this.wasDragging) {
       event.preventDefault();
@@ -1079,7 +1104,7 @@ class WhatsOnSlider {
   }
 
   handleScroll(event) {
-    const dragX = event.clientX;
+    const dragX = event.clientX || event.touches[0].clientX;
     const dragShift = dragX - this.x;
     const x = dragShift / this._slideSize.width;
     this.wasDragging = true;
@@ -1090,15 +1115,20 @@ class WhatsOnSlider {
 
   handleDown(event) {
     this.startIndex = this.currentIndex;
-    this.x = event.clientX;
-    this.sliderContainerNode.addEventListener('pointermove', this.handleScroll);
+    this.x = event.clientX || event.touches[0].clientX;
+    this.sliderContainerNode.addEventListener('mousemove', this.handleScroll);
+    this.sliderContainerNode.addEventListener('touchmove', this.handleScroll);
     this.sliderContainerNode.classList.add('wo-slider--dragging');
   }
 
   handleUp(event) {
     this.sliderContainerNode.classList.remove('wo-slider--dragging');
     this.sliderContainerNode.removeEventListener(
-      'pointermove',
+      'mousemove',
+      this.handleScroll
+    );
+    this.sliderContainerNode.removeEventListener(
+      'touchmove',
       this.handleScroll
     );
 
