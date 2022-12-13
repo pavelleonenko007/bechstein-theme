@@ -662,7 +662,7 @@ function bech_get_filtered_tickets()
 	$tickets_query = new WP_Query($tickets_args);
 	$tickets = $tickets_query->posts;
 
-	if (!empty($_POST['time']) && empty($_POST['from'])) {
+	if (!empty($_POST['time']) && empty($_POST['from']) && !empty($tickets)) {
 		// $sorted_tickets = bech_sort_tickets($tickets, false);
 		$date_map = [
 			'today' => 'Today',
