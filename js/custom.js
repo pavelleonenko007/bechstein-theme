@@ -1027,7 +1027,7 @@ class WhatsOnSlider {
 
     // console.log(this.freeCardsCount);
 
-    this.setSlidesPosition();
+    // this.setSlidesPosition();
     this.sliderContainerNode.classList.add('wo-slider--ready');
 
     this.handleScroll = this.handleScroll.bind(this);
@@ -1094,6 +1094,8 @@ class WhatsOnSlider {
         this.freeCardsCount = 3;
         break;
     }
+
+    this.setSlidesPosition();
   }
 
   handleClick(event) {
@@ -1405,6 +1407,7 @@ class VideoPlayer {
     this.handleProgressUnHover = this.handleProgressUnHover.bind(this);
 
     this.handleMute();
+    this.play();
 
     this._soundButton.addEventListener('click', this.handleMute);
     this._playButton?.addEventListener('click', this.handlePlay);
