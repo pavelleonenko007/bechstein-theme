@@ -2118,39 +2118,29 @@ const initShowMoreFilterButtons = () => {
   const showAllButtons = Array.from(
     document.querySelectorAll(SHOW_MORE_BUTTON_SELECTOR)
   );
-  const getAllFilterButtons = async (event) => {
+
+  const showAllFilterButtons = (event) => {
     event.preventDefault();
-    const target = event.target;
-    const showAllButton = target.closest(SHOW_MORE_BUTTON_SELECTOR);
-    const { taxonomy } = showAllButton.dataset;
-    const formData = new FormData();
+    const filterButtons = Array.from(
+      event.target
+        .closest('.filters-bottom-div')
+        .querySelectorAll('.w-checkbox')
+    );
 
-    formData.append('action', 'get_more_filter_buttons');
-    formData.append('taxonomy', taxonomy);
+    event.target.classList.toggle('show-all-btn--hide');
 
-    try {
-      const response = await (
-        await fetch(bech_var.url, {
-          method: 'POST',
-          body: formData,
-        })
-      ).json();
-
-      console.log(response);
-
-      if (response.status !== 'success') {
-        throw new Error('Error: ' + response.message);
+    filterButtons.forEach((filter, index) => {
+      if (index >= 4) {
+        filter.classList.toggle(
+          'hidden-item',
+          !!event.target.classList.contains('show-all-btn--hide')
+        );
       }
-
-      showAllButton.insertAdjacentHTML('beforebegin', response.data.html);
-      showAllButton.remove();
-    } catch (e) {
-      console.error(e);
-    }
+    });
   };
 
   showAllButtons.forEach((showAllButton) =>
-    showAllButton.addEventListener('click', getAllFilterButtons)
+    showAllButton.addEventListener('click', showAllFilterButtons)
   );
 };
 

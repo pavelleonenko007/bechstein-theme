@@ -129,21 +129,25 @@ Template name: What's on
                               </div>
                               <div class="filters-bottom-div">
                                 <?php
-                                $counter = 0;
                                 foreach ($genres as $index => $genre) :
-                                  if ($counter <= 4) : ?>
+                                  if ($index <= 3) : ?>
                                     <label class="w-checkbox cbx-mom">
                                       <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
                                       <input data-filter="checkbox" type="checkbox" id="<?php echo $genre->taxonomy . '-' . $genre->term_id; ?>" name="genres[]" value="<?php echo $genre->slug; ?>" <?php if (isset($_GET['genres']) && in_array($genre->slug, $_GET['genres'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
                                       <span class="filter-cbx ischbx w-form-label" for="<?php echo $genre->taxonomy . '-' . $genre->term_id; ?>"><?php echo $genre->name; ?></span>
                                     </label>
+                                  <?php else : ?>
+                                    <label class="w-checkbox cbx-mom hidden-item">
+                                      <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                                      <input data-filter="checkbox" type="checkbox" id="<?php echo $genre->taxonomy . '-' . $genre->term_id; ?>" name="genres[]" value="<?php echo $genre->slug; ?>" <?php if (isset($_GET['genres']) && in_array($genre->slug, $_GET['genres'])) echo 'checked'; ?> style="opacity:0;position:absolute;z-index:-1" />
+                                      <span class="filter-cbx ischbx w-form-label" for="<?php echo $genre->taxonomy . '-' . $genre->term_id; ?>"><?php echo $genre->name; ?></span>
+                                    </label>
                                 <?php
-                                    $counter++;
                                   endif;
                                 endforeach;
                                 unset($index); ?>
-                                <?php if (count($genres) > 5) : ?>
-                                  <button type="button" class="show-all-btn" data-button="show-all-filters" data-taxonomy="<?php echo $genres[0]->taxonomy; ?>">show all</button>
+                                <?php if (count($genres) > 3) : ?>
+                                  <button type="button" class="show-all-btn show-all-btn--hide" data-button="show-all-filters" data-taxonomy="<?php echo $genres[0]->taxonomy; ?>">show all</button>
                                 <?php endif; ?>
                               </div>
                             </div>
