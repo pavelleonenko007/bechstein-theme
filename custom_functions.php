@@ -174,7 +174,7 @@ function bech_register_post_types()
 		'supports'      => ['title', 'editor', 'thumbnail'],
 		// 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
 		'taxonomies'    => [],
-		'has_archive'   => true,
+		'has_archive'   => false,
 		'rewrite'       => true,
 		'query_var'     => true,
 	]);
