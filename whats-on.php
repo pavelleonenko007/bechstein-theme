@@ -110,13 +110,24 @@ Template name: What's on
                                 <div class="p-20-30">Event categories</div>
                               </div>
                               <div class="filters-bottom-div">
-                                <?php foreach ($event_tags as $event_tag) : ?>
-                                  <label class="w-checkbox cbx-mom">
-                                    <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
-                                    <input type="checkbox" id="event_tag-<?php echo $event_tag->term_id; ?>" name="event_tag[]" value="<?php echo $event_tag->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
-                                    <span class="filter-cbx ischbx w-form-label" for="event_tag-<?php echo $event_tag->term_id; ?>"><?php echo $event_tag->name; ?></span>
-                                  </label>
+                                <?php foreach ($event_tags as $index => $event_tag) : ?>
+                                  <?php if ($index <= 3) : ?>
+                                    <label class="w-checkbox cbx-mom">
+                                      <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                                      <input type="checkbox" id="event_tag-<?php echo $event_tag->term_id; ?>" name="event_tag[]" value="<?php echo $event_tag->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                                      <span class="filter-cbx ischbx w-form-label" for="event_tag-<?php echo $event_tag->term_id; ?>"><?php echo $event_tag->name; ?></span>
+                                    </label>
+                                  <?php else : ?>
+                                    <label class="w-checkbox cbx-mom hidden-item">
+                                      <div class="w-checkbox-input w-checkbox-input--inputType-custom cbx"></div>
+                                      <input type="checkbox" id="event_tag-<?php echo $event_tag->term_id; ?>" name="event_tag[]" value="<?php echo $event_tag->slug; ?>" style="opacity:0;position:absolute;z-index:-1" />
+                                      <span class="filter-cbx ischbx w-form-label" for="event_tag-<?php echo $event_tag->term_id; ?>"><?php echo $event_tag->name; ?></span>
+                                    </label>
+                                  <?php endif; ?>
                                 <?php endforeach; ?>
+                                <?php if (count($event_tags) > 3) : ?>
+                                  <button type="button" class="show-all-btn show-all-btn--hide" data-button="show-all-filters" data-taxonomy="<?php echo $event_tags[0]->taxonomy; ?>">show all</button>
+                                <?php endif; ?>
                               </div>
                             </div>
                           <?php endif;
