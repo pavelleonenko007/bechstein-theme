@@ -23,15 +23,16 @@ Template name: Simple page template
 					} ?>
 				</div>
 			</section>
-			<section class="section wf-section">
+			<?php $thumbnail = get_the_post_thumbnail($post, 'full', [
+				'class'   => "img-fest",
+				'loading' => 'lazy'
+			]); ?>
+			<section class="section <?php echo empty($thumbnail) ? 'section--no-thumbnail' : ''; ?> wf-section">
 				<div class="head-fest _2">
 					<h1 class="h1-50-65"><?php the_title(); ?></h1>
 					<p class="p-25-40"><?php echo bech_get_the_content_without_formatting($post->ID); ?></p>
 				</div>
-				<?php $thumbnail = get_the_post_thumbnail($post, 'full', [
-					'class'   => "img-fest",
-					'loading' => 'lazy'
-				]);
+				<?php
 
 				if (!empty($thumbnail)) : ?>
 					<div class="mom-fest-img">
