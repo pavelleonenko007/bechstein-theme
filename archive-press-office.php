@@ -113,7 +113,7 @@ Template name: Archive Press office
                 <?php endif; ?>
               </div>
             <?php else : ?>
-              <p>There is no news yet</p>
+              <p style="font-size: 20rem; line-height: 30rem; color: #030e14; margin-bottom: 10rem;">There is no news yet</p>
             <?php endif; ?>
           </div>
         </div>
