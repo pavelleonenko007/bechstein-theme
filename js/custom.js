@@ -1044,6 +1044,7 @@ class WhatsOnSlider {
       this.handleDown.bind(this)
     );
     this.sliderContainerNode.addEventListener('click', this.handleClick);
+    this.sliderContainerNode.addEventListener('mouseleave', this.handleUp);
     document.addEventListener('mouseup', this.handleUp);
     document.addEventListener('touchend', this.handleUp);
     window.addEventListener('resize', debounce(this.resize, 100));
@@ -1091,7 +1092,7 @@ class WhatsOnSlider {
         this.freeCardsCount = 1;
         break;
       default:
-        this.freeCardsCount = 3;
+        this.freeCardsCount = 2;
         break;
     }
 

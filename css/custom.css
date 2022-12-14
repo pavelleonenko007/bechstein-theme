@@ -63,6 +63,12 @@
   -webkit-user-drag: none;
 }
 
+.slider-wvwnts_bottom {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .p-30-45 {
   text-decoration: none;
 }
