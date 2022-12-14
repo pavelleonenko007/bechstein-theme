@@ -1,3 +1,12 @@
+[property='itemListElement'] *:first-child {
+  color: #7a7a78;
+  font-size: 12rem;
+  line-height: 25rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
 #tickets,
 #tickets:focus {
   outline: none;
