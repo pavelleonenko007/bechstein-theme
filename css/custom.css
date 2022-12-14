@@ -7,6 +7,10 @@
   text-transform: uppercase;
 }
 
+.show-all-btn {
+  background-color: transparent;
+}
+
 #tickets,
 #tickets:focus {
   outline: none;

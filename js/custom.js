@@ -2129,6 +2129,12 @@ const initShowMoreFilterButtons = () => {
 
     event.target.classList.toggle('show-all-btn--hide');
 
+    if (event.target.classList.contains('show-all-btn--hide')) {
+      event.target.textContent = 'show all';
+    } else {
+      event.target.textContent = 'hide';
+    }
+
     filterButtons.forEach((filter, index) => {
       if (index >= 4) {
         filter.classList.toggle(
