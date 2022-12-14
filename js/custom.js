@@ -872,8 +872,7 @@ class UserCart {
   }
 
   handleClick(event) {
-    console.log(event);
-    if (this._orders.length > 0 && this._user.name) {
+    if (this._orders.length > 0) {
       event.preventDefault();
       document.body.classList.toggle(
         'opencart',
@@ -895,10 +894,7 @@ class UserCart {
   }
 
   setExpiresTime() {
-    console.log(this.expiresTime);
-    console.log(this.timerInterval);
     if (this.expiresTime === 0) {
-      console.log('inside if');
       document.body.classList.remove('opencart');
       clearInterval(this.timerInterval);
       this.setData({
@@ -909,7 +905,6 @@ class UserCart {
     }
 
     if (!this.expiresTime) {
-      console.log('inside !if');
       document.body.classList.remove('opencart');
       clearInterval(this.timerInterval);
       this.setData({
@@ -951,22 +946,25 @@ class UserCart {
     let markup = '';
     this.setExpiresTime = this.setExpiresTime.bind(this);
     if (this._orders.length >= 1) {
-      const links = this._user?.email
+      const links = this._user
         ? `<div id="user-actions">
             <a href="${this._profileUrl}" class="p-17-25 card-block-a">View your account</a>
             <a href="${this._logoutUrl}" class="p-17-25 card-block-a">Log out</a>
          </div>`
-        : ``;
+        : `<div id="user-actions">
+             <a href="${this._loginUrl}" class="p-17-25 card-block-a">Log in</a>
+          </div>`;
 
-      const userNameHTML = this._user?.name
+      const userNameHTML = this._user
         ? `<div id="user-name">
               <div class="p-20-30 cart-block_top">${this._user.name}</div>
               <div class="cart-block_divider"></div>
           </div>`
         : '';
 
-      const userCartHTML = this._user?.name
-        ? `<div id="user-basket">
+      const userCartHTML =
+        this._orders.length > 0
+          ? `<div id="user-basket">
               <div class="p-17-25 card-block-txt">Your basket contains</div>
               <div class="p-20-30 cart-block-text">${
                 this._orders.length
@@ -986,7 +984,7 @@ class UserCart {
               )}</span>&nbsp;left to purchase</div>
               <div class="cart-block_divider"></div>
           </div>`
-        : '';
+          : '';
 
       markup = userNameHTML + userCartHTML + links;
       this.timerInterval = setInterval(this.setExpiresTime, 1000);
