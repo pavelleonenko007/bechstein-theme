@@ -126,91 +126,93 @@ global $post;
           </div>
           <div class="event-row_right-col">
             <?php $content_blocks = get_field('content_blocks');
-            foreach ($content_blocks as $content_block) : ?>
-              <?php
-              if ($content_block['acf_fc_layout'] === 'dropdowns_block') :
-                continue;
-              elseif ($content_block['acf_fc_layout'] === 'alert_block') :
-                $link = $content_block['link'];
-                $link_html = $link['url'] ? '<a href="' . $link['url'] . '">' . $link['link_text'] . '</a>' : '';
-                if ($content_block['text']) : ?>
-                  <div class="ui_alert-block w-richtext">
-                    <p><?php echo $content_block['text']; ?> <?php echo $link_html; ?></p>
-                  </div>
-                <?php endif; ?>
-              <?php elseif ($content_block['acf_fc_layout'] === 'paragraph') : ?>
-                <div class="ui_text-block w-richtext">
-                  <?php echo $content_block['paragraph']; ?>
-                </div>
-              <?php elseif ($content_block['acf_fc_layout'] === 'programme_columns') : ?>
-                <div class="ui_program-row">
-                  <?php $columns = $content_block['columns'];
-                  foreach ($columns as $column) : ?>
-                    <div id="w-node-fa9df372-dff5-74be-646a-834100e2033a-92261598" class="ui_program-col">
-                      <h2 class="h2-35-45">
-                        <?php echo $column['column_title']; ?>
-                      </h2>
-                      <?php $list = $column['column_list'];
-                      if (!empty($list)) : ?>
-                        <div class="ui_program-core">
-                          <?php foreach ($list as $list_item) : ?>
-                            <div class="ui_program-item">
-                              <div class="p-20-30">
-                                <?php echo $list_item['list_title']; ?>
-                              </div>
-                              <div class="p-17-25 italic">
-                                <?php echo $list_item['list_subtitle']; ?>
-                              </div>
-                            </div>
-                          <?php endforeach; ?>
-                        </div>
-                      <?php endif; ?>
-                    </div>
-                  <?php endforeach; ?>
-                </div>
-              <?php elseif ($content_block['acf_fc_layout'] === 'watch_and_listen') : ?>
-                <h2 class="h2-35-45">
-                  <?php echo $content_block['heading']; ?>
-                </h2>
+            if (!empty($content_blocks)) : ?>
+              <?php foreach ($content_blocks as $content_block) : ?>
                 <?php
-                $videos = $content_block['videos'];
-                foreach ($videos as $video) : ?>
-                  <a href="#" class="ui-event-link w-inline-block w-lightbox">
-                    <div class="ui-event-link_img-mom">
-                      <?php echo preg_replace('/(width|height)=\"(\d+)\"/', '', wp_get_attachment_image(
-                        $video['poster']['ID'],
-                        'medium',
-                        false,
-                        [
-                          'class' => 'ui-event-link_img'
-                        ]
-                      )); ?>
-                      <!-- <img src="" loading="lazy" alt class="play-ico-24"> -->
+                if ($content_block['acf_fc_layout'] === 'dropdowns_block') :
+                  continue;
+                elseif ($content_block['acf_fc_layout'] === 'alert_block') :
+                  $link = $content_block['link'];
+                  $link_html = $link['url'] ? '<a href="' . $link['url'] . '">' . $link['link_text'] . '</a>' : '';
+                  if ($content_block['text']) : ?>
+                    <div class="ui_alert-block w-richtext">
+                      <p><?php echo $content_block['text']; ?> <?php echo $link_html; ?></p>
                     </div>
-                    <div class="vert">
-                      <div class="p-25-40"><?php echo $video['video_title']; ?></div>
-                      <div class="p-17-25 italic"><?php echo $video['video_description']; ?></div>
-                    </div>
-                    <?php
-                    $json = [];
-                    $json['group'] = $content_block['heading'];
-                    $json['items'][] = [
-                      'url' => $video['video_link'],
-                      'originalUrl' => $video['video_link'],
-                      'html' => '<iframe width="940" height="528" src="https://www.youtube.com/embed/' . bech_get_youtube_video_id_from_link($video['video_link']) . '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                      'thumbnailUrl' => wp_get_attachment_image_url($video['poster']['ID'], 'full'),
-                      'width' => 940,
-                      'height' => 528,
-                      'type' => 'video'
-                    ];
-                    ?>
-                    <script class="w-json" type="application/json">
-                      <?php echo json_encode($json, JSON_UNESCAPED_SLASHES); ?>
-                    </script>
-                  </a>
-                <?php endforeach; ?>
-              <?php endif; ?>
+                  <?php endif; ?>
+                <?php elseif ($content_block['acf_fc_layout'] === 'paragraph') : ?>
+                  <div class="ui_text-block w-richtext">
+                    <?php echo $content_block['paragraph']; ?>
+                  </div>
+                <?php elseif ($content_block['acf_fc_layout'] === 'programme_columns') : ?>
+                  <div class="ui_program-row">
+                    <?php $columns = $content_block['columns'];
+                    foreach ($columns as $column) : ?>
+                      <div id="w-node-fa9df372-dff5-74be-646a-834100e2033a-92261598" class="ui_program-col">
+                        <h2 class="h2-35-45">
+                          <?php echo $column['column_title']; ?>
+                        </h2>
+                        <?php $list = $column['column_list'];
+                        if (!empty($list)) : ?>
+                          <div class="ui_program-core">
+                            <?php foreach ($list as $list_item) : ?>
+                              <div class="ui_program-item">
+                                <div class="p-20-30">
+                                  <?php echo $list_item['list_title']; ?>
+                                </div>
+                                <div class="p-17-25 italic">
+                                  <?php echo $list_item['list_subtitle']; ?>
+                                </div>
+                              </div>
+                            <?php endforeach; ?>
+                          </div>
+                        <?php endif; ?>
+                      </div>
+                    <?php endforeach; ?>
+                  </div>
+                <?php elseif ($content_block['acf_fc_layout'] === 'watch_and_listen') : ?>
+                  <h2 class="h2-35-45">
+                    <?php echo $content_block['heading']; ?>
+                  </h2>
+                  <?php
+                  $videos = $content_block['videos'];
+                  foreach ($videos as $video) : ?>
+                    <a href="#" class="ui-event-link w-inline-block w-lightbox">
+                      <div class="ui-event-link_img-mom">
+                        <?php echo preg_replace('/(width|height)=\"(\d+)\"/', '', wp_get_attachment_image(
+                          $video['poster']['ID'],
+                          'medium',
+                          false,
+                          [
+                            'class' => 'ui-event-link_img'
+                          ]
+                        )); ?>
+                        <!-- <img src="" loading="lazy" alt class="play-ico-24"> -->
+                      </div>
+                      <div class="vert">
+                        <div class="p-25-40"><?php echo $video['video_title']; ?></div>
+                        <div class="p-17-25 italic"><?php echo $video['video_description']; ?></div>
+                      </div>
+                      <?php
+                      $json = [];
+                      $json['group'] = $content_block['heading'];
+                      $json['items'][] = [
+                        'url' => $video['video_link'],
+                        'originalUrl' => $video['video_link'],
+                        'html' => '<iframe width="940" height="528" src="https://www.youtube.com/embed/' . bech_get_youtube_video_id_from_link($video['video_link']) . '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                        'thumbnailUrl' => wp_get_attachment_image_url($video['poster']['ID'], 'full'),
+                        'width' => 940,
+                        'height' => 528,
+                        'type' => 'video'
+                      ];
+                      ?>
+                      <script class="w-json" type="application/json">
+                        <?php echo json_encode($json, JSON_UNESCAPED_SLASHES); ?>
+                      </script>
+                    </a>
+                  <?php endforeach; ?>
+                <?php endif; ?>
             <?php endforeach;
+            endif;
             ?>
             <?php $festival = get_post_meta($post->ID, '_bechtix_festival_relation', true);
             if (!empty($festival)) : ?>
@@ -225,232 +227,36 @@ global $post;
                 </div>
               </a>
             <?php endif; ?>
-            <?php foreach ($content_blocks as $content_block) : ?>
-              <?php if ($content_block['acf_fc_layout'] !== 'dropdowns_block') :
-                continue;
-              else : ?>
-                <h2 class="h2-35-45">
-                  <?php echo $content_block['heading']; ?>
-                </h2>
-                <?php $dropdowns = $content_block['dropdowns'];
-                foreach ($dropdowns as $dropdown) : ?>
-                  <div class="ui-drop-container">
-                    <div class="ui-drop-container_btn">
-                      <div class="p-20-30">
-                        <?php echo $dropdown['dropdown_title']; ?>
+            <?php
+            if (!empty($content_block)) :
+              foreach ($content_blocks as $content_block) : ?>
+                <?php if ($content_block['acf_fc_layout'] !== 'dropdowns_block') :
+                  continue;
+                else : ?>
+                  <h2 class="h2-35-45">
+                    <?php echo $content_block['heading']; ?>
+                  </h2>
+                  <?php $dropdowns = $content_block['dropdowns'];
+                  foreach ($dropdowns as $dropdown) : ?>
+                    <div class="ui-drop-container">
+                      <div class="ui-drop-container_btn">
+                        <div class="p-20-30">
+                          <?php echo $dropdown['dropdown_title']; ?>
+                        </div>
+                        <div class="ui-drop-container_ico-mom">
+                          <div class="ui-drop-container_ico-mom_down">→</div>
+                          <div class="ui-drop-container_ico-mom_top">→</div>
+                        </div>
                       </div>
-                      <div class="ui-drop-container_ico-mom">
-                        <div class="ui-drop-container_ico-mom_down">→</div>
-                        <div class="ui-drop-container_ico-mom_top">→</div>
+                      <div class="ui-drop-container_content">
+                        <?php echo preg_replace('/<p([^>]+)?>/', '<p$1 class="p-17-25">', $dropdown['dropdown_content']); ?>
                       </div>
                     </div>
-                    <div class="ui-drop-container_content">
-                      <?php echo preg_replace('/<p([^>]+)?>/', '<p$1 class="p-17-25">', $dropdown['dropdown_content']); ?>
-                    </div>
-                  </div>
-                <?php endforeach; ?>
-              <?php endif; ?>
-            <?php endforeach; ?>
-            <?php if (get_field('show_alert_box')) { ?>
-              <div>
-                <div class="ui_alert-block w-richtext">
-                  <?php echo get_field('alert_box_text') ?>
-                </div>
-              </div>
-            <?php } ?>
-            <div class="ui_text-block w-richtext">
-              <?php echo get_field('main_info') ?>
-            </div>
-            <div class="ui_program-row">
-              <div id="w-node-fa9df372-dff5-74be-646a-834100e2033a-92261598" class="ui_program-col">
-                <h2 class="h2-35-45">
-                  <?php echo get_field('performers_header') ?>
-                </h2>
-                <?php if (have_rows('performers_loop')) { ?>
-                  <div class="ui_program-core">
-                    <?php global $parent_id;
-                    $parent_id = $loop_id;
-                    $loop_index = 0;
-                    $loop_title = "Performers loop";
-                    $loop_field = "performers_loop";
-                    while (have_rows('performers_loop')) {
-                      global $loop_id;
-                      $loop_index++;
-                      $loop_id++;
-                      the_row(); ?>
-                      <div class="ui_program-item">
-                        <div class="p-20-30">
-                          <?php echo get_sub_field('name') ?>
-                        </div>
-                        <div class="p-17-25 italic">
-                          <?php echo get_sub_field('instrument') ?>
-                        </div>
-                      </div>
-                    <?php } ?>
-                  </div>
-                <?php } ?>
-              </div>
-              <div id="w-node-_3918fa0d-bee1-22b5-2113-249bb5d8e536-92261598" class="ui_program-col">
-                <h2 class="h2-35-45">
-                  <?php echo get_field('programme_header') ?>
-                </h2>
-                <?php if (have_rows('programme_loop')) { ?>
-                  <div class="ui_program-core">
-                    <?php global $parent_id;
-                    $parent_id = $loop_id;
-                    $loop_index = 0;
-                    $loop_title = "Programme loop";
-                    $loop_field = "programme_loop";
-                    while (have_rows('programme_loop')) {
-                      global $loop_id;
-                      $loop_index++;
-                      $loop_id++;
-                      the_row(); ?>
-                      <div class="ui_program-item">
-                        <div class="p-20-30">
-                          <?php echo get_sub_field('composer') ?>
-                        </div>
-                        <div class="p-17-25 italic">
-                          <?php echo get_sub_field('composition') ?>
-                        </div>
-                      </div>
-                    <?php } ?>
-                  </div>
-                <?php } ?>
-              </div>
-            </div>
+                  <?php endforeach; ?>
+                <?php endif; ?>
+            <?php endforeach;
+            endif; ?>
 
-            <h2 class="h2-35-45">
-              <?php echo get_field('watch_and_listen_header') ?>
-            </h2>
-            <?php if (have_rows('videos')) { ?>
-              <div>
-                <?php global $parent_id;
-                $parent_id = $loop_id;
-                $loop_index = 0;
-                $loop_title = "Videos";
-                $loop_field = "videos";
-                while (have_rows('videos')) {
-                  global $loop_id;
-                  $loop_index++;
-                  $loop_id++;
-                  the_row(); ?>
-                  <a href="#" class="ui-event-link w-inline-block w-lightbox">
-                    <div class="ui-event-link_img-mom"><img src="<?php $field = get_sub_field('video_cover');
-                                                                  if (isset($field['url'])) {
-                                                                    echo ($field['url']);
-                                                                  } elseif (is_numeric($field)) {
-                                                                    echo (wp_get_attachment_image_url($field, 'full'));
-                                                                  } else {
-                                                                    echo ($field);
-                                                                  } ?>" loading="lazy" alt="<?php echo esc_attr($field['alt']); ?>" class="ui-event-link_img" title="<?php echo pathinfo($field['filename'])['filename'] !== $field['title'] ? esc_attr($field['title']) : ''; ?>"><img src="<?php echo get_template_directory_uri() ?>/images/62bc3fe7d9cc6168db2615cc_poly-play.svg" loading="lazy" alt class="play-ico-24"></div>
-                    <div class="vert">
-                      <div class="p-25-40"><?php echo get_sub_field('video_header') ?></div>
-                      <div class="p-17-25 italic"><?php echo get_sub_field('video_description') ?></div>
-                    </div>
-                    <script type="application/json" class="w-json">
-                      <?php
-                      $item = get_sub_field('video_link');
-                      $items = array();
-                      if (is_array($item)) {
-                        $video = $item['video'];
-                        $poster = $item['poster'];
-                        if (isset($poster['url'])) {
-                          $image_url = $poster['url'];
-                        } elseif (is_numeric($poster)) {
-                          $image_url = wp_get_attachment_image_url($poster, 'full');
-                        } else {
-                          $image_url = $poster;
-                        }
-                      } else {
-                        $video = $item;
-                        $image_url = '';
-                      }
-                      $items[] = [
-                        'html' => $video,
-                        'thumbnailUrl' => $image_url,
-                        'width' => 940,
-                        'height' => 528,
-                        'type' => 'video'
-                      ];
-                      echo json_encode([
-                        'group' => '',
-                        'items' => $items
-                      ], JSON_UNESCAPED_SLASHES);
-                      ?>
-                    </script>
-                  </a>
-                <?php } ?>
-              </div>
-            <?php } ?>
-            <?php if (get_field('show_festival_block')) { ?>
-              <div class="div-block-24">
-                <?php if (have_rows('festival_group')) { ?>
-                  <div>
-                    <?php global $parent_id;
-                    $parent_id = $loop_id;
-                    $loop_index = 0;
-                    $loop_title = "Festival group";
-                    $loop_field = "festival_group";
-                    while (have_rows('festival_group')) {
-                      global $loop_id;
-                      $loop_index++;
-                      $loop_id++;
-                      the_row(); ?>
-                      <h2 class="h2-35-45">
-                        <?php echo get_sub_field('festival_block_header') ?>
-                      </h2><a href="<?php echo get_sub_field('festival_link') ?>" class="ui-festival-link w-inline-block"><img src="<?php $field = get_sub_field('festival_image');
-                                                                                                                                    if (isset($field['url'])) {
-                                                                                                                                      echo ($field['url']);
-                                                                                                                                    } elseif (is_numeric($field)) {
-                                                                                                                                      echo (wp_get_attachment_image_url($field, 'full'));
-                                                                                                                                    } else {
-                                                                                                                                      echo ($field);
-                                                                                                                                    } ?>" loading="lazy" alt="<?php echo esc_attr($field['alt']); ?>" class="ui-festival-link_img" title="<?php echo pathinfo($field['filename'])['filename'] !== $field['title'] ? esc_attr($field['title']) : ''; ?>">
-                        <div class="ui-festival-link_content">
-                          <div><?php echo get_sub_field('image_header') ?></div>
-                          <div><?php echo get_sub_field('festival_dates') ?></div>
-                        </div>
-                      </a>
-                    <?php } ?>
-                  </div>
-                <?php } ?>
-              </div>
-            <?php } ?>
-            <h2 class="h2-35-45">
-              <?php echo get_field('your_visit_header') ?>
-            </h2>
-            <?php if (have_rows('dropdowns_loop')) { ?>
-              <div>
-                <?php global $parent_id;
-                $parent_id = $loop_id;
-                $loop_index = 0;
-                $loop_title = "Dropdowns loop";
-                $loop_field = "dropdowns_loop";
-                while (have_rows('dropdowns_loop')) {
-                  global $loop_id;
-                  $loop_index++;
-                  $loop_id++;
-                  the_row(); ?>
-                  <div class="ui-drop-container">
-                    <div class="ui-drop-container_btn">
-                      <div class="p-20-30">
-                        <?php echo get_sub_field('header') ?>
-                      </div>
-                      <div class="ui-drop-container_ico-mom">
-                        <div class="ui-drop-container_ico-mom_down">→</div>
-                        <div class="ui-drop-container_ico-mom_top">→</div>
-                      </div>
-                    </div>
-                    <div class="ui-drop-container_content">
-                      <p class="p-17-25">
-                        <?php echo get_sub_field('text') ?>
-                      </p>
-                    </div>
-                  </div>
-                <?php } ?>
-              </div>
-            <?php } ?>
             <?php if ($tickets_query->have_posts()) : ?>
               <div id="tickets-mob" class="tikets-mob">
                 <?php while ($tickets_query->have_posts()) : $tickets_query->the_post(); ?>
