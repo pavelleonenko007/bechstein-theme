@@ -1109,6 +1109,7 @@ class WhatsOnSlider {
     const dragShift = dragX - this.x;
     const x = dragShift / this._slideSize.width;
     this.wasDragging = true;
+    document.body.classList.add('whats-on-dragging');
     this.sliderContainerNode.removeEventListener('click', this.handleClick);
     // if (Math.abs(dragShift) < 10) return;
     this.dragging(x);
@@ -1123,6 +1124,7 @@ class WhatsOnSlider {
   }
 
   handleUp(event) {
+    document.body.classList.remove('whats-on-dragging');
     this.sliderContainerNode.classList.remove('wo-slider--dragging');
     this.sliderContainerNode.removeEventListener(
       'mousemove',
