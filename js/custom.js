@@ -1020,7 +1020,10 @@ class WhatsOnSlider {
     this.nextButtonNode = document.querySelector('[data-button="next"]');
     this._currentIndex = 0;
     this.wasDragging = false;
-    this.allowPageScroll = false;
+
+    this.pageScrolling = false;
+    this.slideScrolling = false;
+
     this.freeCardsCount;
     this.resize();
 
@@ -1106,6 +1109,12 @@ class WhatsOnSlider {
   }
 
   handleScroll(event) {
+    if (this.pageScrolling) return;
+
+    if (this.slideScrolling) {
+      event.preventDefault();
+    }
+
     const dragY = event.clientY || event.touches[0].clientY;
     const dragX = event.clientX || event.touches[0].clientX;
     const dragShiftX = dragX - this.x;
@@ -1113,13 +1122,17 @@ class WhatsOnSlider {
     const x = dragShiftX / this._slideSize.width;
     this.wasDragging = true;
 
-    // if ()
-    if (Math.abs(dragShiftX) > 5) {
+    if (Math.abs(dragShiftY) > 5) {
+      this.pageScrolling = true;
+    } else if (Math.abs(dragShiftX) > 5) {
       event.preventDefault();
+      this.slideScrolling = true;
     }
 
-    console.log('dragshiftX', dragShiftX);
-    console.log('dragshiftY', dragShiftY);
+    console.log('скроллится ' + this.pageScrolling ? 'страница' : 'слайдер');
+
+    // console.log('dragshiftX', dragShiftX);
+    // console.log('dragshiftY', dragShiftY);
 
     this.sliderContainerNode.removeEventListener('click', this.handleClick);
     // if (Math.abs(dragShift) < 10) return;
@@ -1138,7 +1151,7 @@ class WhatsOnSlider {
   }
 
   handleUp(event) {
-    this.allowPageScroll = false;
+    this.pageScrolling = false;
     document.body.classList.remove('whats-on-dragging');
     this.sliderContainerNode.classList.remove('wo-slider--dragging');
     this.sliderContainerNode.removeEventListener(
