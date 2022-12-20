@@ -358,8 +358,8 @@ class WOCalendar {
         ? 6
         : this.firstDayInMonth.getDay() - 1;
 
-    for (let i = 0; i < this.lastDayInMonth.getDate() + paddingDays; i++) {
-      if (i < paddingDays) {
+    for (let i = 0; i < 42; i++) {
+      if (i < paddingDays || i >= this.lastDayInMonth.getDate() + paddingDays) {
         dates.push('');
       } else {
         dates.push(new Date(this.year, this.month, dayNumber));
