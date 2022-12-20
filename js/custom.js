@@ -1110,6 +1110,7 @@ class WhatsOnSlider {
     if (this.allowPageScroll) return;
 
     const dragY = event.clientY || event.touches[0].clientY;
+    console.log(dragY);
     if (event.touches && Math.abs(this.y - dragY) === 0) {
       event.preventDefault();
       this.allowPageScroll = true;
