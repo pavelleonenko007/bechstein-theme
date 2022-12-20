@@ -1105,14 +1105,15 @@ class WhatsOnSlider {
   }
 
   handleScroll(event) {
+    event.preventDefault();
     const dragX = event.clientX || event.touches[0].clientX;
     const dragShift = dragX - this.x;
     const x = dragShift / this._slideSize.width;
     this.wasDragging = true;
 
-    if (Math.abs(dragShift) > 5) {
-      document.body.classList.add('whats-on-dragging');
-    }
+    // if (Math.abs(dragShift) > 5) {
+    //   document.body.classList.add('whats-on-dragging');
+    // }
 
     this.sliderContainerNode.removeEventListener('click', this.handleClick);
     // if (Math.abs(dragShift) < 10) return;
