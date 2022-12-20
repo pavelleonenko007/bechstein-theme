@@ -1107,19 +1107,16 @@ class WhatsOnSlider {
 
   handleScroll(event) {
     const dragY = event.clientY || event.touches[0].clientY;
-    console.log('scroll', dragY);
-    if (event.touches && Math.abs(this.y - dragY) === 0) {
-      event.preventDefault();
-      this.allowPageScroll = true;
-    }
     const dragX = event.clientX || event.touches[0].clientX;
     const dragShift = dragX - this.x;
     const x = dragShift / this._slideSize.width;
     this.wasDragging = true;
 
-    // if (Math.abs(dragShift) > 5) {
-    //   document.body.classList.add('whats-on-dragging');
-    // }
+    if (Math.abs(dragShift) > 5) {
+      event.preventDefault();
+    }
+
+    console.log('dragshift', dragShift);
 
     this.sliderContainerNode.removeEventListener('click', this.handleClick);
     // if (Math.abs(dragShift) < 10) return;
@@ -1131,7 +1128,7 @@ class WhatsOnSlider {
     this.x = event.clientX || event.touches[0].clientX;
     this.y = event.clientY || event.touches[0].clientY;
 
-    console.log('start', this.y);
+    // console.log('start', this.y);
     this.sliderContainerNode.addEventListener('mousemove', this.handleScroll);
     this.sliderContainerNode.addEventListener('touchmove', this.handleScroll);
     this.sliderContainerNode.classList.add('wo-slider--dragging');
