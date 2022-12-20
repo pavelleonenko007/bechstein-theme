@@ -1108,15 +1108,18 @@ class WhatsOnSlider {
   handleScroll(event) {
     const dragY = event.clientY || event.touches[0].clientY;
     const dragX = event.clientX || event.touches[0].clientX;
-    const dragShift = dragX - this.x;
-    const x = dragShift / this._slideSize.width;
+    const dragShiftX = dragX - this.x;
+    const dragShiftY = dragY - this.y;
+    const x = dragShiftX / this._slideSize.width;
     this.wasDragging = true;
 
-    if (Math.abs(dragShift) > 5) {
+    // if ()
+    if (Math.abs(dragShiftX) > 5) {
       event.preventDefault();
     }
 
-    console.log('dragshift', dragShift);
+    console.log('dragshiftX', dragShiftX);
+    console.log('dragshiftY', dragShiftY);
 
     this.sliderContainerNode.removeEventListener('click', this.handleClick);
     // if (Math.abs(dragShift) < 10) return;
