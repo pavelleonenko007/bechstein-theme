@@ -1020,6 +1020,7 @@ class WhatsOnSlider {
     this.nextButtonNode = document.querySelector('[data-button="next"]');
     this._currentIndex = 0;
     this.wasDragging = false;
+    this.allowPageScroll = false;
     this.freeCardsCount;
     this.resize();
 
@@ -1105,7 +1106,14 @@ class WhatsOnSlider {
   }
 
   handleScroll(event) {
-    event.preventDefault();
+    console.log(this.allowPageScroll);
+    if (this.allowPageScroll) return;
+
+    const dragY = event.clientY || event.touches[0].clientY;
+    if (event.touches && Math.abs(this.y - dragY) === 0) {
+      event.preventDefault();
+      this.allowPageScroll = true;
+    }
     const dragX = event.clientX || event.touches[0].clientX;
     const dragShift = dragX - this.x;
     const x = dragShift / this._slideSize.width;
@@ -1123,12 +1131,14 @@ class WhatsOnSlider {
   handleDown(event) {
     this.startIndex = this.currentIndex;
     this.x = event.clientX || event.touches[0].clientX;
+    this.y = event.clientY || event.touches[0].clientY;
     this.sliderContainerNode.addEventListener('mousemove', this.handleScroll);
     this.sliderContainerNode.addEventListener('touchmove', this.handleScroll);
     this.sliderContainerNode.classList.add('wo-slider--dragging');
   }
 
   handleUp(event) {
+    this.allowPageScroll = false;
     document.body.classList.remove('whats-on-dragging');
     this.sliderContainerNode.classList.remove('wo-slider--dragging');
     this.sliderContainerNode.removeEventListener(
