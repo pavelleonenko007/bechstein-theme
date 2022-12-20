@@ -1122,7 +1122,7 @@ class WhatsOnSlider {
     const x = dragShiftX / this._slideSize.width;
     this.wasDragging = true;
 
-    if (Math.abs(dragShiftY) > 5) {
+    if (Math.abs(dragShiftY) > 5 && !this.slideScrolling) {
       this.pageScrolling = true;
     } else if (Math.abs(dragShiftX) > 5) {
       event.preventDefault();
