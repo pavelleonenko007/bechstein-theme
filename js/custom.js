@@ -1152,6 +1152,7 @@ class WhatsOnSlider {
 
   handleUp(event) {
     this.pageScrolling = false;
+    this.slideScrolling = false;
     document.body.classList.remove('whats-on-dragging');
     this.sliderContainerNode.classList.remove('wo-slider--dragging');
     this.sliderContainerNode.removeEventListener(
