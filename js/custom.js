@@ -1106,11 +1106,8 @@ class WhatsOnSlider {
   }
 
   handleScroll(event) {
-    console.log(this.allowPageScroll);
-    if (this.allowPageScroll) return;
-
     const dragY = event.clientY || event.touches[0].clientY;
-    console.log(dragY);
+    console.log('scroll', dragY);
     if (event.touches && Math.abs(this.y - dragY) === 0) {
       event.preventDefault();
       this.allowPageScroll = true;
@@ -1133,6 +1130,8 @@ class WhatsOnSlider {
     this.startIndex = this.currentIndex;
     this.x = event.clientX || event.touches[0].clientX;
     this.y = event.clientY || event.touches[0].clientY;
+
+    console.log('start', this.y);
     this.sliderContainerNode.addEventListener('mousemove', this.handleScroll);
     this.sliderContainerNode.addEventListener('touchmove', this.handleScroll);
     this.sliderContainerNode.classList.add('wo-slider--dragging');
