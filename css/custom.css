@@ -1,3 +1,7 @@
+.head-event-image_mob {
+  display: none;
+}
+
 .whats-on-dragging {
   overflow: hidden;
 }
@@ -1119,6 +1123,19 @@ p strong {
 }
 
 @media screen and (max-width: 495px) {
+  .head-event-image {
+    display: none;
+  }
+
+  .head-event-image_mob {
+    display: block;
+    flex: 0 0 auto;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
   .navbar {
     background-image: none;
   }

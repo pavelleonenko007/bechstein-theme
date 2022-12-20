@@ -26,14 +26,21 @@ Template name: Copy of Bechstein Hall
                                     <div class="bech-slider__slide" data-type="slide">
                                         <div class="head-event-content">
                                             <?php $slide_image = wp_get_attachment_image($slide['background_image']['ID'], 'large', false, [
-                                                'class' => 'img-fw mob-cover'
+                                                'class' => 'img-fw mob-cover head-event-image'
+                                            ]);
+
+                                            $slider_image_mob = wp_get_attachment_image($slide['background_image_mob']['ID'], 'large', false, [
+                                                'class' => 'head-event-image_mob'
                                             ]);
 
                                             if (!empty($slide_image)) : ?>
-                                                <a href="">
-                                                    <?php echo $slide_image; ?>
-                                                </a>
+                                                <?php echo $slide_image; ?>
                                             <?php endif; ?>
+
+                                            <?php if (!empty($slider_image_mob)) :
+                                                echo $slider_image_mob;
+                                            endif; ?>
+
                                             <?php /*echo wp_get_attachment_image($slide['background_image']['ID'], 'large', false, [
                                                 'class' => 'img-fw mob-cover'
                                             ]); */ ?>
