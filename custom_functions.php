@@ -179,6 +179,8 @@ function bech_register_post_types()
 		'query_var'     => true,
 	]);
 
+	remove_post_type_support('press-office', 'editor');
+
 	register_taxonomy('press_tag', ['press-office'], [
 		'label'                 => '', // определяется параметром $labels->name
 		'labels'                => [
