@@ -2440,23 +2440,65 @@ function quickSort(array = []) {
   return [...quickSort(less), pivot, ...quickSort(greater)];
 }
 
+/**
+ *
+ *
+ * - Проверяем на теги пользователя
+ * -- если нет тегов, то ничего не делаем
+ *
+ * -- если теги есть
+ * --- проверяем на бенефит с полем OnlineSaleStart
+ * ---- если бенефита с таким полем нет
+ * ----- проверяем на бенефит с ценой
+ * ---- если бенефит есть
+ * -----
+ *
+ *
+ */
+
 const initBenefitsForUser = (user = {}) => {
-  if (!user && user.tags.length === 0) return;
+  if (!user && user.tags.length === 0) {
+    return;
+  }
 
   const userTags = user.tags;
   const ticketWithBenefitsNodes = Array.from(
-    document.querySelectorAll('[data-ticket_benefits]')
+    document.querySelectorAll(
+      '[data-ticket_benefits]:not([data-ticket_benefits=""])'
+    )
   );
 
-  ticketWithBenefitsNodes.forEach((ticketNode) => {
-    if (!ticketNode.dataset.ticket_benefits) return;
-    const benefitsArray = JSON.parse(ticketNode.dataset.ticket_benefits);
-    const userBenefits = benefitsArray.filter((benefit) =>
-      userTags?.find((tag) => tag.id === benefit.CustomerTag.CustomerTagId)
+  ticketWithBenefitsNodes.forEach((ticketWithBenefitsNode) => {
+    const bookTicketsButton = ticketWithBenefitsNode.querySelector(
+      'a.booktickets-btn.none'
     );
+    const benefits = JSON.parse(ticketWithBenefitsNode.dataset.ticket_benefits);
+    const benefitsForCurrentUser = benefits.filter((benefit) =>
+      userTags.find((tag) => tag.id === benefit.CustomerTag.CustomerTagId)
+    );
+    // search benefit with OnlineSaleStart
+    const timeBenefit = benefitsForCurrentUser.find(
+      (benefit) => benefit.OnlineSaleStart
+    );
+
+    if (timeBenefit) {
+      const timeForNow = new Date();
+      const ticketOnlineSaleStartTime = new Date(timeBenefit.OnlineSaleStart);
+
+      if (timeForNow > ticketOnlineSaleStartTime) {
+        if (bookTicketsButton) {
+          bookTicketsButton.style.display = 'flex';
+
+          if (bookTicketsButton.previousElementSibling) {
+            bookTicketsButton.previousElementSibling.style.display = 'none';
+          }
+        }
+      }
+    }
+
     let prices = [];
 
-    userBenefits.forEach((benefit) => {
+    benefitsForCurrentUser.forEach((benefit) => {
       benefit.Prices.forEach((priceObj) => {
         priceObj.Prices.forEach((innerPriceObj) => {
           prices.push(innerPriceObj.Price);
@@ -2465,11 +2507,12 @@ const initBenefitsForUser = (user = {}) => {
     });
 
     prices = quickSort([...new Set(prices)]);
-    // console.log(prices);
 
-    if (prices.length === 0) return;
+    if (prices.length === 0) {
+      return;
+    }
 
-    const priceNodes = ticketNode.querySelectorAll('.cms-li_price');
+    const priceNodes = ticketWithBenefitsNode.querySelectorAll('.cms-li_price');
     const priceString = `from £${prices[0]}`;
 
     priceNodes.forEach((priceNode) => {
