@@ -5,3 +5,7 @@
 .acf-row {
   margin-bottom: 10rem;
 }
+
+#menu-posts {
+  display: none;
+}
