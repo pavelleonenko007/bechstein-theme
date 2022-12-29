@@ -174,7 +174,7 @@ function bech_register_post_types()
 		'supports'      => ['title', 'editor', 'thumbnail'],
 		// 'title','editor','author','thumbnail','excerpt','trackbacks','custom-fields','comments','revisions','page-attributes','post-formats'
 		'taxonomies'    => [],
-		'has_archive'   => false,
+		'has_archive'   => true,
 		'rewrite'       => true,
 		'query_var'     => true,
 	]);
@@ -218,6 +218,52 @@ function bech_register_post_types()
 		// '_builtin'              => false,
 		//'update_count_callback' => '_update_post_term_count',
 	]);
+}
+
+// add_filter('pre_get_posts', function ($query_vars) {
+// 	if (is_admin()) {
+// 		return $query_vars;
+// 	}
+
+// 	if (is_post_type_archive('press-office')) {
+// 		$query_vars->query;
+// 		$query_vars->query['pagename'] = 'press-office';
+// 		$query_vars->query['page'] = '';
+// 		unset($query_vars->query['post_type']);
+// 	}
+
+// 	// var_dump($query_vars);
+// 	return $query_vars;
+// });
+
+add_filter('request', 'bech_change_post_variable_in_press_office_archive');
+
+function bech_change_post_variable_in_press_office_archive($query_vars)
+{
+	if (is_admin()) {
+		return $query_vars;
+	}
+
+	$request = urldecode($_SERVER['REQUEST_URI']);
+	$change_query_vars = false;
+
+	if (str_contains($_SERVER['HTTP_HOST'], 'localhost')) {
+		if ($request === '/bechstein-hall/press-office/') {
+			$change_query_vars = true;
+		}
+	} else {
+		if ($request === '/press-office/') {
+			$change_query_vars = true;
+		}
+	}
+
+	if ($change_query_vars) {
+		$query_vars['pagename'] = 'press-office';
+		$query_vars['page'] = '';
+		unset($query_vars['post_type']);
+	}
+
+	return $query_vars;
 }
 
 /* Tix Utils Functions */
