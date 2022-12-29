@@ -788,6 +788,7 @@ p strong {
 }
 
 .wo-slide img {
+  transform: translateZ(0);
   user-select: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
