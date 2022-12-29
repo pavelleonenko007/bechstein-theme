@@ -40,7 +40,7 @@ Template name: Festival
 			<section class="section wf-section">
 				<div class="desc-fest">
 					<p class="p-25-40 fest-desc">
-						<?php echo get_the_content(); ?>
+						<?php echo get_field('festival_description'); ?>
 					</p>
 				</div>
 			</section>
