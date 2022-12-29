@@ -1,3 +1,7 @@
+.home-but-link:hover {
+  z-index: 11;
+}
+
 .head-event-image_mob {
   display: none;
 }
@@ -72,6 +76,7 @@
 }
 
 .slider-wvwnts_bottom {
+  cursor: auto;
   -webkit-user-drag: none;
   user-select: none;
   -webkit-user-select: none;
@@ -125,8 +130,21 @@
   transition: opacity 0.2s ease-in-out;
 }
 
-.splide__cursor--active {
+.slider-wvwnts-home {
+  position: relative;
+}
+
+#w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594 {
+  position: relative;
+}
+
+.cursor {
+  position: absolute;
+}
+
+.custom-cursor--active {
   opacity: 1;
+  z-index: 10;
 }
 
 [data-type='cursor'] {
@@ -765,6 +783,7 @@ p strong {
   left: 0;
   bottom: 0;
   user-select: none;
+  cursor: none;
   transform: translateZ(0);
 }
 

@@ -188,57 +188,55 @@ class CustomCursor {
     this.parentElement = parentElementSelector
       ? this.cursor.closest(parentElementSelector)
       : document.body;
+    this.options = {
+      ratio: 0.2,
+      ...options,
+    };
 
     gsap.set(this.cursor, {
       xPercent: -50,
       yPercent: -50,
     });
 
-    this.ratio = options.ratio ?? 0.2;
-
-    // TweenLite.set(this.cursor, {
-    //   xPercent: -50,
-    //   yPercent: -50,
-    // });
-
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleHover = this.handleHover.bind(this);
+    this.handleLeave = this.handleLeave.bind(this);
 
     this.parentElement.addEventListener('mousemove', this.handleMouseMove);
-    this.parentElement.addEventListener('mouseenter', this.handleHover);
-    this.parentElement.addEventListener('mouseleave', this.handleHover);
+    this.parentElement.addEventListener('mouseover', this.handleHover);
+    this.parentElement.addEventListener('mouseleave', this.handleLeave);
   }
 
-  handleHover() {
-    this.cursor.classList.toggle(
-      'splide__cursor--active',
-      !this.cursor.classList.contains('splide__cursor--active')
-    );
+  handleLeave(event) {
+    this.cursor.classList.remove('custom-cursor--active');
+  }
+
+  handleHover(event) {
+    if (event.target.closest('.slider-wvwnts_bottom')) {
+      this.cursor.classList.remove('custom-cursor--active');
+      return;
+    }
+    this.cursor.classList.add('custom-cursor--active');
   }
 
   handleMouseMove(event) {
-    var targetCoords = this.parentElement.getBoundingClientRect();
-    var xCoord = event.clientX - targetCoords.left;
-    var yCoord = event.clientY - targetCoords.top;
+    const targetCoords = this.parentElement.getBoundingClientRect();
+    const xCoord = event.clientX - targetCoords.left;
+    const yCoord = event.clientY - targetCoords.top;
 
-    console.log(xCoord, yCoord);
-
-    gsap.to(this.cursor, this.ratio, {
+    gsap.to(this.cursor, this.options.ratio, {
       x: xCoord,
       y: yCoord,
     });
   }
 }
 
-// new CustomCursor(
-//   'whats-on-cursor',
-//   document.querySelector('.slider-wvwnts-home')
-// );
+new CustomCursor('whats-on-cursor', '.slider-wvwnts-home');
 
-// new CustomCursor(
-//   'ball',
-//   '#w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'
-// );
+new CustomCursor(
+  'ball',
+  '#w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'
+);
 
 class WOCalendar {
   constructor(selector, options = {}) {
