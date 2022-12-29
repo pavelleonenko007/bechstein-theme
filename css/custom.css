@@ -245,6 +245,7 @@
 
 .loader {
   opacity: 0;
+  z-index: 9999;
   transition: opacity 0.4s ease-in-out;
 }
 
