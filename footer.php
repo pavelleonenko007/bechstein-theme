@@ -162,6 +162,7 @@
             </div>
             <div class="footer-col no-mob">
                 <div class="foo-bottom nz">
+                    <a href="#" data-href="#moove_gdpr_cookie_modal" class="link-foo-small _2">GDPR</a>
                     <?php $terms_page = bech_get_page_by_slug('terms-and-conditions');
                     if ($terms_page) : ?>
                         <a href="<?php echo get_the_permalink($terms_page); ?>" class="link-foo-small _2"><?php echo get_the_title($terms_page); ?></a>
