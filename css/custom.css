@@ -1098,6 +1098,10 @@ p strong {
 }
 
 @media screen and (max-width: 991px) {
+  .head-event-content_in.home-slid {
+    height: 100%;
+  }
+
   .catalog-column .h1-75-90 {
     margin-left: -30rem;
   }
