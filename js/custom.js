@@ -196,10 +196,10 @@ class CustomCursor {
 
     this.ratio = options.ratio ?? 0.2;
 
-    TweenLite.set(this.cursor, {
-      xPercent: -50,
-      yPercent: -50,
-    });
+    // TweenLite.set(this.cursor, {
+    //   xPercent: -50,
+    //   yPercent: -50,
+    // });
 
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleHover = this.handleHover.bind(this);
@@ -217,9 +217,15 @@ class CustomCursor {
   }
 
   handleMouseMove(event) {
+    var targetCoords = this.parentElement.getBoundingClientRect();
+    var xCoord = event.clientX - targetCoords.left;
+    var yCoord = event.clientY - targetCoords.top;
+
+    console.log(xCoord, yCoord);
+
     gsap.to(this.cursor, this.ratio, {
-      x: event.clientX,
-      y: event.clientY,
+      x: xCoord,
+      y: yCoord,
     });
   }
 }
@@ -229,10 +235,10 @@ class CustomCursor {
 //   document.querySelector('.slider-wvwnts-home')
 // );
 
-new CustomCursor(
-  'ball',
-  '#w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'
-);
+// new CustomCursor(
+//   'ball',
+//   '#w-node-f68b1e07-4cf2-4c60-76f8-48cbef9b803c-89261594'
+// );
 
 class WOCalendar {
   constructor(selector, options = {}) {
@@ -1751,7 +1757,7 @@ function initSplideCarousel() {
     },
   }).mount();
 
-  new CustomCursor('splide-cursor', '.splide');
+  new CustomCursor('splide-cursor', '.section.home-white.wf-section');
 }
 
 const initLoader = () => {

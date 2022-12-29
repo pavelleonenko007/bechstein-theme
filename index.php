@@ -220,8 +220,8 @@ Template name: Copy of Bechstein Hall
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <div id="splide-cursor" class="splide__cursor"></div>
                     </div>
+                    <div id="splide-cursor" class="splide__cursor"></div>
                     <div class="white-z"></div>
                 </section>
             <?php endif; ?>

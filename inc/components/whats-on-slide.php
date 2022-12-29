@@ -11,9 +11,7 @@ global $post; ?>
       ]);
 
       if (!empty($event_image)) : ?>
-        <a href="<?php echo $event_url; ?>" class="wo-slide__image">
-          <?php echo $event_image; ?>
-        </a>
+        <?php echo $event_image; ?>
       <?php endif;  ?>
 
       <?php $term_query = wp_get_object_terms($event_id, [
