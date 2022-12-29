@@ -290,7 +290,7 @@ $email           = get_field('email', 'option');
                 </div>
                 <div class="footer-col no-mob">
                     <div class="foo-bottom nz">
-                        <a href="#" data-href="#moove_gdpr_cookie_modal" class="link-foo-small _2">GDPR</a>
+                        <a href="#" data-href="#moove_gdpr_cookie_modal" class="link-foo-small _2">Manage Consents</a>
                         <a href="#" class="link-foo-small _2">Terms and Conditions</a>
                         <a href="#" class="link-foo-small last">Privacy policy</a>
                     </div>
