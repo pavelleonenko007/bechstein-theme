@@ -1341,3 +1341,46 @@ function bech_get_whats_on_ticket_image($post_id): string
 		'style' => 'max-height: 270rem'
 	]) : '';
 }
+
+add_filter('wpseo_metadesc', 'bech_set_default_custom_meta_description');
+add_filter('wpseo_opengraph_desc', 'bech_set_default_custom_meta_description');
+function bech_set_default_custom_meta_description($description)
+{
+	if (!$description || empty($description)) {
+		return 'Bechstein Hall official website';
+	}
+	return $description;
+}
+
+add_filter('wpseo_schema_webpage', 'bech_set_default_description_field_to_webpage_piece');
+function bech_set_default_description_field_to_webpage_piece($data)
+{
+	if (empty($data['description'])) {
+		$data['description'] = 'Bechstein Hall official website';
+	}
+	return $data;
+}
+
+add_action('wpseo_add_opengraph_additional_images', 'bech_default_og_image');
+function bech_default_og_image($image)
+{
+	global $post;
+
+	if (!$image->has_images()) {
+		$image->add_image('default'); // this can be whatever you want it to be as long as it isn't falsey
+	}
+}
+
+// set the default share image
+add_action('wpseo_twitter_image', 'bech_default_share_image');
+add_action('wpseo_opengraph_image', 'bech_default_share_image');
+function bech_default_share_image($image)
+{
+	$home_url = get_home_url();
+	if (!$image || $image === 'default') { // twitter will pass an empty string for $image while 
+		$image = "{$home_url}/wp-content/uploads/62bc3fe7d9cc61371f2615ec_rectangle252057-p-1080.png";
+	}
+
+	return $image;
+}
+// now we can call the same function for both actions without having to set a default facebook image in the UI
