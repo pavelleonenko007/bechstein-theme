@@ -547,6 +547,10 @@ p strong {
   font-weight: 500;
 }
 
+.filter-press {
+  margin-top: 60rem;
+}
+
 .form-filter-press .filter-chek {
   margin-right: 20rem;
 }
@@ -1153,6 +1157,10 @@ p strong {
 }
 
 @media screen and (max-width: 495px) {
+  .filter-press {
+    margin-top: 31rem;
+  }
+
   .head-event-image {
     display: none;
   }

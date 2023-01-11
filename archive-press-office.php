@@ -65,7 +65,6 @@ Template name: Archive Press office
           </div>
           <div class="pressres-column">
             <h1 class="h1-75-90">Press Office</h1>
-            <h2 class="h2-50-65 w70">Press releases</h2>
             <?php $args = [
               'post_type' => 'press-office',
               'posts_per_page' => 10,
