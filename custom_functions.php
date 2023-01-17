@@ -1061,7 +1061,7 @@ function bech_get_ticket_event_data_for_calendar($ticket)
 		'endDate' => gmdate('Y-m-d', $end_date_unix),
 		'startTime' => gmdate('H:i', $start_date_unix),
 		'endTime' => gmdate('H:i', $end_date_unix),
-		'timeZone' => "Europe/Berlin",
+		'timeZone' => "Europe/London",
 		'location' => 'Bechstein Hall',
 		'iCalFileName' => $ticket->post_title,
 	]), ENT_QUOTES, 'UTF-8', true);
