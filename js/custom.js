@@ -2533,7 +2533,7 @@ const initAddToCalendarButtons = () => {
       const eventCalendarObj = JSON.parse(button.dataset.calendar);
       const addToCalendarConfig = {
         options: ['Apple'],
-        timeZone: 'Europe/Berlin',
+        timeZone: 'Europe/London',
         trigger: 'click',
         ...eventCalendarObj,
       };
