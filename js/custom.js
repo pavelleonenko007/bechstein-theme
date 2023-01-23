@@ -1002,8 +1002,8 @@ class UserCart {
     this._setTicketsCount();
 
     this.handleClick = this.handleClick.bind(this);
-    document.body.addEventListener('click', this.handleClick);
-    // this.cartButton.addEventListener('click', this.handleClick);
+    // document.body.addEventListener('click', this.handleClick);
+    this.cartButton.addEventListener('click', this.handleClick);
   }
 }
 
