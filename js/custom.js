@@ -903,7 +903,6 @@ class UserCart {
     }
 
     if (event.target.closest('.cart-block')) {
-      console.log('block');
       event.stopPropagation();
       if (event.target.closest('.header-book-head-btn-chk')) {
         window.location.href = event.target
