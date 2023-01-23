@@ -2144,6 +2144,7 @@ function initWhatsOnFilters3() {
     }
 
     popupNode.classList.add('mobile-filter-popup--open');
+    document.body.classList.add('flires-popup-open');
     document.body.style.overflow = 'hidden';
 
     if (hasSelectedFilters) {
@@ -2166,6 +2167,7 @@ function initWhatsOnFilters3() {
 
     popup.classList.remove('mobile-filter-popup--open');
     document.body.style.overflow = '';
+    document.body.classList.remove('flires-popup-open');
     hidePopupButtons();
   };
 
