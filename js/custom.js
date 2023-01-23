@@ -871,17 +871,33 @@ class UserCart {
       'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
     this.expiresTime = Math.floor(userData.order?.expires);
     this.timerInterval = null;
-
+    this.opened = false;
     this._init();
   }
 
   handleClick(event) {
     if (this._orders.length > 0) {
       event.preventDefault();
-      document.body.classList.toggle(
-        'opencart',
-        !document.body.classList.contains('opencart')
-      );
+
+      if (event.target.closest('.cart-block')) {
+        return;
+      }
+
+      if (event.target.closest('.cart-block_mob-close')) {
+        document.body.classList.remove('opencart');
+      }
+
+      if (event.target.closest('.header-book-head-bt')) {
+        this.opened = !this.opened;
+
+        if (this.opened) {
+          document.body.classList.remove('opencart');
+        } else {
+          document.body.classList.add('opencart');
+        }
+      } else {
+        document.body.classList.remove('opencart');
+      }
     }
   }
 
@@ -1002,7 +1018,8 @@ class UserCart {
     this._setTicketsCount();
 
     this.handleClick = this.handleClick.bind(this);
-    this.cartButton.addEventListener('click', this.handleClick);
+    document.body.addEventListener('click', this.handleClick);
+    // this.cartButton.addEventListener('click', this.handleClick);
   }
 }
 
@@ -1918,7 +1935,6 @@ const initWhatsOnFilters = () => {
 // initWhatsOnFilters();
 
 function initWhatsOnFilters3() {
-  let popupOpenTimes = 0;
   let hasSelectedFilters = false;
   const filterForm = document.querySelector('[data-filter="form"]');
 
