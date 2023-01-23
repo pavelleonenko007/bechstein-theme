@@ -862,6 +862,7 @@ class UserCart {
   constructor(userData = {}) {
     this.cartButton = document.querySelector('.header-book-head-btn');
     this.cartContainerNode = document.querySelector('.cart-block_contant');
+    this.mobileCloseButton = document.querySelector('.cart-block_mob-close');
     this._orders = userData.order?.items || [];
     this._user = userData?.user || {};
     this._profileUrl = userData?.profile || '#';
@@ -875,14 +876,55 @@ class UserCart {
     this._init();
   }
 
+  open() {
+    this.opened = true;
+    document.body.classList.add('opencart');
+  }
+
+  close() {
+    this.opened = false;
+    document.body.classList.remove('opencart');
+  }
+
+  // handleClick(event) {
+  //   if (this._orders.length > 0) {
+  //     event.preventDefault();
+  //     document.body.classList.toggle(
+  //       'opencart',
+  //       !document.body.classList.contains('opencart')
+  //     );
+  //   }
+  // }
+
   handleClick(event) {
-    if (this._orders.length > 0) {
+    if (this._orders.length === 0) return;
+
+    if (
+      event.target.closest('.header-book-head-btn') ||
+      event.target.closest('.cart-block')
+    ) {
       event.preventDefault();
-      document.body.classList.toggle(
-        'opencart',
-        !document.body.classList.contains('opencart')
-      );
     }
+
+    if (event.target.closest('.header-book-head-btn')) {
+      this.opened ? this.close() : this.open();
+    }
+
+    if (event.target.closest('.cart-block')) {
+      if (event.target.closest('.header-book-head-btn-chk')) {
+        window.location.href = event.target
+          .closest('.header-book-head-btn-chk')
+          .getAttribute('href');
+        return;
+      }
+
+      if (event.target.closest('.cart-block_mob-close')) {
+        this.close();
+        return;
+      }
+    }
+
+    this.close();
   }
 
   formatTime(time) {
@@ -1001,8 +1043,8 @@ class UserCart {
     this._setMarkup();
     this._setTicketsCount();
 
-    this.handleClick = this.handleClick.bind(this);
-    // document.body.addEventListener('click', this.handleClick);
+    // this.handleClick = this.handleClick.bind(this);
+    document.body.addEventListener('click', this.handleClick);
     this.cartButton.addEventListener('click', this.handleClick);
   }
 }
