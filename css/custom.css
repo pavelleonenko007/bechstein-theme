@@ -1,3 +1,7 @@
+.header-book-head-btn {
+  transform: translateZ(0);
+}
+
 .moove-gdpr-branding-cnt {
   display: none;
 }
