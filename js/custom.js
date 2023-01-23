@@ -873,6 +873,7 @@ class UserCart {
     this.expiresTime = Math.floor(userData.order?.expires);
     this.timerInterval = null;
     this.opened = false;
+    this.handleClick = this.handleClick.bind(this);
     this._init();
   }
 
@@ -886,16 +887,6 @@ class UserCart {
     document.body.classList.remove('opencart');
   }
 
-  // handleClick(event) {
-  //   if (this._orders.length > 0) {
-  //     event.preventDefault();
-  //     document.body.classList.toggle(
-  //       'opencart',
-  //       !document.body.classList.contains('opencart')
-  //     );
-  //   }
-  // }
-
   handleClick(event) {
     if (this._orders.length === 0) return;
 
@@ -908,20 +899,23 @@ class UserCart {
 
     if (event.target.closest('.header-book-head-btn')) {
       this.opened ? this.close() : this.open();
+      return;
     }
 
     if (event.target.closest('.cart-block')) {
+      console.log('block');
+      event.stopPropagation();
       if (event.target.closest('.header-book-head-btn-chk')) {
         window.location.href = event.target
           .closest('.header-book-head-btn-chk')
           .getAttribute('href');
-        return;
       }
 
       if (event.target.closest('.cart-block_mob-close')) {
         this.close();
-        return;
       }
+
+      return;
     }
 
     this.close();
