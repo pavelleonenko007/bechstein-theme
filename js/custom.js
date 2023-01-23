@@ -2071,6 +2071,8 @@ function initWhatsOnFilters3() {
     pageNumberInput.value = 1;
     hidePopupButtons();
     submitFormCallback();
+
+    //close mobile filter popup
   };
   const showSelectedFilters = (selectedString = '') => {
     const selectedBlock = document.getElementById('selected-filters');
@@ -2153,7 +2155,8 @@ function initWhatsOnFilters3() {
   const closePopupHandler = (event) => {
     const closeButton =
       event.target.closest('.mobile-filter-popup__close') ||
-      event.target.closest('.mobile-filter-popup__button');
+      event.target.closest('.mobile-filter-popup__button') ||
+      event.target.closest('.mobile-filter-popup__clear');
 
     if (!closeButton) return;
     event.stopPropagation();
