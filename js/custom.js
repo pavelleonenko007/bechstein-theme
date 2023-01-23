@@ -1045,7 +1045,7 @@ class UserCart {
 
     // this.handleClick = this.handleClick.bind(this);
     document.body.addEventListener('click', this.handleClick);
-    this.cartButton.addEventListener('click', this.handleClick);
+    // this.cartButton.addEventListener('click', this.handleClick);
   }
 }
 
