@@ -877,29 +877,11 @@ class UserCart {
 
   handleClick(event) {
     if (this._orders.length > 0) {
-      if (event.target.closest('.cart-block')) {
-        event.preventDefault();
-        return;
-      }
-
-      if (event.target.closest('.cart-block_mob-close')) {
-        event.preventDefault();
-        document.body.classList.remove('opencart');
-      }
-
-      if (event.target.closest('.header-book-head-bt')) {
-        event.preventDefault();
-        this.opened = !this.opened;
-
-        if (this.opened) {
-          document.body.classList.remove('opencart');
-        } else {
-          document.body.classList.add('opencart');
-        }
-      } else {
-        event.preventDefault();
-        document.body.classList.remove('opencart');
-      }
+      event.preventDefault();
+      document.body.classList.toggle(
+        'opencart',
+        !document.body.classList.contains('opencart')
+      );
     }
   }
 
