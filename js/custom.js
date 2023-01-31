@@ -866,10 +866,10 @@ class UserCart {
     this._orders = userData.order?.items || [];
     this._user = userData?.user || {};
     this._profileUrl = userData?.profile || '#';
-    this._logoutUrl = 'https://tix.bechsteinhall.func.agency/en/logout/';
-    this._loginUrl = 'https://tix.bechsteinhall.func.agency/en/login/';
+    this._logoutUrl = 'https://tix.new.bechsteinhall.com/en/logout/';
+    this._loginUrl = 'https://tix.new.bechsteinhall.com/en/login/';
     this._checkoutUrl =
-      'https://tix.bechsteinhall.func.agency/en/buyingflow/order/';
+      'https://tix.new.bechsteinhall.com/en/buyingflow/order/';
     this.expiresTime = Math.floor(userData.order?.expires);
     this.timerInterval = null;
     this.opened = false;
@@ -2392,7 +2392,7 @@ initPressReleaseFilters();
 
 const addTixFrame = () => {
   const frame = document.createElement('iframe');
-  frame.setAttribute('src', 'https://tix.bechsteinhall.func.agency/en/itix');
+  frame.setAttribute('src', 'https://tix.new.bechsteinhall.com/en/itix');
   frame.setAttribute('id', 'tix');
   frame.setAttribute(
     'onload',
