@@ -2409,7 +2409,7 @@ const initTixSessions = () => {
   const tixIframe = document.getElementById('tix');
   if (!tixIframe) return;
 
-  const TIX_URL = 'https://tix.bechsteinhall.func.agency/en/itix';
+  const TIX_URL = 'https://tix.new.bechsteinhall.com/en/itix';
   let isTixConnected = false;
   let tixConntectedInterval = null;
   let counter = 0;
