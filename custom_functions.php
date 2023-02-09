@@ -1384,3 +1384,7 @@ function bech_default_share_image($image)
 	return $image;
 }
 // now we can call the same function for both actions without having to set a default facebook image in the UI
+
+
+// fix big image upload
+add_filter('big_image_size_threshold', '__return_false');
