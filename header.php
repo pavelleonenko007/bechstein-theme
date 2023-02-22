@@ -30,7 +30,7 @@ $email           = get_field('email', 'option');
                     <?php echo preg_replace('/(width|height)=\"(\d+)\"/', '', wp_get_attachment_image($poster['ID'], 'large', false)); ?>
                 </a>
             <?php else : ?>
-                <div class="header-video-link w-inline-block" style="height: 90px">
+                <div class="header-video-link" style="height: 90px">
 
                 </div>
             <?php endif; ?>
