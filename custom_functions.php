@@ -62,13 +62,11 @@ function bech_purchase_url_format_data($arr): array
 
 function bech_get_events_number($array, $word)
 {
-	switch (true) {
-		case count($array) < 1:
-			return 'there is no ' . $word . 's';
-		case count($array) % 10 === 1:
-			return count($array) . ' ' . $word . 's';
-		default:
-			return count($array) . ' ' . $word;
+	$count = count($array);
+	if ($count === 1) {
+		return "{$count} {$word}";
+	} else {
+		return "{$count} {$word}s";
 	}
 }
 
