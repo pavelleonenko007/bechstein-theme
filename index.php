@@ -145,8 +145,6 @@ Template name: Copy of Bechstein Hall
                             ];
                         }
 
-                        // var_dump($args);
-
                         $query = new WP_Query($args);
 
                         ?>
@@ -162,12 +160,12 @@ Template name: Copy of Bechstein Hall
                             <div id="whats-on-cursor" class="splide__cursor"></div>
                         </div>
                         <div id="w-node-_0c687936-78a2-7976-2297-97e720f86e4e-89261594" class="slider-wvwnts-home_bottom">
-                            <?php $events = get_posts([
+                            <?php /* $events = get_posts([
                                 'post_type' => 'tickets',
                                 'post_status' => 'publish',
                                 'numberposts' => -1,
-                            ]); ?>
-                            <div class="p-20-30 white"><?php echo bech_get_events_number($events, 'event'); ?></div>
+                            ]);*/ ?>
+                            <div class="p-20-30 white"><?php echo bech_get_events_number($query->posts, 'event'); ?></div>
                             <a href="<?php echo get_the_permalink(255); ?>" class="link-20 home">WHAT’S ON</a>
                         </div>
                     </div>
