@@ -1840,7 +1840,10 @@ const initLoader = () => {
     console.log('hide loader');
   }
 
-  openPlayerButton.addEventListener('click', openVideoPlayer);
+  if (openPlayerButton) {
+    openPlayerButton.addEventListener('click', openVideoPlayer);
+  }
+
 };
 
 const initWhatsOnFilters = () => {
